@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          CS-160 Frontend
+          CS-160 Frontend Production
         </p>
         <a
           className="App-link"
