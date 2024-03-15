@@ -1,0 +1,32 @@
+#Open-sidebar {
+  display: none;
+  flex-direction: column;
+  width: 384px;
+  height: 100%;
+  background-color: #D8DCE5;
+}
+
+#Closed-sidebar {
+  display: inline-flex;
+  flex-direction: column;
+  width: 64px;
+  height: 100%;
+  background-color: #D8DCE5;
+}
+
+#Closed-sidebar button {
+  width: 64px;
+  height: 64px;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+
+#Sidebar-top {
+  display: inline-flex;
+  flex-direction: row;
+  text-align: left;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #9DA5AC;
+}

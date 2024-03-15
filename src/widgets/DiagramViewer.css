@@ -1,0 +1,21 @@
+#Diagram-viewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  background-color: gainsboro;
+  height: 100%;
+  width: 100%;
+}
+
+#Diagram-viewer button {
+  height: 20vmin;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+
+#Diagram-viewer img {
+  height: 20vmin;
+}

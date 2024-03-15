@@ -1,0 +1,18 @@
+#Topbar {
+  display: inline-flex;
+  flex-direction: row;
+  text-align: left;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 48px;
+}
+
+#Title {
+  font-size: calc(10px + 2vmin);
+  margin-left: 8px;
+}
+
+#Login {
+  margin-right: 8px;
+}
