@@ -19,7 +19,7 @@ class Sidebar extends React.Component {
 
   render() {
     return (
-      <>
+      <div id="Sidebar" data-testid="Sidebar">
         <div id="Open-sidebar">
           <div id="Sidebar-top">
             <b>Sidebar content</b>
@@ -39,7 +39,7 @@ class Sidebar extends React.Component {
               <img src={generate} id="Generate" alt="generate" />
           </button>
         </div>
-      </>
+      </div>
     );
   }
 }

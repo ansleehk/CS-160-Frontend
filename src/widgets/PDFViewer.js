@@ -9,7 +9,7 @@ class PDFViewer extends React.Component {
   render() {
     return (
       <>
-        <div id="PDF-viewer">
+        <div id="PDF-viewer" data-testid="PDFViewer">
           <p>Upload PDF</p>
           <button onClick={() => Utilities.showError('Upload PDF not implemented!')}>
             <img src={upload} id="Upload" alt="upload" />

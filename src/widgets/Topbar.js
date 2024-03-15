@@ -6,7 +6,7 @@ import Utilities from "../Utilities";
 class Topbar extends React.Component {
   render() {
     return (
-      <div id="Topbar">
+      <div id="Topbar" data-testid="Topbar">
         <b id="Title">KeyLink V1.0</b>
         <div id="Login">
           <button onClick={() => Utilities.showError('Profiles not implemented!')}>
