@@ -28,30 +28,45 @@ class App extends React.Component {
     }
   };
 
-  uploadPDF = (file) => {
+  uploadPDF = async (file) => {
     alert("Hi");
     const formData = new FormData();
     formData.append('file', file);
 
-    fetch('http://localhost:8080/uploadPdf', {
+    // Local : http://localhost:8080/uploadPdf
+    // AWS : https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf
+  
+    /*
+    const response = await fetch('https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf', {
       method: 'POST',
       body: formData
-    })
-    .then(response => {
-      if (!response.ok) {
-        Utilities.showError(`Failed to upload PDF file: ${response.status} - ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      Utilities.showError('PDF file uploaded successfully:' + data);
-      // Optionally, handle the response data
-    })
-    .catch(error => {
-      Utilities.showError('Error uploading PDF file:' + error);
-      // Optionally, display an error message or handle the error in some way
     });
-  }
+    */
+
+    try {
+      const response = await fetch('https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+      console.log("Download complete", response);
+      const responseBody = await response.text();
+      console.log('Response:', responseBody);
+    } catch (error) {
+      console.error("Download error:", error.message);
+    }
+  
+  
+    /*
+    if (!response.ok) {
+      throw Utilities.showError(`Failed to upload PDF file: ${response.status} - ${response.statusText}`);
+    }
+  
+    const data = await response.json();
+    Utilities.showError('PDF file uploaded successfully:' + data);
+    // Optionally, handle the response data
+    */
+  };
 
   render() {
     return (
