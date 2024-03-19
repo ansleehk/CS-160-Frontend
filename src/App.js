@@ -10,7 +10,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pdfSrc: null
+      pdfSrc: null,
+      isLoading: false
     };
   }
 
@@ -30,6 +31,7 @@ class App extends React.Component {
 
   uploadPDF = async (file) => {
     try {
+      this.setIsLoading(true);
       const formData = new FormData();
       formData.append('file', file);
 
@@ -52,10 +54,17 @@ class App extends React.Component {
   
       const responseBody = await response.text();
       console.log('PDF file uploaded successfully:', responseBody);
+      this.setIsLoading(false);
       this.changeDiagram(responseBody);
     } catch (error) {
-      console.error('Error uploading PDF file:', error.message);
+      console.log('Error uploading PDF file:', error.message); 
+      Utilities.showError('Error uploading PDF file:', error.message);
+      this.setIsLoading(false);
     }
+  };
+
+  setIsLoading = (isLoading) => {
+    this.setState({ isLoading });
   };
 
   changeDiagram(diagram) {
@@ -71,7 +80,8 @@ class App extends React.Component {
           <div id="Views">  
             <PDFViewer onPDFChange={this.changePDF}
                        pdfSrc={this.state.pdfSrc} />
-            <DiagramViewer diagramDefinition={this.state.diagramDefinition}/>
+            <DiagramViewer diagramDefinition={this.state.diagramDefinition}
+                           isLoading={this.state.isLoading}/>
           </div>
         </div>
       </div>

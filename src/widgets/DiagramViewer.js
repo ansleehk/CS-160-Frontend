@@ -10,14 +10,20 @@ class DiagramViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      diagramDefinition: null
+      diagramDefinition: null,
+      isLoading: false
     };
   }
 
   render() {
     return (
       <div id="Diagram-viewer" data-testid="DiagramViewer">
-        {this.props.diagramDefinition ? (
+        {this.props.isLoading ? (
+          <>
+            <p>Generating Diagram...</p>
+            <div className="loader"></div>
+          </>
+        ) : this.props.diagramDefinition ? (
           <Mermaid chart={this.props.diagramDefinition} width="100%" height="100%"/>
         ) : (
           <>
