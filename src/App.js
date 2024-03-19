@@ -29,44 +29,37 @@ class App extends React.Component {
   };
 
   uploadPDF = async (file) => {
-    alert("Hi");
-    const formData = new FormData();
-    formData.append('file', file);
-
-    // Local : http://localhost:8080/uploadPdf
-    // AWS : https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf
-  
-    /*
-    const response = await fetch('https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf', {
-      method: 'POST',
-      body: formData
-    });
-    */
-
     try {
-      const response = await fetch('https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf', {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Local : http://localhost:8080/uploadPdf
+      // AWS : https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf
+      // Currently using local w/ proxy
+  
+      const response = await fetch('/uploadPdf', {
         method: 'POST',
-        mode: 'no-cors',
         body: formData
       });
-      console.log("Download complete", response);
+  
+      if (response.status === 413) {
+        Utilities.showError('PDF file exceeds 3500 tokens.');
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to upload PDF file');
+      }
+  
       const responseBody = await response.text();
-      console.log('Response:', responseBody);
+      console.log('PDF file uploaded successfully:', responseBody);
     } catch (error) {
-      console.error("Download error:", error.message);
+      console.error('Error uploading PDF file:', error.message);
     }
-  
-  
-    /*
-    if (!response.ok) {
-      throw Utilities.showError(`Failed to upload PDF file: ${response.status} - ${response.statusText}`);
-    }
-  
-    const data = await response.json();
-    Utilities.showError('PDF file uploaded successfully:' + data);
-    // Optionally, handle the response data
-    */
   };
+
+  changeDiagram(diagram) {
+    this.setState({ diagramDefinition: diagram });
+  }
 
   render() {
     return (
@@ -77,7 +70,7 @@ class App extends React.Component {
           <div id="Views">  
             <PDFViewer onPDFChange={this.changePDF}
                        pdfSrc={this.state.pdfSrc} />
-            <DiagramViewer/>
+            <DiagramViewer diagramDefinition={this.state.diagramDefinition}/>
           </div>
         </div>
       </div>
