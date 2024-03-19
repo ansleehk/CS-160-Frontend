@@ -52,6 +52,7 @@ class App extends React.Component {
   
       const responseBody = await response.text();
       console.log('PDF file uploaded successfully:', responseBody);
+      this.changeDiagram(responseBody);
     } catch (error) {
       console.error('Error uploading PDF file:', error.message);
     }
