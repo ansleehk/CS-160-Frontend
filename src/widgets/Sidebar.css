@@ -1,3 +1,7 @@
+#Sidebar {
+  height: 100%
+}
+
 #Open-sidebar {
   display: none;
   flex-direction: column;
@@ -20,6 +24,7 @@
   padding: 0px;
   margin: 0px;
   border: 0px;
+  background-color: transparent;
 }
 
 #Sidebar-top {
@@ -29,4 +34,12 @@
   align-items: center;
   justify-content: space-between;
   background-color: #9DA5AC;
+  padding: 8px;
+}
+
+#Sidebar-top button {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  background-color: transparent;
 }

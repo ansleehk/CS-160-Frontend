@@ -17,6 +17,7 @@ class Sidebar extends React.Component {
     document.getElementById("Open-sidebar").style.display = "none";
   }
 
+  // TODO : Change to render like PDFViewer, instead of hiding one
   render() {
     return (
       <div id="Sidebar" data-testid="Sidebar">
@@ -32,9 +33,11 @@ class Sidebar extends React.Component {
           <button onClick={() => this.openSideBar()}>
               Open Sidebar
           </button>
-          <button onClick={() => Utilities.showError('Upload PDF not implemented!')}>
-              <img src={upload} id="Upload" alt="upload" />
-          </button>
+          <label for="PDF-input">
+              <img src={upload} id="Upload" alt="upload"/>
+          </label>
+          <input id="PDF-input" type="file" accept=".pdf" 
+              onChange={this.props.onPDFChange}/>
           <button onClick={() => Utilities.showError('Generate Diagram not implemented!')}>
               <img src={generate} id="Generate" alt="generate" />
           </button>
