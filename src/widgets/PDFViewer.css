@@ -1,6 +1,7 @@
 #PDF-viewer {
   display: flex;
   flex-direction: column;
+  text-align: center;
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
@@ -10,18 +11,20 @@
   width: 100%;
 }
 
-#PDF-viewer label {
+#PDF-viewer button {
   height: 20vmin;
+  width: 20vmin;
   padding: 0px;
   margin: 0px;
   border: 0px;
-  background-color: transparent;
-}
-
-#PDF-input {
-  display: none;
+  background-color: #4B4B59;
 }
 
 #PDF-viewer img {
   height: 20vmin;
+  width: 20vmin;
+}
+
+#PDF-viewer button:hover {
+  filter: brightness(1.2) saturate(1.2);
 }

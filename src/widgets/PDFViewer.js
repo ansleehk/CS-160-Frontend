@@ -20,11 +20,12 @@ class PDFViewer extends React.Component {
         ) : (
           <div id="Upload">
             <p>Upload PDF</p>
-            <label for="PDF-input">
-              <img src={upload} id="Upload" alt="upload"/>
-            </label>
-            <input id="PDF-input" type="file" accept=".pdf" 
-                onChange={this.props.onPDFChange}/>
+            <button onClick={() => document.getElementById("PDF-input").click()}>
+              <img src={upload} id="Upload" alt="upload" />
+            </button>
+            <input id="PDF-input" type="file" accept=".pdf"
+              onChange={this.props.onPDFChange}
+              style={{ display: "none" }}/>
           </div>
         )}
       </div>

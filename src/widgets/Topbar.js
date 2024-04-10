@@ -1,9 +1,22 @@
 import "./Topbar.css";
 
 import React from "react";
-import createAlert from "../utilities/Alert";
+import LoginPopup from "../widgets/LoginPopup";
 
 class Topbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showLoginPopup: false
+    };
+  }
+
+  toggleLoginPopup = () => {
+    this.setState((prevState) => ({
+      showLoginPopup: !prevState.showLoginPopup
+    }));
+  };
+
   render() {
     return (
       <div id="Topbar" data-testid="Topbar">
@@ -12,10 +25,13 @@ class Topbar extends React.Component {
           <span id="Version"> V1.0</span>
         </b>
         <div id="Login">
-          <button onClick={() => createAlert('Profiles not implemented!')}>
+          <button onClick={this.toggleLoginPopup}>
             Login
           </button>
         </div>
+        {this.state.showLoginPopup && (
+          <LoginPopup onClose={this.toggleLoginPopup} />
+        )}
       </div>
     );
   }

@@ -21,14 +21,14 @@ class DiagramViewer extends React.Component {
         {this.props.isLoading ? (
           <>
             <p>Generating Diagram...</p>
-            <div className="loader"></div>
+            <div id="loader"></div>
           </>
         ) : this.props.diagramDefinition ? (
           <Mermaid chart={this.props.diagramDefinition} width="100%" height="100%"/>
         ) : (
           <>
             <p>Generate Diagram</p>
-            <button onClick={() => createAlert("Generate Diagram Not Implemented Yet")}>
+            <button onClick={() => createAlert("Regenerate Diagram Not Implemented Yet")}>
               <img src={generate} id="Generate" alt="generate" />
             </button>
           </>

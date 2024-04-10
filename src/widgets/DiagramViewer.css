@@ -1,6 +1,7 @@
 #Diagram-viewer {
   display: flex;
   flex-direction: column;
+  text-align: center;
   align-items: center;
   justify-content: center;
   font-size: 1.4rem;
@@ -12,23 +13,29 @@
 
 #Diagram-viewer button {
   height: 20vmin;
+  width: 20vmin;
   padding: 0px;
   margin: 0px;
   border: 0px;
-  background-color: transparent;
+  background-color: #4B4B59;
 }
 
 #Diagram-viewer img {
   height: 20vmin;
+  width: 20vmin;
 }
 
-.loader {
-  border: 16px solid #D5DDE8;
-  border-top: 16px solid #0056b3;
+#Diagram-viewer button:hover {
+  filter: brightness(1.2) saturate(1.2);
+}
+
+#loader {
+  border: 8px solid transparent; /* Reduce border width */
+  border-top: 8px solid #0056b3; /* Blue color */
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
+  width: 40px; /* Reduced size */
+  height: 40px; /* Reduced size */
+  animation: spin 1s linear infinite; /* Smoother animation */
 }
 
 @keyframes spin {
