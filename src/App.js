@@ -4,7 +4,7 @@ import Sidebar from "./widgets/Sidebar";
 import Topbar from "./widgets/Topbar";
 import PDFViewer from "./widgets/PDFViewer";
 import DiagramViewer from "./widgets/DiagramViewer";
-import Utilities from "./Utilities";
+import createAlert from "./utilities/Alert";
 
 class App extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class App extends React.Component {
       };
       reader.readAsDataURL(file);
     } else {
-      Utilities.showError('Please select a PDF file.');
+      createAlert('Please select a PDF file.');
     }
   };
 
@@ -45,7 +45,7 @@ class App extends React.Component {
       });
   
       if (response.status === 413) {
-        Utilities.showError('PDF file exceeds 3500 tokens.');
+        createAlert('PDF file exceeds 3500 tokens.');
       }
 
       if (!response.ok) {
@@ -58,7 +58,7 @@ class App extends React.Component {
       this.changeDiagram(responseBody);
     } catch (error) {
       console.log('Error uploading PDF file:', error.message); 
-      Utilities.showError('Error uploading PDF file:', error.message);
+      createAlert('Error uploading PDF file:', error.message);
       this.setIsLoading(false);
     }
   };

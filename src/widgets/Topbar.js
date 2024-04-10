@@ -1,15 +1,18 @@
 import "./Topbar.css";
 
 import React from "react";
-import Utilities from "../Utilities";
+import createAlert from "../utilities/Alert";
 
 class Topbar extends React.Component {
   render() {
     return (
       <div id="Topbar" data-testid="Topbar">
-        <b id="Title">KeyLink V1.0</b>
+        <b id="Title">
+          <span id="Name">KeyLink</span>
+          <span id="Version"> V1.0</span>
+        </b>
         <div id="Login">
-          <button onClick={() => Utilities.showError('Profiles not implemented!')}>
+          <button onClick={() => createAlert('Profiles not implemented!')}>
             Login
           </button>
         </div>
