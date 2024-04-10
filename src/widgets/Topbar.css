@@ -1,36 +1,40 @@
+@import "../utilities/Styles.css";
+
 #Topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
-  background-color: #2B2B33;
-  border-bottom: 4px solid #0056b3;
+  height: var(--closed_sidebar_width);
+  background-color: var(--c_black);
+  border-bottom: var(--small_dim) solid var(--c_blue);
 }
 
 #Title {
-  font-size: 1.4rem;
-  margin-left: 8px;
+  font-size: var(--h1_font);
+  margin-left: var(--medium_dim);
 }
 
 #Name {
-  color: #D5DDE8;
+  color: var(--c_white);
 }
 
 #Version {
-  color: #A9AEC2;
+  color: var(--c_pale);
 }
 
 #Login button {
-  padding: 8px 16px;
-  margin: 8px;
+  padding: var(--medium_dim) var(--large_dim);
+  margin: var(--medium_dim);
   border: none;
-  background-color: #0056b3;
-  color: #D5DDE8;
-  border-radius: 4px;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
+  background-color: var(--c_blue);
+  color: var(--c_white);
+  border-radius: var(--small_dim);
 }
 
 #Login button:hover {
-  opacity: 1;
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
+}
+
+#Login button {
+  transition: background-color 0.3s ease;
 }

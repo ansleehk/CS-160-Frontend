@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./LoginPopup.css";
+
 import createAlert from "../utilities/Alert";
 
 const LoginPopup = ({ onClose }) => {
@@ -31,49 +32,42 @@ const LoginPopup = ({ onClose }) => {
     //onClose();
   };
 
+  const passwordHelp = () => {
+    createAlert("Passwords not yet implemented.");
+  };
+
   return (
-    <div className="login-popup-overlay">
-      <div className="login-popup">
-        <button className="close-button" onClick={onClose}>x</button>
-        <div className="login-header">
-          <h2>User Login</h2>
+    <div id="login-popup-overlay">
+      <div id="login-popup">
+        <button id="close-button" onClick={onClose}>x</button>
+        <div id="login-header">
+          <h2>{tab === "signin" ? "User Login" : "New User"}</h2>
         </div>
-        <div className="tab-header">
-          <span
-            className={tab === "signin" ? "active" : ""}
+        <div id="tab-header">
+          <span id={tab === "signin" ? "active" : ""}
             onClick={() => handleTabChange("signin")}
           >
             Sign in
           </span>
-          <span
-            className={tab === "signup" ? "active" : ""}
+          <span id={tab === "signup" ? "active" : ""}
             onClick={() => handleTabChange("signup")}
           >
             Sign up
           </span>
         </div>
-        <div className="login-content">
+        <div id="login-content">
           <form onSubmit={handleSubmit}>
             <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              required
-            />
+            <input type="email" value={email}
+              onChange={handleEmailChange} required />
             <label>Password:</label>
-            <div className="password-field">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={handlePasswordChange}
-                required
-              />
+            <input type={showPassword ? "text" : "password"} value={password}
+                onChange={handlePasswordChange} required />
+            <div id="password-options">
               {tab === "signin" && (
-                <span className="password-help">Password help</span>
+                <span id="password-help" onClick={passwordHelp}>Password help</span>
               )}
-              <span
-                className="show-password"
+              <span id="show-password"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}

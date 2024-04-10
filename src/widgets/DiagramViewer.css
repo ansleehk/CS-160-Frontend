@@ -1,28 +1,30 @@
+@import "../utilities/Styles.css";
+
 #Diagram-viewer {
   display: flex;
   flex-direction: column;
   text-align: center;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  color: #D5DDE8;
-  background-color: #4B4B59;
+  font-size: var(--h1_font);
+  color: var(--c_white);
+  background-color: var(--c_gray);
   height: 100%;
   width: 100%;
 }
 
 #Diagram-viewer button {
-  height: 20vmin;
-  width: 20vmin;
-  padding: 0px;
-  margin: 0px;
-  border: 0px;
-  background-color: #4B4B59;
+  height: var(--large_button);
+  width: var(--large_button);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background-color: var(--c_gray);
 }
 
 #Diagram-viewer img {
-  height: 20vmin;
-  width: 20vmin;
+  height: var(--large_button);
+  width: var(--large_button);
 }
 
 #Diagram-viewer button:hover {
@@ -30,12 +32,12 @@
 }
 
 #loader {
-  border: 8px solid transparent; /* Reduce border width */
-  border-top: 8px solid #0056b3; /* Blue color */
+  border: var(--medium_dim) solid transparent;
+  border-top: var(--medium_dim) solid var(--c_blue);
   border-radius: 50%;
-  width: 40px; /* Reduced size */
-  height: 40px; /* Reduced size */
-  animation: spin 1s linear infinite; /* Smoother animation */
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {

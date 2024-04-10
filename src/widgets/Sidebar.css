@@ -1,3 +1,5 @@
+@import "../utilities/Styles.css";
+
 #Sidebar {
   height: 100%;
 }
@@ -5,9 +7,9 @@
 #Open-sidebar {
   display: flex;
   flex-direction: column;
-  width: 384px;
+  width: var(--open_sidebar_width);
   height: 100%;
-  background-color: #D5DDE8;
+  background-color: var(--c_white);
 }
 
 #Open-sidebar-top {
@@ -16,63 +18,63 @@
   text-align: left;
   align-items: center;
   justify-content: space-between;
-  background-color: #A9AEC2;
-  padding: 0 8px;
-  height: 48px;
-  border-bottom: 4px solid #0056b3;
+  background-color: var(--c_pale);
+  padding: 0 var(--medium_dim);
+  height: var(--closed_sidebar_width);
+  border-bottom: var(--small_dim) solid var(--c_blue);
 }
 
 #Open-sidebar-top button {
   padding: 0;
   margin: 0;
-  width: 48px;
-  height: 48px;
+  width: var(--small_button);
+  height: var(--small_button);
   border: none;
-  background-color: #A9AEC2;
+  background-color: var(--c_pale);
 }
 
 #Open-sidebar img {
-  width: 48px;
-  height: 48px;
+  width: var(--small_button);
+  height: var(--small_button);
 }
 
 #Closed-sidebar {
   display: flex;
   flex-direction: column;
-  width: 48px;
+  width: var(--closed_sidebar_width);
   height: 100%;
-  background-color: #D5DDE8;
+  background-color: var(--c_white);
   overflow: hidden;
 }
 
 #Closed-sidebar button {
-  width: 48px;
-  height: 48px;
+  width: var(--small_button);
+  height: var(--small_button);
   padding: 0;
   margin: 0;
   border: none;
   border-radius: 0;
-  background-color: #D5DDE8;
+  background-color: var(--c_white);
 }
 
 #Closed-sidebar-top button {
-  background-color: #A9AEC2;
+  background-color: var(--c_pale);
 }
 
 #Closed-sidebar-top {
   display: flex;
   align-items: flex-start;
-  border-bottom: 4px solid #0056b3;
+  border-bottom: var(--small_dim) solid var(--c_blue);
 }
 
 #Closed-sidebar img {
-  width: 48px;
-  height: 48px;
+  width: var(--small_button);
+  height: var(--small_button);
 }
 
 #Sidebar button:hover,
 #Sidebar label:hover {
-  filter: brightness(1.2) saturate(1.2);
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }
 
 #Open-sidebar,
