@@ -13,7 +13,7 @@ class Utilities extends React.Component {
     static showError(message) {
         alert(message);
     }
-  
+
     render() {
       return (
         <div className={this.state.isVisible ? 'error-popup visible' : 'error-popup'}>

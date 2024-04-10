@@ -9,11 +9,16 @@
   width: 100%;
 }
 
-#PDF-viewer button {
+#PDF-viewer label {
   height: 20vmin;
   padding: 0px;
   margin: 0px;
   border: 0px;
+  background-color: transparent;
+}
+
+#PDF-input {
+  display: none;
 }
 
 #PDF-viewer img {
