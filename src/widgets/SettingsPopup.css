@@ -1,6 +1,6 @@
 @import "../utilities/Styles.css";
 
-#login-popup-overlay {
+.settings-popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   align-items: center;
 }
 
-#login-popup {
+.settings-popup {
   background-color: var(--c_accent2);
   color: var(--c_main1);
   padding: var(--large_dim);
@@ -23,7 +23,7 @@
   width: var(--login_width);
 }
 
-#close-button {
+.close-button {
   position: absolute;
   top: var(--medium_dim);
   right: var(--medium_dim);
@@ -34,65 +34,28 @@
   font-size: var(--h2_font);
 }
 
-#login-header {
+.settings-header {
   text-align: center;
 }
 
-#tab-header {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-}
-
-#tab-header span {
-  margin-right: var(--large_dim);
-  cursor: pointer;
-}
-
-#tab-header span#active {
-  border-bottom: var(--small_dim) solid var(--c_highlight);
-}
-
-#login-content form {
+.settings-content form {
   display: flex;
   flex-direction: column;
 }
 
-#login-content label {
+.settings-content label {
   margin-top: var(--large_dim);
   margin-bottom: var(--small_dim);
 }
 
-#login-content input {
+.settings-content input[type="color"] {
   padding: var(--medium_dim);
   border-radius: var(--small_dim);
   border: 1px solid var(--c_accent1);
 }
 
-#password-options {
-  display: flex;
-  flex-direction: row;
-  text-align: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: var(--medium_dim);
-}
-
-#password-help {
-  margin-right: auto;
-  color: var(--c_accent1);
-  font-size: var(--sub_font);
-  cursor: pointer;
-}
-
-#show-password {
-  margin-left: auto;
-  color: var(--c_accent1);
-  font-size: var(--sub_font);
-  cursor: pointer;
-}
-
-button {
+.settings-content button {
+  margin-top: var(--large_dim);
   padding: var(--medium_dim);
   background-color: var(--c_highlight);
   color: var(--c_main1);
@@ -101,6 +64,6 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.settings-content button:hover {
   filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }

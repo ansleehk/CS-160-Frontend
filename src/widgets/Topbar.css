@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: space-between;
   height: var(--closed_sidebar_width);
-  background-color: var(--c_black);
-  border-bottom: var(--small_dim) solid var(--c_blue);
+  background-color: var(--c_accent2);
+  border-bottom: var(--small_dim) solid var(--c_highlight);
 }
 
 #Title {
@@ -15,25 +15,25 @@
 }
 
 #Site-name {
-  color: var(--c_white);
+  color: var(--c_main1);
 }
 
 #Version {
-  color: var(--c_pale);
+  color: var(--c_accent1);
 }
 
 #User-name {
   padding: var(--medium_dim) var(--large_dim);
   margin: var(--medium_dim);
-  color: var(--c_white);
+  color: var(--c_main1);
 }
 
 #Login {
   padding: var(--medium_dim) var(--large_dim);
   margin: var(--medium_dim);
   border: none;
-  background-color: var(--c_blue);
-  color: var(--c_white);
+  background-color: var(--c_highlight);
+  color: var(--c_main1);
   border-radius: var(--small_dim);
   transition: background-color 0.3s ease;
 }

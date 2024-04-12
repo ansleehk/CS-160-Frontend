@@ -1,10 +1,10 @@
 :root {
   /* Color Pallete */
-  --c_white: #D5DDE8;
-  --c_pale: #A9AEC2;
-  --c_gray: #4B4B59;
-  --c_black: #2B2B33;
-  --c_blue: #0056b3;
+  --c_main1: #D5DDE8;
+  --c_accent1: #A9AEC2;
+  --c_main2: #4B4B59;
+  --c_accent2: #2B2B33;
+  --c_highlight: #0056b3;
   --c_shadow: rgba(0, 0, 0, 0.5); /* Semi Transparent Background */
 
   /* Space Sizes */

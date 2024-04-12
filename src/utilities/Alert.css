@@ -13,9 +13,9 @@
 }
 
 #alert {
-  background-color: var(--c_black);
-  color: var(--c_white);
-  border: var(--small_dim) solid var(--c_blue);
+  background-color: var(--c_accent2);
+  color: var(--c_main1);
+  border: var(--small_dim) solid var(--c_highlight);
   padding: var(--large_dim);
   border-radius: var(--small_dim);
   box-shadow: 0 var(--small_dim) var(--small_dim) var(--c_shadow);

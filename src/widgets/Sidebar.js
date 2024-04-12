@@ -2,10 +2,12 @@ import "./Sidebar.css";
 
 import React from "react";
 import createAlert from "../utilities/Alert";
+import SettingsPopup from "../widgets/SettingsPopup";
 
 import sidebar from "../images/Sidebar.png";
 import upload from "../images/Upload.png";
 import generate from "../images/Generate.png";
+import settings from "../images/Settings.png";
 import testArticles from "../testArticles.json"; // Test articles
 
 class Sidebar extends React.Component {
@@ -13,9 +15,16 @@ class Sidebar extends React.Component {
     super(props);
     this.state = {
       sidebarOpen: false,
-      articles: []
+      articles: [],
+      showSettings: false
     };
   }
+
+  toggleSettingsPopup = () => {
+    this.setState((prevState) => ({
+      showSettings: !prevState.showSettings
+    }));
+  };
 
   // Fetch articles when the component mounts
   // Change to onlogin later on
@@ -51,17 +60,24 @@ class Sidebar extends React.Component {
                   style={{ transform: 'rotate(180deg)' }} />
               </button>
             </div>
-            <div id="article-list">
+            <div id="Article-list">
               <ul>
                 {this.state.articles.map(article => (
-                  <li key={article.ArticleID} id="article-item">
-                    <button onClick={() => console.log("Article clicked:", article)} id="article-button">
-                      <div id="article-title">{article.Title}</div>
-                      <div id="article-id">{"UUID : " + article.StorageArticleUUID}</div>
+                  <li key={article.ArticleID} id="Article-item">
+                    <button onClick={() => console.log("Article clicked:", article)} id="Article-button">
+                      <div id="Article-title">{article.Title}</div>
+                      <div id="Article-id">{"UUID : " + article.StorageArticleUUID}</div>
                     </button>
                   </li>
                 ))}
               </ul>
+            </div>
+            <div id="Open-sidebar-bottom">
+              <button id="New-article">New Article</button>
+              <button id="Settings-open" onClick={this.toggleSettingsPopup}>
+                <img src={settings} id="Settings" alt="settings" />
+              </button>
+              {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
             </div>
           </div>
         ) : (
@@ -80,6 +96,12 @@ class Sidebar extends React.Component {
             <button onClick={() => createAlert('Regenerate Diagram not implemented!')}>
               <img src={generate} id="Generate" alt="generate" />
             </button>
+            <div id="Closed-sidebar-bottom">
+              <button id="Settings-close" onClick={this.toggleSettingsPopup}>
+                <img src={settings} id="Settings" alt="settings" />
+              </button>
+              {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
+            </div>
           </div>
         )}
       </div>
