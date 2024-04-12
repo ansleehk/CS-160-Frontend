@@ -5,12 +5,14 @@ import React from "react";
 import upload from "../images/Upload.png";
 
 class PDFViewer extends React.Component {
+  /*
   constructor(props) {
     super(props);
     this.state = {
       pdfSrc: null
     };
   }
+  */
 
   render() {
     return (

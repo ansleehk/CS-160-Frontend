@@ -58,7 +58,7 @@ class App extends React.Component {
       this.changeDiagram(responseBody);
     } catch (error) {
       console.log('Error uploading PDF file:', error.message); 
-      createAlert('Error uploading PDF file:', error.message);
+      createAlert('Error uploading PDF file: ' + error.message);
       this.setIsLoading(false);
     }
   };

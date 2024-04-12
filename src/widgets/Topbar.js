@@ -21,11 +21,12 @@ class Topbar extends React.Component {
     return (
       <div id="Topbar" data-testid="Topbar">
         <b id="Title">
-          <span id="Name">KeyLink</span>
+          <span id="Site-name">KeyLink</span>
           <span id="Version"> V1.0</span>
         </b>
-        <div id="Login">
-          <button onClick={this.toggleLoginPopup}>
+        <div id="User">
+          <span id="User-name">Guest</span>
+          <button id="Login" onClick={this.toggleLoginPopup}>
             Login
           </button>
         </div>

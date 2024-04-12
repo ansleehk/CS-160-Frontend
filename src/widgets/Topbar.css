@@ -14,7 +14,7 @@
   margin-left: var(--medium_dim);
 }
 
-#Name {
+#Site-name {
   color: var(--c_white);
 }
 
@@ -22,19 +22,22 @@
   color: var(--c_pale);
 }
 
-#Login button {
+#User-name {
+  padding: var(--medium_dim) var(--large_dim);
+  margin: var(--medium_dim);
+  color: var(--c_white);
+}
+
+#Login {
   padding: var(--medium_dim) var(--large_dim);
   margin: var(--medium_dim);
   border: none;
   background-color: var(--c_blue);
   color: var(--c_white);
   border-radius: var(--small_dim);
-}
-
-#Login button:hover {
-  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
-}
-
-#Login button {
   transition: background-color 0.3s ease;
+}
+
+#Login:hover {
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }

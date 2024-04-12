@@ -1,3 +1,5 @@
+@import "Styles.css";
+
 #alert-overlay {
   position: fixed;
   top: 0;
@@ -7,14 +9,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  background-color: var(--c_shadow);
 }
 
 #alert {
-  background-color: #2B2B33;
-  color: #D5DDE8;
-  border: 2px solid #0056b3;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: var(--c_black);
+  color: var(--c_white);
+  border: var(--small_dim) solid var(--c_blue);
+  padding: var(--large_dim);
+  border-radius: var(--small_dim);
+  box-shadow: 0 var(--small_dim) var(--small_dim) var(--c_shadow);
 }

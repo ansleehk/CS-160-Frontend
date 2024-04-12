@@ -1,0 +1,156 @@
+[
+  {
+    "ArticleID": 1,
+    "Title": "Sample Article 1",
+    "StorageArticleUUID": "ABC123",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 1,
+      "StorageDiagramName": "Diagram 1",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 2,
+    "Title": "Sample Article 2",
+    "StorageArticleUUID": "XYZ456",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 2,
+      "StorageDiagramName": "Diagram 2",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 3,
+    "Title": "Sample Article 3",
+    "StorageArticleUUID": "DEF789",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 3,
+      "StorageDiagramName": "Diagram 3",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 4,
+    "Title": "Sample Article 4",
+    "StorageArticleUUID": "UVW987",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 4,
+      "StorageDiagramName": "Diagram 4",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 5,
+    "Title": "Sample Article 5",
+    "StorageArticleUUID": "GHI654",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 5,
+      "StorageDiagramName": "Diagram 5",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 6,
+    "Title": "Sample Article 6",
+    "StorageArticleUUID": "RST321",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 6,
+      "StorageDiagramName": "Diagram 6",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 7,
+    "Title": "Sample Article 7",
+    "StorageArticleUUID": "ABC987",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 7,
+      "StorageDiagramName": "Diagram 7",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 8,
+    "Title": "Sample Article 8",
+    "StorageArticleUUID": "XYZ654",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 8,
+      "StorageDiagramName": "Diagram 8",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 9,
+    "Title": "Sample Article 9",
+    "StorageArticleUUID": "DEF321",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 9,
+      "StorageDiagramName": "Diagram 9",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 10,
+    "Title": "Sample Article 10",
+    "StorageArticleUUID": "UVW123",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 10,
+      "StorageDiagramName": "Diagram 10",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 11,
+    "Title": "Sample Article 11",
+    "StorageArticleUUID": "GHI456",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 11,
+      "StorageDiagramName": "Diagram 11",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 12,
+    "Title": "Sample Article 12",
+    "StorageArticleUUID": "RST789",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 12,
+      "StorageDiagramName": "Diagram 12",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 13,
+    "Title": "Sample Article 13",
+    "StorageArticleUUID": "JKL111",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 13,
+      "StorageDiagramName": "Diagram 13",
+      "Active": true
+    }
+  },
+  {
+    "ArticleID": 14,
+    "Title": "Sample Article 14",
+    "StorageArticleUUID": "OPQ999",
+    "Active": true,
+    "Diagram": {
+      "ArticleID": 14,
+      "StorageDiagramName": "Diagram 14",
+      "Active": true
+    }
+  }
+]

@@ -6,13 +6,31 @@ import createAlert from "../utilities/Alert";
 import sidebar from "../images/Sidebar.png";
 import upload from "../images/Upload.png";
 import generate from "../images/Generate.png";
+import testArticles from "../testArticles.json"; // Test articles
 
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sidebarOpen: false
+      sidebarOpen: false,
+      articles: []
     };
+  }
+
+  // Fetch articles when the component mounts
+  // Change to onlogin later on
+  componentDidMount() {
+    this.setState({ articles: testArticles });
+    /*
+    fetch("../testArticles.json") // Temporary json testing, possibly allow local storage?
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ articles: data });
+      })
+      .catch(error => {
+        createAlert("Error fetching articles: " + error);
+      });
+      */
   }
 
   toggleSidebar = () => {
@@ -32,6 +50,18 @@ class Sidebar extends React.Component {
                 <img src={sidebar} id="Sidebar-close" alt="close sidebar"
                   style={{ transform: 'rotate(180deg)' }} />
               </button>
+            </div>
+            <div id="article-list">
+              <ul>
+                {this.state.articles.map(article => (
+                  <li key={article.ArticleID} id="article-item">
+                    <button onClick={() => console.log("Article clicked:", article)} id="article-button">
+                      <div id="article-title">{article.Title}</div>
+                      <div id="article-id">{"UUID : " + article.StorageArticleUUID}</div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         ) : (

@@ -86,3 +86,36 @@
 #Sidebar label {
   transition: background-color 0.3s ease;
 }
+
+#article-list {
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: var(--large_dim);
+}
+
+#article-item {
+  list-style-type: none;
+  margin-bottom: var(--medium_dim);
+}
+
+#article-button {
+  width: 100%;
+  text-align: left;
+  padding: var(--small_dim);
+  margin: 0;
+  background-color: var(--c_white);
+  color: var(--c_pale);
+  border: none;
+  border-radius: var(--small_dim);
+  cursor: pointer;
+}
+
+#article-title {
+  font-size: var(--h2_font);
+  font-weight: bold;
+}
+
+#article-id {
+  font-size: var(--sub_font);
+  color: var(--c_gray);
+}
