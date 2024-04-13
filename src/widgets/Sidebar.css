@@ -23,6 +23,7 @@
   text-align: left;
   align-items: center;
   justify-content: space-between;
+  color: var(--c_alttext);
   background-color: var(--c_accent1);
   padding: 0 var(--medium_dim);
   border-bottom: var(--small_dim) solid var(--c_highlight);
@@ -116,7 +117,7 @@
   padding: var(--small_dim);
   margin: 0;
   background-color: var(--c_main1);
-  color: var(--c_accent1);
+  color: var(--c_maintext);
   border: none;
   border-radius: var(--small_dim);
   cursor: pointer;
@@ -129,7 +130,7 @@
 
 #Article-id {
   font-size: var(--sub_font);
-  color: var(--c_main2);
+  color: var(--c_subtext);
 }
 
 #Open-sidebar-bottom {
@@ -139,6 +140,7 @@
   text-align: left;
   align-items: center;
   justify-content: space-between;
+  color: var(--c_alttext);
   background-color: var(--c_accent1);
   padding: 0 var(--medium_dim);
   border-top: var(--small_dim) solid var(--c_highlight);

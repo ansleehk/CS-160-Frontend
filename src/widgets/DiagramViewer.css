@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   font-size: var(--h1_font);
-  color: var(--c_main1);
+  color: var(--c_headtext);
   background-color: var(--c_main2);
   height: 100%;
   width: 100%;

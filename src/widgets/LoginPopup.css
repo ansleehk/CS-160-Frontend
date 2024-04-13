@@ -15,7 +15,7 @@
 
 #login-popup {
   background-color: var(--c_accent2);
-  color: var(--c_main1);
+  color: var(--c_headtext);
   padding: var(--large_dim);
   border-radius: var(--medium_dim);
   box-shadow: 0 0 var(--large_dim) var(--c_shadow);
@@ -29,7 +29,7 @@
   right: var(--medium_dim);
   background: none;
   border: none;
-  color: var(--c_main1);
+  color: var(--c_headtext);
   cursor: pointer;
   font-size: var(--h2_font);
 }
@@ -80,14 +80,14 @@
 
 #password-help {
   margin-right: auto;
-  color: var(--c_accent1);
+  color: var(--c_maintext);
   font-size: var(--sub_font);
   cursor: pointer;
 }
 
 #show-password {
   margin-left: auto;
-  color: var(--c_accent1);
+  color: var(--c_maintext);
   font-size: var(--sub_font);
   cursor: pointer;
 }
@@ -95,7 +95,7 @@
 button {
   padding: var(--medium_dim);
   background-color: var(--c_highlight);
-  color: var(--c_main1);
+  color: var(--c_headtext);
   border: none;
   border-radius: var(--small_dim);
   cursor: pointer;

@@ -14,7 +14,7 @@
 
 #alert {
   background-color: var(--c_accent2);
-  color: var(--c_main1);
+  color: var(--c_headtext);
   border: var(--small_dim) solid var(--c_highlight);
   padding: var(--large_dim);
   border-radius: var(--small_dim);

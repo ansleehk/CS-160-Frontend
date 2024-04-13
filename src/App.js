@@ -1,18 +1,39 @@
 import "./App.css";
+
 import React from "react";
 import Sidebar from "./widgets/Sidebar";
 import Topbar from "./widgets/Topbar";
 import PDFViewer from "./widgets/PDFViewer";
 import DiagramViewer from "./widgets/DiagramViewer";
+
 import createAlert from "./utilities/Alert";
+import Themes from "./utilities/Themes.js";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pdfSrc: null,
-      isLoading: false
+      isLoading: false,
+      selectedPresetIndex: 0,
     };
+  }
+
+  componentDidMount() {
+    const storedPresetIndex = localStorage.getItem("selectedPresetIndex");
+    if (storedPresetIndex !== null) {
+      this.setState({ selectedPresetIndex: parseInt(storedPresetIndex) });
+    }
+    this.applyThemeColors();
+  }
+
+  applyThemeColors() {
+    const presetColors = Themes[this.state.selectedPresetIndex].colors;
+    Object.keys(presetColors).forEach((name) => {
+      const storedColor = localStorage.getItem(name);
+      const color = storedColor || presetColors[name];
+      document.documentElement.style.setProperty(`--${name}`, color);
+    });
   }
 
   changePDF = (event) => {

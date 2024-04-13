@@ -15,17 +15,17 @@
 }
 
 #Site-name {
-  color: var(--c_main1);
+  color: var(--c_headtext);
 }
 
 #Version {
-  color: var(--c_accent1);
+  color: var(--c_maintext);
 }
 
 #User-name {
   padding: var(--medium_dim) var(--large_dim);
   margin: var(--medium_dim);
-  color: var(--c_main1);
+  color: var(--c_headtext);
 }
 
 #Login {
@@ -33,7 +33,7 @@
   margin: var(--medium_dim);
   border: none;
   background-color: var(--c_highlight);
-  color: var(--c_main1);
+  color: var(--c_headtext);
   border-radius: var(--small_dim);
   transition: background-color 0.3s ease;
 }
