@@ -21,6 +21,7 @@
   --closed_sidebar_width: 48px; 
 
   /* Button Sizes */
+  --mini_button: 16px;
   --small_button: 48px;
   --large_button: 20vmin;
 

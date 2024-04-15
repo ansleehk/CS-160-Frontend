@@ -23,9 +23,37 @@
   width: var(--settings_width);
 }
 
-#theme-preset {
+#title {
+  text-align: center;
+  margin-bottom: var(--medium_dim);
+}
+
+#theme-preset,
+#theme-adder {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  gap: var(--medium_dim);
+  margin-bottom: var(--medium_dim);
+  height: var(--large_dim);
+}
+
+#delete-button,
+#add-button {
+  padding: 0;
+  margin: 0;
+  background-color: var(--c_accent1) !important;
+  border: none;
+  border-radius: var(--small_dim);
+  height : var(--mini_button) !important;
+  width : var(--mini_button) !important;
+}
+
+#delete-theme,
+#add-theme {
+  background-color: transparent !important;
+  height : var(--mini_button) !important;
+  width : var(--mini_button) !important;
 }
 
 #color-picker {
@@ -36,49 +64,22 @@
   width: 100%;
 }
 
-#site-color-label,
-#site-color-picker,
-#font-color-label,
-#font-color-picker {
+#color-picker div {
   display: flex;
   flex-direction: column;
 }
 
-#settings-popup h2 {
-  text-align: center;
-  margin-bottom: var(--medium_dim);
-}
-
-#settings-popup label {
+#settings-popup label,
+#settings-popup input[type="color"] {
   display: block;
   margin-bottom: var(--medium_dim);
 }
 
-#settings-popup select,
-#settings-popup input[type="color"] {
-  margin-bottom: var(--medium_dim);
-}
-
-#settings-popup .color-input {
-  display: flex;
-  align-items: center; /* Center align color input and its label */
-}
-
-#settings-popup .color-input label {
-  margin-right: var(--medium_dim);
-}
-
-#settings-popup .color-input input[type="color"] {
-  flex: 1; /* Take remaining space */
-}
-
 #close-button {
-  position: absolute;
-  top: var(--medium_dim);
-  right: var(--medium_dim);
-  background: none;
-  border: none;
+  background: none !important;
   color: var(--c_headtext);
+  border: none;
+  border-radius: var(--small_dim);
   cursor: pointer;
   font-size: var(--h2_font);
 }
