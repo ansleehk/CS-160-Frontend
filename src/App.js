@@ -16,6 +16,8 @@ class App extends React.Component {
       pdfSrc: null,
       isLoading: false,
       selectedPresetIndex: 0,
+      showPDFView: true,
+      showDiagramView: true,
     };
   }
 
@@ -110,6 +112,17 @@ class App extends React.Component {
   }
 
 
+  // Shows/hides PDFView
+  togglePDFView = () => {
+    this.setState({ showPDFView : !this.state.showPDFView })
+  }
+
+  // Shows/hides DiagramView
+  toggleDiagramView = () => {
+    this.setState({ showDiagramView : !this.state.showDiagramView })
+  }
+
+
   // Clears the PDF and Diagram views
   resetViews = () => {
     this.setState({ pdfSrc: null, diagramDefinition: null });
@@ -119,14 +132,23 @@ class App extends React.Component {
     return (
       <div id="Fullscreen">
         <Sidebar onPDFChange={this.changePDF}
-                 onReset={this.resetViews} />
+                 onReset={this.resetViews}
+                 togglePDF={this.togglePDFView}
+                 toggleDiagram={this.toggleDiagramView} />
         <div id="Main">
           <Topbar/>
-          <div id="Views">  
-            <PDFViewer onPDFChange={this.changePDF}
-                       pdfSrc={this.state.pdfSrc} />
-            <DiagramViewer diagramDefinition={this.state.diagramDefinition}
-                           isLoading={this.state.isLoading}/>
+          <div id="Views">
+            {this.state.showPDFView && (
+              <PDFViewer onPDFChange={this.changePDF}
+                         pdfSrc={this.state.pdfSrc} />
+            )}
+            {this.state.showDiagramView && (
+              <DiagramViewer diagramDefinition={this.state.diagramDefinition}
+                             isLoading={this.state.isLoading}/>
+            )}
+            {!this.state.showPDFView && !this.state.showDiagramView && (
+              <b>No Views Open :(</b>
+            )}
           </div>
         </div>
       </div>

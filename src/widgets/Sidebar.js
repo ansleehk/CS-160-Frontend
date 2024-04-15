@@ -7,6 +7,8 @@ import SettingsPopup from "../widgets/SettingsPopup";
 import sidebar from "../images/Sidebar.png";
 import upload from "../images/Upload.png";
 import generate from "../images/Generate.png";
+import pdf from "../images/PDF.png";
+import diagram from "../images/Diagram.png";
 import settings from "../images/Settings.png";
 import testArticles from "../testArticles.json"; // Test articles
 
@@ -58,6 +60,7 @@ class Sidebar extends React.Component {
     return (
       <div id="Sidebar" data-testid="Sidebar">
         { this.state.sidebarOpen ? (
+
           // Open sidebar view
           <div id="Open-sidebar">
             <div id="Open-sidebar-top">
@@ -67,6 +70,7 @@ class Sidebar extends React.Component {
                   style={{ transform: 'rotate(180deg)' }} />
               </button>
             </div>
+
             {/* List of articles */}
             <div id="Article-list">
               <ul>
@@ -80,6 +84,7 @@ class Sidebar extends React.Component {
                 ))}
               </ul>
             </div>
+
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">
               <button id="New-article" onClick={this.props.onReset}>New Article</button>
@@ -90,6 +95,7 @@ class Sidebar extends React.Component {
             </div>
           </div>
         ) : (
+
           // Closed sidebar view
           <div id="Closed-sidebar">
             <div id="Closed-sidebar-top">
@@ -97,6 +103,8 @@ class Sidebar extends React.Component {
                 <img src={sidebar} id="Sidebar-open" alt="open sidebar" />
               </button>
             </div>
+
+          
             {/* Functionality */}
             <button onClick={() => document.getElementById("PDF-input").click()}>
               <img src={upload} id="Upload" alt="upload" />
@@ -107,6 +115,13 @@ class Sidebar extends React.Component {
             <button onClick={() => createAlert('Regenerate Diagram not implemented!')}>
               <img src={generate} id="Generate" alt="generate" />
             </button>
+            <button onClick={this.props.togglePDF}>
+              <img src={pdf} id="Toggle-pdf" alt="toggle pdf" />
+            </button>
+            <button onClick={this.props.toggleDiagram}>
+              <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
+            </button>
+
             {/* Settings */}
             <div id="Closed-sidebar-bottom">
               <button id="Settings-close" onClick={this.toggleSettingsPopup}>
