@@ -73,7 +73,7 @@ class Sidebar extends React.Component {
               </ul>
             </div>
             <div id="Open-sidebar-bottom">
-              <button id="New-article">New Article</button>
+              <button id="New-article" onClick={this.props.onReset}>New Article</button>
               <button id="Settings-open" onClick={this.toggleSettingsPopup}>
                 <img src={settings} id="Settings" alt="settings" />
               </button>

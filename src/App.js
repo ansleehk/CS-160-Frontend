@@ -92,10 +92,15 @@ class App extends React.Component {
     this.setState({ diagramDefinition: diagram });
   }
 
+  resetViews = () => {
+    this.setState({ pdfSrc: null, diagramDefinition: null });
+  };
+
   render() {
     return (
       <div id="Fullscreen">
-        <Sidebar onPDFChange={this.changePDF} />
+        <Sidebar onPDFChange={this.changePDF}
+                 onReset={this.resetViews} />
         <div id="Main">
           <Topbar/>
           <div id="Views">  
