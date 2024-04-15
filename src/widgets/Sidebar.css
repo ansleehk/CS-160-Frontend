@@ -6,17 +6,22 @@
   flex-direction: column;
 }
 
-#Open-sidebar {
+#Open-sidebar,
+#Closed-sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  width: var(--open_sidebar_width);
   height: 100%;
   background-color: var(--c_main1);
   overflow: hidden;
 }
 
-#Open-sidebar-top {
+#Open-sidebar {
+  justify-content: space-between;
+  width: var(--open_sidebar_width);
+}
+
+#Open-sidebar-top,
+#Open-sidebar-bottom {
   flex: 0 0 var(--closed_sidebar_width);
   display: flex;
   flex-direction: row;
@@ -26,38 +31,38 @@
   color: var(--c_alttext);
   background-color: var(--c_accent1);
   padding: 0 var(--medium_dim);
+}
+
+#Open-sidebar-top {
   border-bottom: var(--small_dim) solid var(--c_highlight);
 }
 
-#Open-sidebar-top button {
+#Open-sidebar-top button,
+#Open-sidebar-bottom button,
+#Closed-sidebar button {
   padding: 0;
   margin: 0;
   width: var(--small_button);
   height: var(--small_button);
   border: none;
+}
+
+#Open-sidebar-top button,
+#Open-sidebar-bottom button {
   background-color: var(--c_accent1);
 }
 
-#Open-sidebar img {
+#Open-sidebar img,
+#Closed-sidebar img {
   width: var(--small_button);
   height: var(--small_button);
 }
 
 #Closed-sidebar {
-  display: flex;
-  flex-direction: column;
   width: var(--closed_sidebar_width);
-  height: 100%;
-  background-color: var(--c_main1);
-  overflow: hidden;
 }
 
 #Closed-sidebar button {
-  width: var(--small_button);
-  height: var(--small_button);
-  padding: 0;
-  margin: 0;
-  border: none;
   border-radius: 0;
   background-color: var(--c_main1);
 }
@@ -73,10 +78,6 @@
   border-bottom: var(--small_dim) solid var(--c_highlight);
 }
 
-#Closed-sidebar img {
-  width: var(--small_button);
-  height: var(--small_button);
-}
 
 #Closed-sidebar-bottom {
   margin-top: auto;
@@ -134,28 +135,5 @@
 }
 
 #Open-sidebar-bottom {
-  flex: 0 0 var(--closed_sidebar_width);
-  display: flex;
-  flex-direction: row;
-  text-align: left;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--c_alttext);
-  background-color: var(--c_accent1);
-  padding: 0 var(--medium_dim);
   border-top: var(--small_dim) solid var(--c_highlight);
-}
-
-#Open-sidebar-bottom button {
-  padding: 0;
-  margin: 0;
-  width: var(--small_button);
-  height: var(--small_button);
-  border: none;
-  background-color: var(--c_accent1);
-}
-
-#Open-sidebar img {
-  width: var(--small_button);
-  height: var(--small_button);
 }

@@ -5,6 +5,8 @@ import "./Alert.css";
 const Alert = ({ message }) => {
   const [showAlert, setShowAlert] = useState(true);
 
+
+  // Auto-dismiss after 3 sectons
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowAlert(false);
@@ -13,12 +15,16 @@ const Alert = ({ message }) => {
     return () => clearTimeout(timeout);
   }, []);
 
+
+  // Click to remove alert
   const handleAlertClick = () => {
     setShowAlert(false);
   };
 
+
   return (
     <>
+    {/* render overlay if showAlert true */}
       {showAlert && (
         <div id="alert-overlay" onClick={handleAlertClick}>
           <div id="alert" onClick={handleAlertClick}>
@@ -30,12 +36,15 @@ const Alert = ({ message }) => {
   );
 };
 
+
+// Create and display alert
 const createAlert = (message) => {
+  // Mount to div
   const div = document.createElement("div");
   document.body.appendChild(div);
-
   ReactDOM.render(<Alert message={message} />, div);
 
+  // Autoremove after timeout
   setTimeout(() => {
     ReactDOM.unmountComponentAtNode(div);
     div.remove();

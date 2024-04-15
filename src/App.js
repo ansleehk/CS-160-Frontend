@@ -19,16 +19,21 @@ class App extends React.Component {
     };
   }
 
+
   componentDidMount() {
+    this.loadThemeColors();
+  }
+
+
+  // Load previously selected theme from local storage
+  loadThemeColors() {
     const storedPresetIndex = localStorage.getItem("selectedPresetIndex");
     if (storedPresetIndex !== null) {
       this.setState({ selectedPresetIndex: parseInt(storedPresetIndex) });
     }
-    this.applyThemeColors();
-  }
-
-  applyThemeColors() {
     const presetColors = Themes[this.state.selectedPresetIndex].colors;
+
+    // Settings each of the color variables
     Object.keys(presetColors).forEach((name) => {
       const storedColor = localStorage.getItem(name);
       const color = storedColor || presetColors[name];
@@ -36,12 +41,17 @@ class App extends React.Component {
     });
   }
 
+  
+  // Handler for pdf upload
   changePDF = (event) => {
     const file = event.target.files[0];
+    // Check for PDF
     if (file && file.type === 'application/pdf') {
       const reader = new FileReader();
       reader.onload = (e) => {
+        // Show PDF on screen
         this.setState({ pdfSrc: e.target.result });
+        // Send PDF to backend for diagram
         this.uploadPDF(file);
       };
       reader.readAsDataURL(file);
@@ -50,6 +60,7 @@ class App extends React.Component {
     }
   };
 
+  // Send PDF to backend for diagram
   uploadPDF = async (file) => {
     try {
       this.setIsLoading(true);
@@ -60,6 +71,7 @@ class App extends React.Component {
       // AWS : https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf
       // Currently using local w/ proxy
   
+      // PDF upload endpoint
       const response = await fetch('/uploadPdf', {
         method: 'POST',
         body: formData
@@ -76,6 +88,7 @@ class App extends React.Component {
       const responseBody = await response.text();
       console.log('PDF file uploaded successfully:', responseBody);
       this.setIsLoading(false);
+      // Update diagram
       this.changeDiagram(responseBody);
     } catch (error) {
       console.log('Error uploading PDF file:', error.message); 
@@ -84,14 +97,20 @@ class App extends React.Component {
     }
   };
 
+
+  // Whether to show loading wheel
   setIsLoading = (isLoading) => {
     this.setState({ isLoading });
   };
 
+
+  // Changes the embeded diagram
   changeDiagram(diagram) {
     this.setState({ diagramDefinition: diagram });
   }
 
+
+  // Clears the PDF and Diagram views
   resetViews = () => {
     this.setState({ pdfSrc: null, diagramDefinition: null });
   };

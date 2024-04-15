@@ -11,6 +11,7 @@
   background-color: var(--c_main2);
   height: 100%;
   width: 100%;
+  transition: width 0.3s ease;
 }
 
 #Diagram-viewer button {

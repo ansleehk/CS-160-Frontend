@@ -78,18 +78,19 @@
   margin-bottom: var(--medium_dim);
 }
 
-#password-help {
-  margin-right: auto;
+#password-help,
+#show-password {
   color: var(--c_maintext);
   font-size: var(--sub_font);
   cursor: pointer;
 }
 
+#password-help {
+  margin-right: auto;
+}
+
 #show-password {
   margin-left: auto;
-  color: var(--c_maintext);
-  font-size: var(--sub_font);
-  cursor: pointer;
 }
 
 button {
