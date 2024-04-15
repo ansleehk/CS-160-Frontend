@@ -11,6 +11,7 @@ import generate from "../images/Generate.png";
 import pdf from "../images/PDF.png";
 import diagram from "../images/Diagram.png";
 import settings from "../images/Settings.png";
+import reset from "../images/Reset.png";
 
 class Sidebar extends React.Component {
 
@@ -60,7 +61,9 @@ class Sidebar extends React.Component {
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">
-              <button id="New-article" onClick={this.props.onReset}>New Article</button>
+              <button id="New-article" onClick={this.props.onReset}>
+                <img src={reset} id="New-article" alt="new article" />
+              </button>
               <button id="Settings-open" onClick={this.toggleSettingsPopup}>
                 <img src={settings} id="Settings" alt="settings" />
               </button>
