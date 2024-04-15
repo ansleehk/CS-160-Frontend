@@ -5,26 +5,23 @@ import React from "react";
 import upload from "../images/Upload.png";
 
 class PDFViewer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pdfSrc: null
-    };
-  }
-
   render() {
     return (
       <div id="PDF-viewer" data-testid="PDFViewer">
         {this.props.pdfSrc ? (
+          // Render PDF if pdfSrc available
           <embed src={this.props.pdfSrc} type="application/pdf" width="100%" height="100%" />
         ) : (
+          // Upload PDF button
           <div id="Upload">
             <p>Upload PDF</p>
-            <label for="PDF-input">
-              <img src={upload} id="Upload" alt="upload"/>
-            </label>
-            <input id="PDF-input" type="file" accept=".pdf" 
-                onChange={this.props.onPDFChange}/>
+            <button onClick={() => document.getElementById("PDF-input").click()}>
+              <img src={upload} id="Upload" alt="upload" />
+            </button>
+            {/* Input only accepts PDF files */}
+            <input id="PDF-input" type="file" accept=".pdf"
+              onChange={this.props.onPDFChange}
+              style={{ display: "none" }}/>
           </div>
         )}
       </div>

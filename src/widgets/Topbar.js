@@ -1,18 +1,48 @@
 import "./Topbar.css";
 
 import React from "react";
-import Utilities from "../Utilities";
+import LoginPopup from "../widgets/LoginPopup";
 
 class Topbar extends React.Component {
+
+  // Initializing state
+  constructor(props) {
+    super(props);
+    this.state = {
+      showLoginPopup: false
+    };
+  }
+
+
+  // Toggles login popup
+  toggleLoginPopup = () => {
+    this.setState((prevState) => ({
+      showLoginPopup: !prevState.showLoginPopup
+    }));
+  };
+
+
   render() {
     return (
       <div id="Topbar" data-testid="Topbar">
-        <b id="Title">KeyLink V1.0</b>
-        <div id="Login">
-          <button onClick={() => Utilities.showError('Profiles not implemented!')}>
+        {/* Title Section */}
+        <b id="Title">
+          <span id="Site-name">KeyLink</span>
+          <span id="Version"> V1.0</span>
+        </b>
+
+        {/* User Section */}
+        <div id="User">
+          <span id="User-name">Guest</span>
+          <button id="Login" onClick={this.toggleLoginPopup}>
             Login
           </button>
         </div>
+
+        {/* Render login popup if true */}
+        {this.state.showLoginPopup && (
+          <LoginPopup onClose={this.toggleLoginPopup} />
+        )}
       </div>
     );
   }

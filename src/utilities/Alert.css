@@ -1,0 +1,22 @@
+@import "Styles.css";
+
+#alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--c_shadow);
+}
+
+#alert {
+  background-color: var(--c_accent2);
+  color: var(--c_headtext);
+  border: var(--small_dim) solid var(--c_highlight);
+  padding: var(--large_dim);
+  border-radius: var(--small_dim);
+  box-shadow: 0 var(--small_dim) var(--small_dim) var(--c_shadow);
+}

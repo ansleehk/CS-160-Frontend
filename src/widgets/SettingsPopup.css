@@ -1,0 +1,89 @@
+@import "../utilities/Styles.css";
+
+#settings-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--c_shadow);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#settings-popup {
+  background-color: var(--c_accent2);
+  color: var(--c_headtext);
+  padding: var(--large_dim);
+  border-radius: var(--medium_dim);
+  box-shadow: 0 0 var(--large_dim) var(--c_shadow);
+  position: relative;
+  width: var(--settings_width);
+}
+
+#title {
+  text-align: center;
+  margin-bottom: var(--medium_dim);
+}
+
+#theme-preset,
+#theme-adder {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--medium_dim);
+  margin-bottom: var(--medium_dim);
+  height: var(--large_dim);
+}
+
+#delete-button,
+#add-button {
+  padding: 0;
+  margin: 0;
+  background-color: var(--c_accent1) !important;
+  border: none;
+  border-radius: var(--small_dim);
+  height : var(--mini_button) !important;
+  width : var(--mini_button) !important;
+}
+
+#delete-theme,
+#add-theme {
+  background-color: transparent !important;
+  height : var(--mini_button) !important;
+  width : var(--mini_button) !important;
+}
+
+#color-picker {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+#color-picker div {
+  display: flex;
+  flex-direction: column;
+}
+
+#settings-popup label,
+#settings-popup input[type="color"] {
+  display: block;
+  margin-bottom: var(--medium_dim);
+}
+
+#close-button {
+  background: none !important;
+  color: var(--c_headtext);
+  border: none;
+  border-radius: var(--small_dim);
+  cursor: pointer;
+  font-size: var(--h2_font);
+}
+
+#close-button:hover {
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
+}
