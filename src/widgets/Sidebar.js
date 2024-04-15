@@ -2,7 +2,8 @@ import "./Sidebar.css";
 
 import React from "react";
 import createAlert from "../utilities/Alert";
-import SettingsPopup from "../widgets/SettingsPopup";
+import SettingsPopup from "./SettingsPopup.js";
+import ArticleList from "./ArticleList.js";
 
 import sidebar from "../images/Sidebar.png";
 import upload from "../images/Upload.png";
@@ -10,7 +11,6 @@ import generate from "../images/Generate.png";
 import pdf from "../images/PDF.png";
 import diagram from "../images/Diagram.png";
 import settings from "../images/Settings.png";
-import testArticles from "../testArticles.json"; // Test articles
 
 class Sidebar extends React.Component {
 
@@ -19,7 +19,6 @@ class Sidebar extends React.Component {
     super(props);
     this.state = {
       sidebarOpen: false,
-      articles: [],
       showSettings: false
     };
   }
@@ -32,22 +31,6 @@ class Sidebar extends React.Component {
     }));
   };
 
-  // Fetch articles when the component mounts
-  // Change to onlogin later on
-  componentDidMount() {
-    this.setState({ articles: testArticles });
-    /*
-    fetch("../testArticles.json") // Temporary json testing, possibly allow local storage?
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ articles: data });
-      })
-      .catch(error => {
-        createAlert("Error fetching articles: " + error);
-      });
-      */
-  }
-
 
   // Opens/closes sidebar
   toggleSidebar = () => {
@@ -55,6 +38,7 @@ class Sidebar extends React.Component {
       sidebarOpen: !prevState.sidebarOpen
     }));
   };
+
 
   render() {
     return (
@@ -72,18 +56,7 @@ class Sidebar extends React.Component {
             </div>
 
             {/* List of articles */}
-            <div id="Article-list">
-              <ul>
-                {this.state.articles.map(article => (
-                  <li key={article.ArticleID} id="Article-item">
-                    <button onClick={() => console.log("Article clicked:", article)} id="Article-button">
-                      <div id="Article-title">{article.Title}</div>
-                      <div id="Article-id">{"UUID : " + article.StorageArticleUUID}</div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ArticleList/>
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">
