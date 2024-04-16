@@ -4,12 +4,12 @@
   padding-right: var(--large_dim);
 }
 
-#Article-item {
+.Article-item {
   list-style-type: none;
   margin-bottom: var(--medium_dim);
 }
 
-#Article-button {
+.Article-button {
   width: 100%;
   text-align: left;
   padding: var(--small_dim);
@@ -21,12 +21,12 @@
   cursor: pointer;
 }
 
-#Article-title {
+.Article-title {
   font-size: var(--h2_font);
   font-weight: bold;
 }
 
-#Article-id {
+.Article-id {
   font-size: var(--sub_font);
   color: var(--c_subtext);
 }

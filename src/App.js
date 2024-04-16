@@ -18,6 +18,7 @@ class App extends React.Component {
       selectedPresetIndex: 0,
       showPDFView: true,
       showDiagramView: true,
+      diagramDefinition: null
     };
   }
 
@@ -90,6 +91,7 @@ class App extends React.Component {
       const responseBody = await response.text();
       console.log('PDF file uploaded successfully:', responseBody);
       this.setIsLoading(false);
+
       // Update diagram
       this.changeDiagram(responseBody);
     } catch (error) {
@@ -98,6 +100,39 @@ class App extends React.Component {
       this.setIsLoading(false);
     }
   };
+
+
+  // Save the PDF and diagram to local storage
+  saveToLocal = () => {
+    if (this.state.pdfSrc && this.state.diagramDefinition) {
+      //Get data
+      const combinedData = {
+          pdfSrc: this.state.pdfSrc,
+          diagramDefinition: this.state.diagramDefinition
+      };
+
+      // Add to existing/initialize local storage data
+      let savedArticles = JSON.parse(localStorage.getItem('savedArticles')) || [];
+      savedArticles.push(combinedData);
+      localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
+      createAlert("PDF and diagram saved to local storage.");
+    } else {
+      createAlert("Both PDF and diagram must be present to save to local storage.");
+    }
+  };
+
+
+  // Load an article from local/server list
+  loadArticle = (pdfSrc, diagramDefinition) => {
+    if (pdfSrc && diagramDefinition) {
+      this.setState({
+        pdfSrc: pdfSrc,
+        diagramDefinition: diagramDefinition
+      });
+    } else {
+      createAlert("PDF/Diagram information could not be retrieved.")
+    }
+  }
 
 
   // Whether to show loading wheel
@@ -134,7 +169,8 @@ class App extends React.Component {
         <Sidebar onPDFChange={this.changePDF}
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
-                 toggleDiagram={this.toggleDiagramView} />
+                 toggleDiagram={this.toggleDiagramView}
+                 loadArticle={this.loadArticle} />
         <div id="Main">
           <Topbar/>
           <div id="Views">
@@ -144,7 +180,8 @@ class App extends React.Component {
             )}
             {this.state.showDiagramView && (
               <DiagramViewer diagramDefinition={this.state.diagramDefinition}
-                             isLoading={this.state.isLoading}/>
+                             isLoading={this.state.isLoading}
+                             saveToLocal={this.saveToLocal} />
             )}
             {!this.state.showPDFView && !this.state.showDiagramView && (
               <b>No Views Open :(</b>

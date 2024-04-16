@@ -57,7 +57,7 @@ class Sidebar extends React.Component {
             </div>
 
             {/* List of articles */}
-            <ArticleList/>
+            <ArticleList loadArticle={this.props.loadArticle}/>
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">

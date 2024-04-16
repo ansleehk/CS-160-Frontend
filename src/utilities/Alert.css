@@ -10,6 +10,7 @@
   justify-content: center;
   align-items: center;
   background-color: var(--c_shadow);
+  z-index: 10;
 }
 
 #alert {
@@ -19,4 +20,5 @@
   padding: var(--large_dim);
   border-radius: var(--small_dim);
   box-shadow: 0 var(--small_dim) var(--small_dim) var(--c_shadow);
+  z-index: 11;
 }
