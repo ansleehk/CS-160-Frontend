@@ -102,6 +102,24 @@ class App extends React.Component {
   };
 
 
+  // Regenerate diagram from pdf
+  regenDiagram = async () => {
+    if (this.state.pdfSrc) {
+      try {
+        // Convert data URI to PDF file
+        const blob = await (await fetch(this.state.pdfSrc)).blob();
+        const file = new File([blob], "filename.pdf", { type: "application/pdf" });
+        await this.uploadPDF(file);
+      } catch (error) {
+        console.error("Error regenerating diagram:", error);
+        createAlert("Error regenerating diagram. Please try again.");
+      }
+    } else {
+      createAlert("No current PDF")
+    }
+  }
+
+
   // Save the PDF and diagram to local storage
   saveToLocal = () => {
     if (this.state.pdfSrc && this.state.diagramDefinition) {
@@ -167,6 +185,7 @@ class App extends React.Component {
     return (
       <div id="Fullscreen">
         <Sidebar onPDFChange={this.changePDF}
+                 regenDiagram={this.regenDiagram}
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
                  toggleDiagram={this.toggleDiagramView}
@@ -179,7 +198,8 @@ class App extends React.Component {
                          pdfSrc={this.state.pdfSrc} />
             )}
             {this.state.showDiagramView && (
-              <DiagramViewer diagramDefinition={this.state.diagramDefinition}
+              <DiagramViewer regenDiagram={this.regenDiagram}
+                             diagramDefinition={this.state.diagramDefinition}
                              isLoading={this.state.isLoading}
                              saveToLocal={this.saveToLocal} />
             )}

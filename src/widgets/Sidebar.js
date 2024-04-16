@@ -1,7 +1,7 @@
 import "./Sidebar.css";
 
 import React from "react";
-import createAlert from "../utilities/Alert";
+// import createAlert from "../utilities/Alert";
 import SettingsPopup from "./SettingsPopup.js";
 import ArticleList from "./ArticleList.js";
 
@@ -88,7 +88,7 @@ class Sidebar extends React.Component {
             <input id="PDF-input" type="file" accept=".pdf"
               onChange={this.props.onPDFChange}
               style={{ display: "none" }}/>
-            <button onClick={() => createAlert('Regenerate Diagram not implemented!')}>
+            <button onClick={this.props.regenDiagram}>
               <img src={generate} id="Generate" alt="generate" />
             </button>
             <button onClick={this.props.togglePDF}>

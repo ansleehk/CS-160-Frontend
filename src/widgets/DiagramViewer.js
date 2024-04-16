@@ -31,7 +31,6 @@ class DiagramViewer extends React.Component {
 
 
   render() {
-    console.log('Diagram Definition:', this.props.diagramDefinition);
     return (
       <div id="Diagram-viewer" data-testid="DiagramViewer">
         {this.props.isLoading ? (
@@ -62,7 +61,7 @@ class DiagramViewer extends React.Component {
           // Generate diagram button
           <>
             <p>Generate Diagram</p>
-            <button onClick={() => createAlert("Regenerate Diagram Not Implemented Yet")}>
+            <button onClick={this.props.regenDiagram}>
               <img src={generate} alt="generate" />
             </button>
           </>
