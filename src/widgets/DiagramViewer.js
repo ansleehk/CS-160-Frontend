@@ -17,9 +17,30 @@ class DiagramViewer extends React.Component {
   }
 
   // TODO : Connect to backend to get image
-  saveDiagramAsImage = () => {
-    createAlert("Save Diagram as Image not implemented yet.")
-  }
+  // Temporary front end fix
+  saveDiagramAsSVG = () => {
+    const mermaidContainer = document.querySelector(".mermaid");
+    if (mermaidContainer) {
+      const svg = mermaidContainer.innerHTML;
+      const blob = new Blob([svg], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "diagram.svg"; // Set the default filename here
+      link.style.display = "none";
+      document.body.appendChild(link);
+      
+      // Programmatically trigger a click event on the anchor element
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } else {
+      createAlert("Diagram not available.");
+    }
+  };
 
 
   // Update diagram if props changed
@@ -46,7 +67,7 @@ class DiagramViewer extends React.Component {
               <button onClick={this.props.saveToLocal}>
                 <img src={localSave} alt="save locally" />
               </button>
-              <button onClick={this.saveDiagramAsImage}>
+              <button onClick={this.saveDiagramAsSVG}>
                 <img src={diagramToImage} alt="save diagram" />
               </button>
             </div>
