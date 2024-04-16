@@ -81,7 +81,9 @@ class App extends React.Component {
       });
   
       if (response.status === 413) {
-        createAlert('PDF file exceeds 3500 tokens.');
+        createAlert('Error uploading PDF file: PDF file exceeds 3500 tokens.');
+        this.setIsLoading(false);
+        return;
       }
 
       if (!response.ok) {
@@ -123,20 +125,35 @@ class App extends React.Component {
   // Save the PDF and diagram to local storage
   saveToLocal = () => {
     if (this.state.pdfSrc && this.state.diagramDefinition) {
-      //Get data
-      const combinedData = {
-          pdfSrc: this.state.pdfSrc,
-          diagramDefinition: this.state.diagramDefinition
-      };
 
-      // Add to existing/initialize local storage data
-      let savedArticles = JSON.parse(localStorage.getItem('savedArticles')) || [];
-      savedArticles.push(combinedData);
+      // Get existing data from local storage
+      let savedArticles = localStorage.getItem('savedArticles');
+      if (savedArticles) {
+        savedArticles = JSON.parse(savedArticles);
+      } else {
+        savedArticles = [];
+      }
+
+      // Combine new data with existing data
+      const newArticle = {
+        pdfSrc: this.state.pdfSrc,
+        diagramDefinition: this.state.diagramDefinition
+      };
+      savedArticles.push(newArticle);
+
       localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
       createAlert("PDF and diagram saved to local storage.");
     } else {
       createAlert("Both PDF and diagram must be present to save to local storage.");
     }
+  };
+
+
+  // Delete an article from local storage
+  deleteFromLocal = (articleIndex) => {
+    const updatedArticles = [...localStorage.getItem('savedArticles')];
+    updatedArticles.splice(articleIndex, 1);
+    localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
   };
 
 
@@ -189,7 +206,8 @@ class App extends React.Component {
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
                  toggleDiagram={this.toggleDiagramView}
-                 loadArticle={this.loadArticle} />
+                 loadArticle={this.loadArticle}
+                 deleteFromLocal={this.deleteFromLocal} />
         <div id="Main">
           <Topbar/>
           <div id="Views">

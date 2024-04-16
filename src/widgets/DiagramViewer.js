@@ -5,8 +5,8 @@ import Mermaid from "./Mermaid";
 import createAlert from "../utilities/Alert";
 
 import generate from "../images/Generate.png";
-import localSave from "../images/Add.png";
-import diagramToImage from "../images/Delete.png";
+import localSave from "../images/LocalSave.png";
+import diagramToImage from "../images/Download.png";
 
 class DiagramViewer extends React.Component {
   constructor(props) {

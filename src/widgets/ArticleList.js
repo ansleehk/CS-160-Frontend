@@ -1,8 +1,9 @@
 import "./ArticleList.css";
 
 import React from "react";
-// import createAlert from "../utilities/Alert";
+//import createAlert from "../utilities/Alert";
 
+import del from "../images/Delete.png";
 import testArticles from "../testArticles.json"; // Test articles
 
 class ArticleList extends React.Component {
@@ -21,16 +22,10 @@ class ArticleList extends React.Component {
   // Change to onlogin later on
   componentDidMount() {
     // Get local articles from local storage
-    const localArticlesData = localStorage.getItem('savedArticles');
-    const localArticles = localArticlesData ? JSON.parse(localArticlesData) : [];
+    const localArticles = this.loadFromLocal();
 
-    console.log('Local articles:', localArticles);
-
-    // Update state with local articles and test articles
-    this.setState({
-      localArticles: localArticles,
-      serverArticles: testArticles
-    });
+    // Get server articles from server
+    const serverArticles = testArticles;
     /*
     fetch("../testArticles.json") // Temporary json testing, possibly allow local storage?
       .then(response => response.json())
@@ -41,19 +36,39 @@ class ArticleList extends React.Component {
         createAlert("Error fetching articles: " + error);
       });
       */
+
+    // Update state article lists
+    this.setState({
+      localArticles: localArticles,
+      serverArticles: serverArticles
+    });
   }
+
+  // Return decompressed articles from local storage
+  loadFromLocal = () => {
+    const savedArticles = localStorage.getItem('savedArticles');
+    if (savedArticles) {
+      return JSON.parse(savedArticles);
+    } else {
+      return [];
+    }
+  };
 
   render() {
     return (
       <div id="Article-list">
         <b>Local Articles</b>
         <ul>
-          {this.state.localArticles.map(article => (
-            <li key={article.ArticleID} className="Article-item">
+          {this.state.localArticles && this.state.localArticles.map((article, index) => (
+            <li key={index} className="Article-item">
               <button onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition)} 
                       className="Article-button">
                 <div className="Article-title">Title</div>
                 <div className="Article-id">Description</div>
+                <button onClick={() => this.props.deleteFromLocal(index)}
+                        className="Article-delete-button">
+                  <img src={del} alt="delete article" />
+                </button>
               </button>
             </li>
           ))}
