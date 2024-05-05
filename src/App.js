@@ -18,7 +18,8 @@ class App extends React.Component {
       selectedPresetIndex: 0,
       showPDFView: true,
       showDiagramView: true,
-      diagramDefinition: null
+      diagramDefinition: null,
+      toggleRefresh: false,
     };
   }
 
@@ -69,10 +70,6 @@ class App extends React.Component {
       this.setIsLoading(true);
       const formData = new FormData();
       formData.append('file', file);
-
-      // Local : http://localhost:8080/uploadPdf
-      // AWS : https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf
-      // Currently using local w/ proxy
   
       // PDF upload endpoint
       const response = await fetch('/uploadPdf', {
@@ -142,7 +139,8 @@ class App extends React.Component {
       savedArticles.push(newArticle);
 
       localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
-      createAlert("PDF and diagram saved to local storage.");
+      this.toggleRefresh();
+      createAlert("PDF and Diagram saved to local storage.");
     } else {
       createAlert("Both PDF and diagram must be present to save to local storage.");
     }
@@ -151,9 +149,12 @@ class App extends React.Component {
 
   // Delete an article from local storage
   deleteFromLocal = (articleIndex) => {
-    const updatedArticles = [...localStorage.getItem('savedArticles')];
+    let updatedArticles = JSON.parse(localStorage.getItem('savedArticles')) || [];
     updatedArticles.splice(articleIndex, 1);
     localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
+    this.toggleRefresh();
+    
+    createAlert("PDF and Diagram removed from local storage.")
   };
 
 
@@ -168,6 +169,12 @@ class App extends React.Component {
       createAlert("PDF/Diagram information could not be retrieved.")
     }
   }
+
+
+  // Reload the article list
+  toggleRefresh = () => {
+    this.setState({ toggleRefresh: !this.state.toggleRefresh });
+  };
 
 
   // Whether to show loading wheel
@@ -207,7 +214,8 @@ class App extends React.Component {
                  togglePDF={this.togglePDFView}
                  toggleDiagram={this.toggleDiagramView}
                  loadArticle={this.loadArticle}
-                 deleteFromLocal={this.deleteFromLocal} />
+                 deleteFromLocal={this.deleteFromLocal}
+                 toggleRefresh={this.state.toggleRefresh} />
         <div id="Main">
           <Topbar/>
           <div id="Views">

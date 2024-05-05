@@ -1,10 +1,10 @@
 import "./ArticleList.css";
 
 import React from "react";
-//import createAlert from "../utilities/Alert";
+import createAlert from "../utilities/Alert";
 
 import del from "../images/Delete.png";
-import testArticles from "../testArticles.json"; // Test articles
+// import testArticles from "../testArticles.json"; // Test articles
 
 class ArticleList extends React.Component {
 
@@ -20,22 +20,16 @@ class ArticleList extends React.Component {
   
   // Fetch articles when the component mounts
   // Change to onlogin later on
-  componentDidMount() {
+  componentDidMount = async () => {
     // Get local articles from local storage
     const localArticles = this.loadFromLocal();
 
     // Get server articles from server
-    const serverArticles = testArticles;
-    /*
-    fetch("../testArticles.json") // Temporary json testing, possibly allow local storage?
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ serverArticles: data });
-      })
-      .catch(error => {
-        createAlert("Error fetching articles: " + error);
-      });
-      */
+    //const serverArticles = testArticles;
+
+    const serverArticles = await this.fetchArticleList()
+    
+      
 
     // Update state article lists
     this.setState({
@@ -43,6 +37,7 @@ class ArticleList extends React.Component {
       serverArticles: serverArticles
     });
   }
+
 
   // Return decompressed articles from local storage
   loadFromLocal = () => {
@@ -54,9 +49,114 @@ class ArticleList extends React.Component {
     }
   };
 
+
+  // Return article/diagram from server
+  loadFromServer = async (articleID) => {
+    // Get user id
+    // TODO
+
+    let article = await this.fetchServerArticle(accountID, articleID);
+    let diagram = await this.fetchServerDiagram(accountID, articleID);
+    this.props.loadArticle(article, diagram)    
+  }
+
+
+  // Get article list from server
+  fetchArticleList = async () => {
+    // Get user id
+    // TODO
+
+    // Fetch article list
+    const response = await fetch('/account/${accountId}/article', {
+      method: 'GET'
+    });
+
+    // Error : Access unauthorized
+    if (response.status === 401) {
+      createAlert("Can't access article list!");
+      return [];
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error when accessing article list.');
+      console.log("Error : ", response.status, response.statusText)
+      return [];
+    }
+
+    const responseBody = await response.result();
+    return responseBody;
+  }
+
+
+  // Fetch article from server
+  fetchServerArticle = async (accountID, articleID) => {
+    // TODO : Fix returns
+
+    // Fetch article
+    const response = await fetch('/account/${accountId}/article/${articleID}', {
+      method: 'GET'
+    });
+
+    // Error : Access unauthorized
+    if (response.status === 401) {
+      createAlert("Can't access article!");
+      return false;
+    }
+
+    // Error : Article not found!
+    if (response.status === 404) {
+      createAlert("Selected article can't be found.");
+      return false;
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error when accessing article list.');
+      console.log("Error : ", response.status, response.statusText)
+      return false;
+    }
+
+    const responseBody = await response.text();
+    return responseBody;
+  }
+
+
+  // Fetch diagram from server
+  fetchServerDiagram = async (accountID, articleID) => {
+    // Fetch Diagram
+    const response = await fetch('/account/${accountId}/visual/${articleID}/concept-map', {
+      method: 'GET'
+    });
+
+    // Error : Access unauthorized
+    if (response.status === 401) {
+      createAlert("Can't access diagram!");
+      return "";
+    }
+
+    // Error : Article not found!
+    if (response.status === 404) {
+      createAlert("Selected diagram can't be found.");
+      return "";
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error when accessing diagram.');
+      console.log("Error : ", response.status, response.statusText)
+      return "";
+    }
+
+    const responseBody = await response.text();
+    return responseBody;
+  }
+
+
+
   render() {
     return (
-      <div id="Article-list">
+      <div key={this.props.toggleRefresh} id="Article-list">
         <b>Local Articles</b>
         <ul>
           {this.state.localArticles && this.state.localArticles.map((article, index) => (
@@ -77,10 +177,10 @@ class ArticleList extends React.Component {
         <ul>
           {this.state.serverArticles.map(article => (
             <li key={article.ArticleID} className="Article-item">
-              <button onClick={() => console.log("Article clicked:", article)} 
+              <button onClick={() => this.loadFromServer(key)} 
                       className="Article-button">
-                <div className="Article-title">{article.Title}</div>
-                <div className="Article-id">{"UUID : " + article.StorageArticleUUID}</div>
+                <div className="Article-title">{article.title}</div>
+                <div className="Article-summary">{article.summary}</div>
               </button>
             </li>
           ))}
