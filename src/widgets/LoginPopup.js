@@ -7,14 +7,41 @@ const LoginPopup = ({ onClose }) => {
 
   // State variables
   const [tab, setTab] = useState("signin");
+  const [profile, setProfile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  };
+  
+
+  // Clean user input 
+  // https://stackoverflow.com/questions/24816/escaping-html-strings-with-jquery
+  function escapeHtml (string) {
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+      return entityMap[s];
+    });
+  }
 
 
   // Handles tab change (signin/signup)
   const handleTabChange = (newTab) => {
     setTab(newTab);
+  };
+
+
+  // Handles profile name changes
+  const handleProfileChange = (e) => {
+    setProfile(e.target.value);
   };
 
 
@@ -33,13 +60,60 @@ const LoginPopup = ({ onClose }) => {
   // Handles form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO : Login/signup logic
-    console.log("Email:", email);
-    console.log("Password:", password);
-    createAlert("Profiles not yet implemented.");
-    // Close the login popup
-    // onClose();
+
+    // Clean user input
+    setEmail(escapeHtml(email));
+    setProfile(escapeHtml(profile));
+    setPassword(escapeHtml(password));
+
+    // Send to login/signup logic
+    var result = (tab == "signin") ? 
+      signIn(email, password) : 
+      signUp(email, profile, password);
+
+    // Close popup on successful response
+    if (result) { onClose(); }
   };
+
+
+  // Handles sign in
+  // True if successful, false otherwise
+  const signIn = (email, password) => {
+    createAlert("Profiles not yet implemented.");
+  }
+
+
+  // Handles sign up
+  // True if successful, false otherwise
+  const signUp = async (email, profile, password) => {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('displayName', profile);
+
+    // Register upload endpoint
+    const response = await fetch('/auth/register', {
+      method: 'POST',
+      body: formData
+    });
+
+    // Error : Email in use
+    if (response.status === 400) {
+      createAlert('A user with this email already exists!');
+      return false;
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error.');
+      throw(Error);
+      return false;
+    }
+
+    const responseBody = await response.text();
+    createAlert("Registration successful.");
+    return true;
+  }
 
 
   // TODO : Function for help with password retrieval
@@ -77,13 +151,27 @@ const LoginPopup = ({ onClose }) => {
         <div id="login-content">
           <form onSubmit={handleSubmit}>
 
+            {tab === "signup" && (
+              <>
+              <label>Name:</label>
+              <input value={profile}
+                onChange={handleProfileChange}
+                pattern="[A-Za-z0-9]{3,24}"
+                title="Name must be an alphanumeric string between 3-24 characters"
+                required />
+              </>
+            )}
+
             {/* Email + Password */}
             <label>Email:</label>
             <input type="email" value={email}
               onChange={handleEmailChange} required />
             <label>Password:</label>
             <input type={showPassword ? "text" : "password"} value={password}
-                onChange={handlePasswordChange} required />
+              onChange={handlePasswordChange} 
+              pattern=".{8,}"
+              title="Password must be at least 8 characters long"
+              required />
 
             {/* Password options (help, show) */}
             <div id="password-options">
