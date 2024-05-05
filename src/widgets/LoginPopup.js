@@ -58,7 +58,7 @@ const LoginPopup = ({ onClose }) => {
 
 
   // Handles form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Clean user input
@@ -67,19 +67,42 @@ const LoginPopup = ({ onClose }) => {
     setPassword(escapeHtml(password));
 
     // Send to login/signup logic
-    var result = (tab == "signin") ? 
-      signIn(email, password) : 
-      signUp(email, profile, password);
+    const result = (tab === "signin") ? await signIn(email, password) : await signUp(email, profile, password);
 
     // Close popup on successful response
-    if (result) { onClose(); }
+    if (result) { onClose(); } 
   };
 
 
   // Handles sign in
   // True if successful, false otherwise
-  const signIn = (email, password) => {
-    createAlert("Profiles not yet implemented.");
+  const signIn = async (email, password) => {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+
+    // Register upload endpoint
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      body: formData
+    });
+
+    // Error : Email in use
+    if (response.status === 400) {
+      createAlert('User not found!');
+      return false;
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error.');
+      console.log("Error : ", response.status, response.statusText)
+      return false;
+    }
+
+    const responseBody = await response.text();
+    createAlert("Successfully logged in!");
+    return true;
   }
 
 
@@ -106,7 +129,7 @@ const LoginPopup = ({ onClose }) => {
     // Error : Internal server error
     if (!response.ok) {
       createAlert('Internal server error.');
-      throw(Error);
+      console.log("Error : ", response.status, response.statusText)
       return false;
     }
 
