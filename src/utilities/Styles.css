@@ -1,12 +1,26 @@
 /*
 TODO ::
-- Fetch articles/diagram from server
-- Button to delete articles/diagrams
-- Button to save diagram as image
-- Cleaning inputs
-- Some setup for diagram comparision?
+- Delete correct local article
+- Add Diagram comparision
 - Redo/clarify icons
-- Help menu???
+- Add Help menu --> Hover overlay
+- Add Privacy policy
+- Add profiles menu
+- Add diagram color choice
+- Add place for sumamry
+
+
+SERVER SIDE ::
+- Article Visualization
+ - Update concept map
+ - Get article summary
+ - Update article summary
+- Article CRUD
+ - Upload PDF
+ - Delete article
+- Account
+ - Update details
+ - Delete user
 */
 
 :root {
