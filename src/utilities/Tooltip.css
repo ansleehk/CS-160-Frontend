@@ -1,0 +1,22 @@
+@import "Styles.css";
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: fixed; /* Position fixed */
+  z-index: 9999; /* Ensure it's on top of other elements */
+  background-color: var(--c_accent2);
+  color: var(--c_headtext);
+  padding: var(--small_dim);
+  border-radius: var(--small_dim);
+  font-size: var(--sub_font);
+  white-space: nowrap;
+  display: none;
+}
+
+.tooltip-container:hover .tooltip {
+  display: block;
+}

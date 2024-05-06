@@ -3,6 +3,7 @@ import "./DiagramViewer.css";
 import React from "react";
 import Mermaid from "./Mermaid";
 import createAlert from "../utilities/Alert";
+import Tooltip from "../utilities/Tooltip";
 
 import generate from "../images/Generate.png";
 import localSave from "../images/LocalSave.png";
@@ -64,12 +65,16 @@ class DiagramViewer extends React.Component {
           // Mermaid diagram
           <>
             <div id="diagram-options">
-              <button onClick={this.props.saveToLocal}>
-                <img src={localSave} alt="save locally" />
-              </button>
-              <button onClick={this.saveDiagramAsSVG}>
-                <img src={diagramToImage} alt="save diagram" />
-              </button>
+              <Tooltip text="Save diagram locally">
+                <button onClick={this.props.saveToLocal}>
+                  <img src={localSave} alt="save locally" />
+                </button>
+              </Tooltip>
+              <Tooltip text="Download diagram as svg">
+                <button onClick={this.saveDiagramAsSVG}>
+                  <img src={diagramToImage} alt="save diagram" />
+                </button>
+              </Tooltip>
             </div>
             <div id="mermaid-container">
               <Mermaid id="mermaid" key={this.state.diagramKey}
@@ -82,9 +87,11 @@ class DiagramViewer extends React.Component {
           // Generate diagram button
           <>
             <p>Generate Diagram</p>
-            <button onClick={this.props.regenDiagram}>
-              <img src={generate} alt="generate" />
-            </button>
+            <Tooltip text="Regerenate a diagram">
+              <button onClick={this.props.regenDiagram}>
+                <img src={generate} alt="generate" />
+              </button>
+            </Tooltip>
           </>
         )}
       </div>

@@ -2,6 +2,7 @@ import "./ArticleList.css";
 
 import React from "react";
 import createAlert from "../utilities/Alert";
+import Tooltip from "../utilities/Tooltip";
 
 import del from "../images/Delete.png";
 // import testArticles from "../testArticles.json"; // Test articles
@@ -26,11 +27,9 @@ class ArticleList extends React.Component {
 
     // Get server articles from server
     //const serverArticles = testArticles;
-
     const serverArticles = await this.fetchArticleList()
     
       
-
     // Update state article lists
     this.setState({
       localArticles: localArticles,
@@ -166,10 +165,12 @@ class ArticleList extends React.Component {
                       className="Article-button">
                 <div className="Article-title">Title</div>
                 <div className="Article-id">Description</div>
-                <button onClick={() => this.props.deleteFromLocal(index)}
-                        className="Article-delete-button">
+                <Tooltip text="Delete from local storage">
+                  <button onClick={() => this.props.deleteFromLocal(index)}
+                    className="Article-delete-button">
                   <img src={del} alt="delete article" />
-                </button>
+                  </button>
+                </Tooltip>
               </button>
             </li>
           ))}

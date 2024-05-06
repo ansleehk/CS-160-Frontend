@@ -2,6 +2,7 @@ import "./Sidebar.css";
 
 import React from "react";
 // import createAlert from "../utilities/Alert";
+import Tooltip from "../utilities/Tooltip";
 import SettingsPopup from "./SettingsPopup.js";
 import ArticleList from "./ArticleList.js";
 
@@ -50,10 +51,12 @@ class Sidebar extends React.Component {
           <div id="Open-sidebar">
             <div id="Open-sidebar-top">
               <b>Saved Articles</b>
-              <button onClick={() => this.toggleSidebar()}>
-                <img src={sidebar} id="Sidebar-close" alt="close sidebar"
-                  style={{ transform: 'rotate(180deg)' }} />
-              </button>
+              <Tooltip text="Closes sidebar">
+                <button onClick={() => this.toggleSidebar()}>
+                  <img src={sidebar} id="Sidebar-close" alt="close sidebar"
+                    style={{ transform: 'rotate(180deg)' }} />
+                </button>
+              </Tooltip>
             </div>
 
             {/* List of articles */}
@@ -63,12 +66,16 @@ class Sidebar extends React.Component {
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">
-              <button id="New-article" onClick={this.props.onReset}>
-                <img src={reset} id="New-article" alt="new article" />
-              </button>
-              <button id="Settings-open" onClick={this.toggleSettingsPopup}>
-                <img src={settings} id="Settings" alt="settings" />
-              </button>
+              <Tooltip text="Clears current PDF/diagram">
+                <button id="New-article" onClick={this.props.onReset}>
+                  <img src={reset} id="New-article" alt="new article" />
+                </button>
+              </Tooltip>
+              <Tooltip text="Opens settings">
+                <button id="Settings-open" onClick={this.toggleSettingsPopup}>
+                  <img src={settings} id="Settings" alt="settings" />
+                </button>
+              </Tooltip>
               {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
             </div>
           </div>
@@ -77,34 +84,46 @@ class Sidebar extends React.Component {
           // Closed sidebar view
           <div id="Closed-sidebar">
             <div id="Closed-sidebar-top">
-              <button onClick={() => this.toggleSidebar()}>
-                <img src={sidebar} id="Sidebar-open" alt="open sidebar" />
-              </button>
+              <Tooltip text="Opens sidebar">
+                <button onClick={() => this.toggleSidebar()}>
+                  <img src={sidebar} id="Sidebar-open" alt="open sidebar" />
+                </button>
+              </Tooltip>
             </div>
 
           
             {/* Functionality */}
+            <Tooltip text="Upload PDF for diagram generation">
             <button onClick={() => document.getElementById("PDF-input").click()}>
               <img src={upload} id="Upload" alt="upload" />
             </button>
+            </Tooltip>
             <input id="PDF-input" type="file" accept=".pdf"
               onChange={this.props.onPDFChange}
               style={{ display: "none" }}/>
-            <button onClick={this.props.regenDiagram}>
-              <img src={generate} id="Generate" alt="generate" />
-            </button>
-            <button onClick={this.props.togglePDF}>
-              <img src={pdf} id="Toggle-pdf" alt="toggle pdf" />
-            </button>
-            <button onClick={this.props.toggleDiagram}>
-              <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
-            </button>
+            <Tooltip text="Regenerate a diagram">
+              <button onClick={this.props.regenDiagram}>
+                <img src={generate} id="Generate" alt="generate" />
+              </button>
+            </Tooltip>
+            <Tooltip text="Toggles PDF visibility">
+              <button onClick={this.props.togglePDF}>
+                <img src={pdf} id="Toggle-pdf" alt="toggle pdf" />
+              </button>
+            </Tooltip>
+            <Tooltip text="Toggles diagram visibility">
+              <button onClick={this.props.toggleDiagram}>
+                <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
+              </button>
+            </Tooltip>
 
             {/* Settings */}
             <div id="Closed-sidebar-bottom">
-              <button id="Settings-close" onClick={this.toggleSettingsPopup}>
-                <img src={settings} id="Settings" alt="settings" />
-              </button>
+              <Tooltip text="Opens settings">
+                <button id="Settings-close" onClick={this.toggleSettingsPopup}>
+                  <img src={settings} id="Settings" alt="settings" />
+                </button>
+              </Tooltip>
               {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
             </div>
           </div>

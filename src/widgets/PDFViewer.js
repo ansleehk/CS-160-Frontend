@@ -1,6 +1,7 @@
 import "./PDFViewer.css";
 
 import React from "react";
+import Tooltip from "../utilities/Tooltip";
 
 import upload from "../images/Upload.png";
 
@@ -15,9 +16,11 @@ class PDFViewer extends React.Component {
           // Upload PDF button
           <div id="Upload">
             <p>Upload PDF</p>
-            <button onClick={() => document.getElementById("PDF-input").click()}>
-              <img src={upload} id="Upload" alt="upload" />
-            </button>
+            <Tooltip text="Upload PDF for diagram generation">
+              <button onClick={() => document.getElementById("PDF-input").click()}>
+                <img src={upload} id="Upload" alt="upload" />
+              </button>
+            </Tooltip>
             {/* Input only accepts PDF files */}
             <input id="PDF-input" type="file" accept=".pdf"
               onChange={this.props.onPDFChange}

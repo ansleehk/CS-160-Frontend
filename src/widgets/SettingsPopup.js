@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./SettingsPopup.css";
 
+import Tooltip from "../utilities/Tooltip";
+
 import del from "../images/Delete.png";
 import add from "../images/Add.png";
 import Themes from "../utilities/Themes.js";
@@ -204,9 +206,11 @@ const SettingsPopup = ({ onClose }) => {
         {/* Adding custom themes */}
         <div id="theme-adder">
           <input type="text" placeholder="Enter theme name" value={newThemeName} onChange={(e) => setNewThemeName(e.target.value)} />
-          <button id="add-button" onClick={handleAddTheme}>
-            <img src={add} id="add-theme" alt="add theme" />
-          </button>
+          <Tooltip text="Save theme locally">
+            <button id="add-button" onClick={handleAddTheme}>
+              <img src={add} id="add-theme" alt="add theme" />
+            </button>
+          </Tooltip>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import "./Topbar.css";
 
 import React from "react";
+import Tooltip from "../utilities/Tooltip";
 import LoginPopup from "../widgets/LoginPopup";
 
 class Topbar extends React.Component {
@@ -34,9 +35,11 @@ class Topbar extends React.Component {
         {/* User Section */}
         <div id="User">
           <span id="User-name">Guest</span>
-          <button id="Login" onClick={this.toggleLoginPopup}>
-            Login
-          </button>
+          <Tooltip text="Login/signup">
+            <button id="Login" onClick={this.toggleLoginPopup}>
+              Login
+            </button>
+          </Tooltip>
         </div>
 
         {/* Render login popup if true */}

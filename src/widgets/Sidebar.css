@@ -46,6 +46,7 @@
   height: var(--small_button);
   border: none;
   background-color: var(--c_accent1);
+  vertical-align: top;
 }
 
 #Closed-sidebar button {
