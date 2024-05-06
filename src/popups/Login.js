@@ -109,8 +109,8 @@ const Login = ({ onClose }) => {
         const data = await response.json();
 
         // TODO : more secure storage
-        localStorage.setItem('authToken', data.data.token);
-        localStorage.setItem('userId', data.data.userId);
+        localStorage.setItem('authToken', data.result.token);
+        localStorage.setItem('userId', data.result.userId);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
         localStorage.setItem('profile', profile);
@@ -130,7 +130,7 @@ const Login = ({ onClose }) => {
       }
     } catch (error) {
       createAlert('Internal server error.');
-      console.log("Error : ", error)
+      console.log("Error : ", error);
       return false;
     }
   }
@@ -158,8 +158,8 @@ const Login = ({ onClose }) => {
         const data = await response.json();
 
         // TODO : more secure storage
-        localStorage.setItem('authToken', data.data.token);
-        localStorage.setItem('userId', data.data.userId);
+        localStorage.setItem('authToken', data.result.token);
+        localStorage.setItem('userId', data.result.userId);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
         localStorage.setItem('profile', profile);
@@ -179,7 +179,7 @@ const Login = ({ onClose }) => {
       }
     } catch (error) {
       createAlert('Internal server error.');
-      console.log("Error : ", error)
+      console.log("Error : ", error);
       return false;
     }
   }
