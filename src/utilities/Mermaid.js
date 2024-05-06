@@ -19,21 +19,26 @@ export default class Mermaid extends React.Component {
       previousX: 0,
       previousY: 0
     };
+    this.mermaidContainerRef = React.createRef();
   }
 
   componentDidMount() {
     mermaid.contentLoaded();
-    window.addEventListener("wheel", this.handleWheel, { passive: false });
-    window.addEventListener("mousedown", this.handleMouseDown);
-    window.addEventListener("mousemove", this.handleMouseMove);
-    window.addEventListener("mouseup", this.handleMouseUp);
+    if (this.mermaidContainerRef.current) {
+      this.mermaidContainerRef.current.addEventListener("wheel", this.handleWheel, { passive: false });
+      this.mermaidContainerRef.current.addEventListener("mousedown", this.handleMouseDown);
+      this.mermaidContainerRef.current.addEventListener("mousemove", this.handleMouseMove);
+      this.mermaidContainerRef.current.addEventListener("mouseup", this.handleMouseUp);
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener("wheel", this.handleWheel);
-    window.removeEventListener("mousedown", this.handleMouseDown);
-    window.removeEventListener("mousemove", this.handleMouseMove);
-    window.removeEventListener("mouseup", this.handleMouseUp);
+    if (this.mermaidContainerRef.current) {
+      this.mermaidContainerRef.current.removeEventListener("wheel", this.handleWheel);
+      this.mermaidContainerRef.current.removeEventListener("mousedown", this.handleMouseDown);
+      this.mermaidContainerRef.current.removeEventListener("mousemove", this.handleMouseMove);
+      this.mermaidContainerRef.current.removeEventListener("mouseup", this.handleMouseUp);
+    }
   }
 
   handleWheel = (event) => {
@@ -72,7 +77,7 @@ export default class Mermaid extends React.Component {
 
   render() {
     return (
-      <div className="mermaid-container">
+      <div ref={this.mermaidContainerRef} className="mermaid-container">
         <div className="mermaid-zoom"
              style={{ transform: `scale(${this.state.scale})
                                   translate(${this.state.offsetX}px,

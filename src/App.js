@@ -1,87 +1,459 @@
 import "./App.css";
+
 import React from "react";
 import Sidebar from "./widgets/Sidebar";
 import Topbar from "./widgets/Topbar";
 import PDFViewer from "./widgets/PDFViewer";
 import DiagramViewer from "./widgets/DiagramViewer";
-import Utilities from "./Utilities";
+
+import createAlert from "./utilities/Alert";
+import Themes from "./utilities/Themes.js";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pdfSrc: null,
-      isLoading: false
+      articleID: null,
+      isLoading: false,
+      selectedPresetIndex: 0,
+      showPDFView: true,
+      showDiagramView: true,
+      diagramDefinition: null,
+      sumamryDefinition: null,
+      toggleRefresh: false,
     };
   }
 
-  changePDF = (event) => {
+
+  componentDidMount() {
+    this.loadThemeColors();
+
+    // Below is to test profiles
+    /*
+    localStorage.setItem('authToken', "token");
+    localStorage.setItem('userId', 1241);
+    localStorage.setItem('email', "testing@email.com");
+    localStorage.setItem('password', "Password");
+    localStorage.setItem('profile', "Testing");
+    */
+  }
+
+
+  // Load previously selected theme from local storage
+  loadThemeColors() {
+    const storedPresetIndex = localStorage.getItem("selectedPresetIndex");
+    if (storedPresetIndex !== null) {
+      this.setState({ selectedPresetIndex: parseInt(storedPresetIndex) });
+    }
+    const presetColors = Themes[this.state.selectedPresetIndex].colors;
+
+    // Settings each of the color variables
+    Object.keys(presetColors).forEach((name) => {
+      const storedColor = localStorage.getItem(name);
+      const color = storedColor || presetColors[name];
+      document.documentElement.style.setProperty(`--${name}`, color);
+    });
+  }
+
+  
+  // Handler for pdf upload
+  changePDF = async (event) => {
     const file = event.target.files[0];
+    // Check for PDF
     if (file && file.type === 'application/pdf') {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.setState({ pdfSrc: e.target.result });
-        this.uploadPDF(file);
-      };
-      reader.readAsDataURL(file);
+      if (file.size > 1024 * 1024) { // 1MB in bytes
+        createAlert('PDF file size exceeds 1MB.');
+      } else {
+        // Loading bar
+        this.setIsLoading(true);
+
+        // Get accountID
+        let accountID = localStorage.getItem("userId");
+
+        // Send PDF to backend for diagram
+        let articleID = this.uploadPDF(file);
+        // Check success
+        if (articleID == null) {
+          // No need for extra alert
+          this.setIsLoading(false);
+          return;
+        }
+        this.setState({ articleID: articleID });
+
+        // Send article to server for diagram
+        let diagram = await this.generateDiagram(accountID, articleID);
+        // Send article to server for sumamry
+        let summary = await this.generateSummary(accountID, articleID);
+        // Check success
+        if (diagram === null || summary === null) {
+          // No need for extra alert
+          this.setIsLoading(false);
+          return;
+        }
+
+        // Update backend database
+        let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
+        let upSummary = await this.updateSummary(accountID, articleID, summary);
+        if (upDiagram === false || upSummary === false) {
+          // No need for extra alert
+          this.setIsLoading(false);
+          return;
+        }
+        
+        // Update views
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.setState({ pdfSrc: e.target.result });      
+        };
+        reader.readAsDataURL(file);
+        this.setState({ diagramDefinition : diagram });
+        this.setState({ summaryDefinition : summary });
+        this.setIsLoading(false);
+      }
     } else {
-      Utilities.showError('Please select a PDF file.');
+      createAlert('Please select a PDF file.');
     }
   };
 
-  uploadPDF = async (file) => {
+  // Send PDF to backend to database
+  uploadPDF = async (file, accountID) => {
     try {
-      this.setIsLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // Local : http://localhost:8080/uploadPdf
-      // AWS : https://d1doi45x0nyjfu.cloudfront.net:443/uploadPdf
-      // Currently using local w/ proxy
-  
-      const response = await fetch('/uploadPdf', {
+      // PDF upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article`, {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+        body: file,
       });
-  
-      if (response.status === 413) {
-        Utilities.showError('PDF file exceeds 3500 tokens.');
-      }
 
-      if (!response.ok) {
-        throw new Error('Failed to upload PDF file');
+      if (response.ok) {
+        // Get article ID
+        const articleID = await response.result.articleId;
+        return articleID;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Unauthorized access!');
+        // Too many tokens
+        } else if (response.status === 413) {
+          createAlert('Error uploading PDF file: PDF file exceeds 3500 tokens.');
+        // All other errors
+        } else {
+          createAlert('Internal server error.');
+          console.log("Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return null;
       }
-  
-      const responseBody = await response.text();
-      console.log('PDF file uploaded successfully:', responseBody);
-      this.setIsLoading(false);
-      this.changeDiagram(responseBody);
     } catch (error) {
-      console.log('Error uploading PDF file:', error.message); 
-      Utilities.showError('Error uploading PDF file:', error.message);
+      createAlert('Internal server error.');
+      console.log("Error : ", error);
       this.setIsLoading(false);
+      return null;
     }
   };
 
+
+  // Generate diagram
+  generateDiagram = async (accountID, articleID) => {
+    try {
+      // PDF to diagram  upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
+        method: 'GET'
+      });
+
+      if (response.ok) {
+        // Recieve diagram as mermaid string
+        const mermaid = await response.text();
+        return mermaid;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Generate Diagram : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Generate Diagram : Internal server error.');
+          console.log("Generate Diagram Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return null;
+      }
+    } catch (error) {
+      createAlert('Generate Diagram : Internal server error.');
+      console.log("Generate Diagram Error : ", error);
+      this.setIsLoading(false);
+      return null;
+    }
+  }
+
+
+  // Generate summary
+  generateSummary = async (accountID, articleID) => {
+    try {
+      // PDF to diagram upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+        method: 'GET'
+      });
+
+      if (response.ok) {
+        // Recieve summary as a string
+        const summary = await response.text();
+        return summary;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Generate Summary : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Generate Summary : Internal server error.');
+          console.log("Generate Summary Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return null;
+      }
+    } catch (error) {
+      createAlert('Generate Summary Internal server error.');
+      console.log("Generate Summary Error : ", error);
+      this.setIsLoading(false);
+      return null;
+    }
+  }
+
+
+  // Update diagram
+  updateDiagram = async (accountID, articleID, diagram) => {
+    try {
+      // Diagram update upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
+        method: 'PUT',
+        body: diagram
+      });
+
+      if (response.ok) {
+        // Successfully uploaded to backend
+        return true;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Update Diagram : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Update Diagram : Internal server error.');
+          console.log("Update Diagram Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      createAlert('Update Diagram : Internal server error.');
+      console.log("Update Diagram Error : ", error);
+      this.setIsLoading(false);
+      return false;
+    }
+  }
+
+
+  // Update sumamry
+  updateSummary = async (accountID, articleID, summary) => {
+    try {
+      // Summary update upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+        method: 'PUT',
+        body: summary
+      });
+
+      if (response.ok) {
+        // Successfully uploaded to backend
+        return true;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Update Summary : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Update Summary : Internal server error.');
+          console.log("Update Summary Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      createAlert('Update Summary : Internal server error.');
+      console.log("Update Summary Error : ", error);
+      this.setIsLoading(false);
+      return false;
+    }
+  }
+
+
+  // Handle regenerate diagram from currently selected pdf
+  handleRegenDiagram = async () => {
+    if (this.state.articleID) {
+      try {
+        // Loading bar
+        this.setIsLoading(true);
+        
+        // Get accountID
+        let accountID = localStorage.getItem("userId");
+
+        // Regenerate diagram
+        await this.regenDiagram(this.state.articleID, accountID);
+      } catch (error) {
+        console.error("Error regenerating diagram:", error);
+        createAlert("Error regenerating diagram. Please try again.");
+      }
+    } else {
+      createAlert("No current PDF")
+    }
+  }
+
+  // Regenerate diagram from currently selected pdf
+  regenDiagram = async (articleID, accountID) => {
+    try {
+      // Send article to server for diagram
+      let diagram = await this.generateDiagram(accountID, articleID);
+      // Check success
+      if (diagram === null) {
+        // No need for extra alert
+        this.setIsLoading(false);
+        return;
+      }
+
+      // Update backend database
+      let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
+      if (upDiagram === false) {
+        // No need for extra alert
+        this.setIsLoading(false);
+        return;
+      }
+      
+      // Update views
+      this.setState({ diagramDefinition : diagram });
+      this.setIsLoading(false);
+    } catch (error) {
+      createAlert('Internal server error.');
+      console.log("Error : ", error);
+      this.setIsLoading(false);
+      return null;
+    }
+  }
+
+
+  // Save the PDF and diagram to local storage
+  saveToLocal = () => {
+    if (this.state.pdfSrc && this.state.diagramDefinition) {
+
+      // Get existing data from local storage
+      let savedArticles = localStorage.getItem('savedArticles');
+      if (savedArticles) {
+        savedArticles = JSON.parse(savedArticles);
+      } else {
+        savedArticles = [];
+      }
+
+      // Combine new data with existing data
+      const newArticle = {
+        pdfSrc: this.state.pdfSrc,
+        diagramDefinition: this.state.diagramDefinition
+      };
+      savedArticles.push(newArticle);
+
+      localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
+      this.toggleRefresh();
+      createAlert("PDF and Diagram saved to local storage.");
+    } else {
+      createAlert("Both PDF and diagram must be present to save to local storage.");
+    }
+  };
+
+
+  // Delete an article from local storage
+  deleteFromLocal = (articleIndex) => {
+    let updatedArticles = JSON.parse(localStorage.getItem('savedArticles')) || [];
+    updatedArticles.splice(articleIndex, 1);
+    localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
+    this.toggleRefresh();
+    
+    createAlert("PDF and Diagram removed from local storage.")
+  };
+
+
+  // Load an article from local/server list
+  loadArticle = (pdfSrc, diagramDefinition) => {
+    if (pdfSrc && diagramDefinition) {
+      this.setState({
+        pdfSrc: pdfSrc,
+        diagramDefinition: diagramDefinition
+      });
+    } else {
+      createAlert("PDF/Diagram information could not be retrieved.")
+    }
+  }
+
+
+  // Reload the article list
+  toggleRefresh = () => {
+    this.setState({ toggleRefresh: !this.state.toggleRefresh });
+  };
+
+
+  // Whether to show loading wheel
   setIsLoading = (isLoading) => {
     this.setState({ isLoading });
   };
 
+
+  // Changes the embeded diagram
   changeDiagram(diagram) {
     this.setState({ diagramDefinition: diagram });
   }
 
+
+  // Shows/hides PDFView
+  togglePDFView = () => {
+    this.setState({ showPDFView : !this.state.showPDFView })
+  }
+
+  // Shows/hides DiagramView
+  toggleDiagramView = () => {
+    this.setState({ showDiagramView : !this.state.showDiagramView })
+  }
+
+
+  // Clears the PDF and Diagram views
+  resetViews = () => {
+    this.setState({ pdfSrc: null, diagramDefinition: null });
+  };
+
   render() {
     return (
       <div id="Fullscreen">
-        <Sidebar onPDFChange={this.changePDF} />
+        <Sidebar onPDFChange={this.changePDF}
+                 regenDiagram={this.handleRegenDiagram}
+                 onReset={this.resetViews}
+                 togglePDF={this.togglePDFView}
+                 toggleDiagram={this.toggleDiagramView}
+                 loadArticle={this.loadArticle}
+                 deleteFromLocal={this.deleteFromLocal}
+                 toggleRefresh={this.state.toggleRefresh} />
         <div id="Main">
           <Topbar/>
-          <div id="Views">  
-            <PDFViewer onPDFChange={this.changePDF}
-                       pdfSrc={this.state.pdfSrc} />
-            <DiagramViewer diagramDefinition={this.state.diagramDefinition}
-                           isLoading={this.state.isLoading}/>
+          <div id="Views">
+            {this.state.showPDFView && (
+              <PDFViewer onPDFChange={this.changePDF}
+                         pdfSrc={this.state.pdfSrc} />
+            )}
+            {this.state.showDiagramView && (
+              <DiagramViewer regenDiagram={this.handleRegenDiagram}
+                             diagramDefinition={this.state.diagramDefinition}
+                             isLoading={this.state.isLoading}
+                             saveToLocal={this.saveToLocal} />
+            )}
+            {!this.state.showPDFView && !this.state.showDiagramView && (
+              <b>No Views Open :(</b>
+            )}
           </div>
         </div>
       </div>

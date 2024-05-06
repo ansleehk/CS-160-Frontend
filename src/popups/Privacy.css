@@ -1,0 +1,33 @@
+@import "../utilities/Styles.css";
+
+#privacy-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--c_shadow);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#privacy-popup {
+  background-color: var(--c_accent2);
+  color: var(--c_headtext);
+  font-size: var(--sub_font);
+  padding: var(--large_dim);
+  border-radius: var(--medium_dim);
+  box-shadow: 0 0 var(--large_dim) var(--c_shadow);
+  position: relative;
+  width: var(--settings_width);
+  z-index: 11;
+}
+
+#title {
+  text-align: center;
+  margin-bottom: var(--medium_dim);
+  border-bottom: var(--small_dim) solid var(--c_highlight);
+}

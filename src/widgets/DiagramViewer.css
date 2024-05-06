@@ -1,36 +1,85 @@
+@import "../utilities/Styles.css";
+
 #Diagram-viewer {
+  position: relative;
   display: flex;
   flex-direction: column;
+  text-align: center;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  background-color: gainsboro;
+  font-size: var(--h1_font);
+  color: var(--c_headtext);
+  background-color: var(--c_main2);
   height: 100%;
   width: 100%;
+  transition: width 0.3s ease;
 }
 
 #Diagram-viewer button {
-  height: 20vmin;
-  padding: 0px;
-  margin: 0px;
-  border: 0px;
-  background-color: transparent;
+  height: var(--large_button);
+  width: var(--large_button);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background-color: var(--c_main2);
 }
 
 #Diagram-viewer img {
-  height: 20vmin;
+  height: var(--large_button);
+  width: var(--large_button);
 }
 
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+#Diagram-viewer button:hover {
+  filter: brightness(1.2) saturate(1.2);
+}
+
+#loader {
+  border: var(--medium_dim) solid transparent;
+  border-top: var(--medium_dim) solid var(--c_highlight);
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+#diagram-options {
+  position: absolute;
+  top: var(--small_dim);
+  right: var(--small_dim);
+  display: flex;
+  margin: 0;
+  padding: 0;
+  gap: var(--medium_dim);
+  z-index: 1;
+}
+
+#diagram-options button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  height: var(--small_button);
+  width: var(--small_button);
+}
+
+#diagram-options button:hover {
+  background-color: var(--c_accent1);
+}
+
+#diagram-options img {
+  height: var(--small_button);
+  width: var(--small_button);
+}
+
+#mermaid-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

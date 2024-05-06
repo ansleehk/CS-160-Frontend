@@ -1,0 +1,49 @@
+/* Variables for UI design */
+
+:root {
+
+  /* Color UI */
+  --c_main1: #D5DDE8;
+  --c_accent1: #A9AEC2;
+  --c_main2: #4B4B59;
+  --c_accent2: #2B2B33;
+  --c_highlight: #0056b3;
+  --c_shadow: rgba(0, 0, 0, 0.5); /* Semi Transparent Background */
+
+  /* Color Text */
+  --c_headtext: #D5DDE8;
+  --c_maintext: #A9AEC2;
+  --c_subtext: #4B4B59;
+  --c_alttext: #2B2B33;
+
+  /* Color Mermaid */
+  /*
+  Rect - Main
+  Text - Duh
+  Line - Arrow
+  Box - Action?
+  */
+
+  /* Space Sizes */
+  --small_dim: 4px;
+  --medium_dim: 8px;
+  --large_dim: 16px;
+  --login_width: 400px;
+  --settings_width: 400px;
+  --open_sidebar_width: 384px;
+  --closed_sidebar_width: 48px; 
+
+  /* Button Sizes */
+  --mini_button: 16px;
+  --small_button: 48px;
+  --large_button: 20vmin;
+
+  /* Button Filters */
+  --b_brightness: 1.2;
+  --b_saturation: 1.2;
+
+  /* Font Sizes */
+  --h1_font: 1.4rem;
+  --h2_font: 1.2rem;
+  --sub_font: 0.8rem;
+}

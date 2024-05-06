@@ -1,0 +1,61 @@
+#Article-list {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: var(--large_dim);
+}
+
+.Article-item {
+  list-style-type: none;
+  margin-bottom: var(--medium_dim);
+  position: relative;
+}
+
+.Article-button {
+  width: 100%;
+  text-align: left;
+  padding: var(--small_dim);
+  margin: 0;
+  background-color: var(--c_main1);
+  color: var(--c_maintext);
+  border: none;
+  border-radius: var(--small_dim);
+  cursor: pointer;
+}
+
+.Article-delete-button {
+  display: none; /* Initially hide the delete button */
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: var(--small_dim);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--small_dim);
+  margin: 0;
+  padding: 0;
+  height: var(--mini_button);
+  width: var(--mini_button);
+  cursor: pointer;
+}
+
+.Article-delete-button img {
+  background-color: none;
+  height: var(--mini_button) !important;
+  width: var(--mini_button) !important;
+}
+
+.Article-item:hover .Article-delete-button {
+  display: flex; /* Show the delete button when hovering over the list item */
+  align-items: center;
+  justify-content: center;
+}
+
+.Article-title {
+  font-size: var(--h2_font);
+  font-weight: bold;
+}
+
+.Article-id {
+  font-size: var(--sub_font);
+  color: var(--c_subtext);
+}

@@ -1,21 +1,45 @@
+@import "../utilities/Styles.css";
+
 #Topbar {
-  display: inline-flex;
-  flex-direction: row;
-  text-align: left;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  height: 48px;
+  height: var(--closed_sidebar_width);
+  background-color: var(--c_accent2);
+  border-bottom: var(--small_dim) solid var(--c_highlight);
 }
 
 #Title {
-  font-size: calc(10px + 2vmin);
-  margin-left: 8px;
+  font-size: var(--h1_font);
+  margin-left: var(--medium_dim);
 }
 
-#Login button {
-  padding: 0px;
-  margin: 8px;
-  border: 0px;
-  background-color: transparent;
+#Site-name {
+  color: var(--c_headtext);
+}
+
+#Version {
+  color: var(--c_maintext);
+}
+
+#User-name {
+  padding: var(--medium_dim) var(--large_dim);
+  margin: var(--medium_dim);
+  color: var(--c_headtext);
+}
+
+#Login,
+#Profile {
+  padding: var(--medium_dim) var(--large_dim);
+  margin: var(--medium_dim);
+  border: none;
+  background-color: var(--c_highlight);
+  color: var(--c_headtext);
+  border-radius: var(--small_dim);
+  transition: background-color 0.3s ease;
+}
+
+#Login:hover,
+#Profile:hover {
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }

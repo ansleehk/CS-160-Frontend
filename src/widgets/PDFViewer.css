@@ -1,26 +1,33 @@
+@import "../utilities/Styles.css";
+
 #PDF-viewer {
   display: flex;
   flex-direction: column;
+  text-align: center;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  background-color: gray;
+  font-size: var(--h1_font);
+  color: var(--c_headtext);
+  background-color: var(--c_main2);
   height: 100%;
   width: 100%;
+  transition: width 0.3s ease;
 }
 
-#PDF-viewer label {
-  height: 20vmin;
-  padding: 0px;
-  margin: 0px;
-  border: 0px;
-  background-color: transparent;
-}
-
-#PDF-input {
-  display: none;
+#PDF-viewer button {
+  height: var(--large_button);
+  width: var(--large_button);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background-color: var(--c_main2);
 }
 
 #PDF-viewer img {
-  height: 20vmin;
+  height: var(--large_button);
+  width: var(--large_button);
+}
+
+#PDF-viewer button:hover {
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }
