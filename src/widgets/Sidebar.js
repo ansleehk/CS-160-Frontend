@@ -3,6 +3,7 @@ import "./Sidebar.css";
 import React from "react";
 // import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
+import PrivacyPopup from "../popups/PrivacyPopup.js";
 import SettingsPopup from "../popups/SettingsPopup.js";
 import ArticleList from "./ArticleList.js";
 
@@ -13,6 +14,7 @@ import pdf from "../images/PDF.png";
 import diagram from "../images/Diagram.png";
 import settings from "../images/Settings.png";
 import reset from "../images/Reset.png";
+import privacy from "../images/Privacy.png";
 
 class Sidebar extends React.Component {
 
@@ -21,9 +23,17 @@ class Sidebar extends React.Component {
     super(props);
     this.state = {
       sidebarOpen: false,
-      showSettings: false
+      showSettings: false,
+      showPrivacyPolicy: false
     };
   }
+
+  // Toggles privacy popup
+  togglePrivacyPopup = () => {
+    this.setState((prevState) => ({
+      showPrivacyPolicy: !prevState.showPrivacyPolicy
+    }));
+  };
 
   
   // Toggles settings popup
@@ -68,14 +78,22 @@ class Sidebar extends React.Component {
             <div id="Open-sidebar-bottom">
               <Tooltip text="Clears current PDF/diagram">
                 <button id="New-article" onClick={this.props.onReset}>
-                  <img src={reset} id="New-article" alt="new article" />
+                  <img src={reset} id="New" alt="new article" />
                 </button>
               </Tooltip>
-              <Tooltip text="Opens settings">
-                <button id="Settings-open" onClick={this.toggleSettingsPopup}>
-                  <img src={settings} id="Settings" alt="settings" />
-                </button>
-              </Tooltip>
+              <div id="Right-align">
+                <Tooltip text="Shows privacy policy">
+                  <button id="Privacy-policy" onClick={this.togglePrivacyPopup}>
+                    <img src={privacy} id="Privacy" alt="privacy policy" />
+                  </button>
+                </Tooltip>
+                {this.state.showPrivacyPolicy && <PrivacyPopup onClose={this.togglePrivacyPopup} />}
+                <Tooltip text="Opens settings">
+                  <button id="Settings-open" onClick={this.toggleSettingsPopup}>
+                    <img src={settings} id="Settings" alt="settings" />
+                  </button>
+                </Tooltip>
+              </div>
               {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
             </div>
           </div>

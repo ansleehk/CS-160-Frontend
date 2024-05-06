@@ -40,6 +40,12 @@
   text-align: center;
 }
 
+#title {
+  text-align: center;
+  margin-bottom: var(--medium_dim);
+  border-bottom: var(--small_dim) solid var(--c_highlight);
+}
+
 #tab-header {
   display: flex;
   text-align: center;

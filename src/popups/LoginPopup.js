@@ -188,7 +188,7 @@ const LoginPopup = ({ onClose }) => {
 
         {/* Login header */}
         <div id="login-header">
-          <h2>{tab === "signin" ? "User Login" : "New User"}</h2>
+          <h2 id="title">{tab === "signin" ? "User Login" : "New User"}</h2>
         </div>
 
         {/* Tabs to switch between signin/signup */}
