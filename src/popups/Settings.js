@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import "./SettingsPopup.css";
+import "./Settings.css";
+
+import Tooltip from "../utilities/Tooltip.js";
 
 import del from "../images/Delete.png";
 import add from "../images/Add.png";
 import Themes from "../utilities/Themes.js";
 
-const SettingsPopup = ({ onClose }) => {
+const Settings = ({ onClose }) => {
 
   // State variables
   const [selectedPreset, setSelectedPreset] = useState(() => 
@@ -204,13 +206,15 @@ const SettingsPopup = ({ onClose }) => {
         {/* Adding custom themes */}
         <div id="theme-adder">
           <input type="text" placeholder="Enter theme name" value={newThemeName} onChange={(e) => setNewThemeName(e.target.value)} />
-          <button id="add-button" onClick={handleAddTheme}>
-            <img src={add} id="add-theme" alt="add theme" />
-          </button>
+          <Tooltip text="Save theme locally">
+            <button id="add-button" onClick={handleAddTheme}>
+              <img src={add} id="add-theme" alt="add theme" />
+            </button>
+          </Tooltip>
         </div>
       </div>
     </div>
   );
 };
 
-export default SettingsPopup;
+export default Settings;

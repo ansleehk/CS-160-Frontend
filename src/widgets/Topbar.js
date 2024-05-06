@@ -1,7 +1,9 @@
 import "./Topbar.css";
 
 import React from "react";
-import LoginPopup from "../widgets/LoginPopup";
+import Tooltip from "../utilities/Tooltip";
+import Login from "../popups/Login";
+import Profile from "../popups/Profile";
 
 class Topbar extends React.Component {
 
@@ -9,7 +11,10 @@ class Topbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLoginPopup: false
+      userName: localStorage.getItem("userName"),
+      authToken: localStorage.getItem("authToken"),
+      showLoginPopup: false,
+      showProfilePopup: false
     };
   }
 
@@ -22,6 +27,14 @@ class Topbar extends React.Component {
   };
 
 
+  // Toggles profile popup
+  toggleProfilePopup = () => {
+    this.setState((prevState) => ({
+      showProfilePopup: !prevState.showProfilePopup
+    }));
+  };
+
+
   render() {
     return (
       <div id="Topbar" data-testid="Topbar">
@@ -30,19 +43,39 @@ class Topbar extends React.Component {
           <span id="Site-name">KeyLink</span>
           <span id="Version"> V1.0</span>
         </b>
-
+      
         {/* User Section */}
         <div id="User">
-          <span id="User-name">Guest</span>
-          <button id="Login" onClick={this.toggleLoginPopup}>
-            Login
-          </button>
-        </div>
+          {this.state.authToken ? (
+            <> {/* Logged in */}
+            <span id="User-name">{this.state.userName}</span>
+            <Tooltip text="Manage account">
+              <button id="Profile" onClick={this.toggleProfilePopup}>
+                Profile
+              </button>
+            </Tooltip>
 
-        {/* Render login popup if true */}
-        {this.state.showLoginPopup && (
-          <LoginPopup onClose={this.toggleLoginPopup} />
-        )}
+            {/* Render profile popup if true */}
+            {this.state.showProfilePopup && (
+              <Profile onClose={this.toggleProfilePopup} />
+            )}
+            </>
+          ) : (
+            <> {/* Guest user */}
+            <span id="User-name">Guest</span>
+            <Tooltip text="Login/signup">
+              <button id="Login" onClick={this.toggleLoginPopup}>
+                Login
+              </button>
+            </Tooltip>
+
+            {/* Render login popup if true */}
+            {this.state.showLoginPopup && (
+              <Login onClose={this.toggleLoginPopup} />
+            )}
+            </>
+          )}
+        </div>
       </div>
     );
   }

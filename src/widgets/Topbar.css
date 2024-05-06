@@ -28,7 +28,8 @@
   color: var(--c_headtext);
 }
 
-#Login {
+#Login,
+#Profile {
   padding: var(--medium_dim) var(--large_dim);
   margin: var(--medium_dim);
   border: none;
@@ -38,6 +39,7 @@
   transition: background-color 0.3s ease;
 }
 
-#Login:hover {
+#Login:hover,
+#Profile:hover {
   filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }

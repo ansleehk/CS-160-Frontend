@@ -1,29 +1,28 @@
-/*
-TODO ::
-- Toggle views
-- Save articles/diagrams to local storage
-- Fetch articles/diagram from server
-- Button to delete articles/diagrams
-- Button to save diagram as image
-- Cleaning inputs
-- Some setup for diagram comparision?
-- Redo/clarify icons
-- Help menu???
-- Diagram moving shouldn't override popups
-*/
+/* Variables for UI design */
 
 :root {
-  /* Color Pallete */
+
+  /* Color UI */
   --c_main1: #D5DDE8;
   --c_accent1: #A9AEC2;
   --c_main2: #4B4B59;
   --c_accent2: #2B2B33;
   --c_highlight: #0056b3;
+  --c_shadow: rgba(0, 0, 0, 0.5); /* Semi Transparent Background */
+
+  /* Color Text */
   --c_headtext: #D5DDE8;
   --c_maintext: #A9AEC2;
   --c_subtext: #4B4B59;
   --c_alttext: #2B2B33;
-  --c_shadow: rgba(0, 0, 0, 0.5); /* Semi Transparent Background */
+
+  /* Color Mermaid */
+  /*
+  Rect - Main
+  Text - Duh
+  Line - Arrow
+  Box - Action?
+  */
 
   /* Space Sizes */
   --small_dim: 4px;

@@ -1,8 +1,11 @@
 import "./Sidebar.css";
 
 import React from "react";
-import createAlert from "../utilities/Alert";
-import SettingsPopup from "../widgets/SettingsPopup";
+// import createAlert from "../utilities/Alert";
+import Tooltip from "../utilities/Tooltip";
+import Privacy from "../popups/Privacy.js";
+import Settings from "../popups/Settings.js";
+import ArticleList from "./ArticleList.js";
 
 import sidebar from "../images/Sidebar.png";
 import upload from "../images/Upload.png";
@@ -10,7 +13,8 @@ import generate from "../images/Generate.png";
 import pdf from "../images/PDF.png";
 import diagram from "../images/Diagram.png";
 import settings from "../images/Settings.png";
-import testArticles from "../testArticles.json"; // Test articles
+import reset from "../images/Reset.png";
+import privacy from "../images/Privacy.png";
 
 class Sidebar extends React.Component {
 
@@ -19,10 +23,17 @@ class Sidebar extends React.Component {
     super(props);
     this.state = {
       sidebarOpen: false,
-      articles: [],
-      showSettings: false
+      showSettings: false,
+      showPrivacyPolicy: false
     };
   }
+
+  // Toggles privacy popup
+  togglePrivacyPopup = () => {
+    this.setState((prevState) => ({
+      showPrivacyPolicy: !prevState.showPrivacyPolicy
+    }));
+  };
 
   
   // Toggles settings popup
@@ -32,22 +43,6 @@ class Sidebar extends React.Component {
     }));
   };
 
-  // Fetch articles when the component mounts
-  // Change to onlogin later on
-  componentDidMount() {
-    this.setState({ articles: testArticles });
-    /*
-    fetch("../testArticles.json") // Temporary json testing, possibly allow local storage?
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ articles: data });
-      })
-      .catch(error => {
-        createAlert("Error fetching articles: " + error);
-      });
-      */
-  }
-
 
   // Opens/closes sidebar
   toggleSidebar = () => {
@@ -55,6 +50,7 @@ class Sidebar extends React.Component {
       sidebarOpen: !prevState.sidebarOpen
     }));
   };
+
 
   render() {
     return (
@@ -65,33 +61,40 @@ class Sidebar extends React.Component {
           <div id="Open-sidebar">
             <div id="Open-sidebar-top">
               <b>Saved Articles</b>
-              <button onClick={() => this.toggleSidebar()}>
-                <img src={sidebar} id="Sidebar-close" alt="close sidebar"
-                  style={{ transform: 'rotate(180deg)' }} />
-              </button>
+              <Tooltip text="Closes sidebar">
+                <button onClick={() => this.toggleSidebar()}>
+                  <img src={sidebar} id="Sidebar-close" alt="close sidebar"
+                    style={{ transform: 'rotate(180deg)' }} />
+                </button>
+              </Tooltip>
             </div>
 
             {/* List of articles */}
-            <div id="Article-list">
-              <ul>
-                {this.state.articles.map(article => (
-                  <li key={article.ArticleID} id="Article-item">
-                    <button onClick={() => console.log("Article clicked:", article)} id="Article-button">
-                      <div id="Article-title">{article.Title}</div>
-                      <div id="Article-id">{"UUID : " + article.StorageArticleUUID}</div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ArticleList loadArticle={this.props.loadArticle}
+                         deleteFromLocal={this.props.deleteFromLocal}
+                         toggleRefresh={this.props.toggleRefresh} />
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">
-              <button id="New-article" onClick={this.props.onReset}>New Article</button>
-              <button id="Settings-open" onClick={this.toggleSettingsPopup}>
-                <img src={settings} id="Settings" alt="settings" />
-              </button>
-              {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
+              <Tooltip text="Clears current PDF/diagram">
+                <button id="New-article" onClick={this.props.onReset}>
+                  <img src={reset} id="New" alt="new article" />
+                </button>
+              </Tooltip>
+              <div id="Right-align">
+                <Tooltip text="Shows privacy policy">
+                  <button id="Privacy-policy" onClick={this.togglePrivacyPopup}>
+                    <img src={privacy} id="Privacy" alt="privacy policy" />
+                  </button>
+                </Tooltip>
+                {this.state.showPrivacyPolicy && <Privacy onClose={this.togglePrivacyPopup} />}
+                <Tooltip text="Opens settings">
+                  <button id="Settings-open" onClick={this.toggleSettingsPopup}>
+                    <img src={settings} id="Settings" alt="settings" />
+                  </button>
+                </Tooltip>
+              </div>
+              {this.state.showSettings && <Settings onClose={this.toggleSettingsPopup} />}
             </div>
           </div>
         ) : (
@@ -99,35 +102,47 @@ class Sidebar extends React.Component {
           // Closed sidebar view
           <div id="Closed-sidebar">
             <div id="Closed-sidebar-top">
-              <button onClick={() => this.toggleSidebar()}>
-                <img src={sidebar} id="Sidebar-open" alt="open sidebar" />
-              </button>
+              <Tooltip text="Opens sidebar">
+                <button onClick={() => this.toggleSidebar()}>
+                  <img src={sidebar} id="Sidebar-open" alt="open sidebar" />
+                </button>
+              </Tooltip>
             </div>
 
           
             {/* Functionality */}
+            <Tooltip text="Upload PDF for diagram generation">
             <button onClick={() => document.getElementById("PDF-input").click()}>
               <img src={upload} id="Upload" alt="upload" />
             </button>
+            </Tooltip>
             <input id="PDF-input" type="file" accept=".pdf"
               onChange={this.props.onPDFChange}
               style={{ display: "none" }}/>
-            <button onClick={() => createAlert('Regenerate Diagram not implemented!')}>
-              <img src={generate} id="Generate" alt="generate" />
-            </button>
-            <button onClick={this.props.togglePDF}>
-              <img src={pdf} id="Toggle-pdf" alt="toggle pdf" />
-            </button>
-            <button onClick={this.props.toggleDiagram}>
-              <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
-            </button>
+            <Tooltip text="Regenerate a diagram">
+              <button onClick={this.props.regenDiagram}>
+                <img src={generate} id="Generate" alt="generate" />
+              </button>
+            </Tooltip>
+            <Tooltip text="Toggles PDF visibility">
+              <button onClick={this.props.togglePDF}>
+                <img src={pdf} id="Toggle-pdf" alt="toggle pdf" />
+              </button>
+            </Tooltip>
+            <Tooltip text="Toggles diagram visibility">
+              <button onClick={this.props.toggleDiagram}>
+                <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
+              </button>
+            </Tooltip>
 
             {/* Settings */}
             <div id="Closed-sidebar-bottom">
-              <button id="Settings-close" onClick={this.toggleSettingsPopup}>
-                <img src={settings} id="Settings" alt="settings" />
-              </button>
-              {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
+              <Tooltip text="Opens settings">
+                <button id="Settings-close" onClick={this.toggleSettingsPopup}>
+                  <img src={settings} id="Settings" alt="settings" />
+                </button>
+              </Tooltip>
+              {this.state.showSettings && <Settings onClose={this.toggleSettingsPopup} />}
             </div>
           </div>
         )}
