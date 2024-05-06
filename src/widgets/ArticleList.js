@@ -64,10 +64,10 @@ class ArticleList extends React.Component {
   // Get article list from server
   fetchArticleList = async () => {
     // Get user id
-    // TODO
+    let accountID = localStorage.getItem("userId") || null;
 
     // Fetch article list
-    const response = await fetch('/account/${accountId}/article', {
+    const response = await fetch(`/account/${accountID}/article`, {
       method: 'GET'
     });
 
@@ -94,7 +94,7 @@ class ArticleList extends React.Component {
     // TODO : Fix returns
 
     // Fetch article
-    const response = await fetch('/account/${accountId}/article/${articleID}', {
+    const response = await fetch(`/account/${accountID}/article/${articleID}`, {
       method: 'GET'
     });
 
@@ -125,7 +125,7 @@ class ArticleList extends React.Component {
   // Fetch diagram from server
   fetchServerDiagram = async (accountID, articleID) => {
     // Fetch Diagram
-    const response = await fetch('/account/${accountId}/visual/${articleID}/concept-map', {
+    const response = await fetch(`/account/${accountID}/visual/${articleID}/concept-map`, {
       method: 'GET'
     });
 

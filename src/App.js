@@ -26,6 +26,15 @@ class App extends React.Component {
 
   componentDidMount() {
     this.loadThemeColors();
+
+    // Below is to test profiles
+    /*
+    localStorage.setItem('authToken', "token");
+    localStorage.setItem('userId', 1241);
+    localStorage.setItem('email', "testing@email.com");
+    localStorage.setItem('password', "Password");
+    localStorage.setItem('profile', "Testing");
+    */
   }
 
 

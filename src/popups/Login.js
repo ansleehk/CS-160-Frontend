@@ -108,8 +108,13 @@ const Login = ({ onClose }) => {
       if (response.ok) {
         const data = await response.json();
 
+        // TODO : more secure storage
         localStorage.setItem('authToken', data.data.token);
         localStorage.setItem('userId', data.data.userId);
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
+        localStorage.setItem('profile', profile);
+
         createAlert("Successfully logged in!");
         return true;
       } else {
@@ -151,8 +156,14 @@ const Login = ({ onClose }) => {
       // Okay
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('authToken', data.data.token);  
+
+        // TODO : more secure storage
+        localStorage.setItem('authToken', data.data.token);
         localStorage.setItem('userId', data.data.userId);
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
+        localStorage.setItem('profile', profile);
+
         createAlert("Registration successful.")
         return true;
       } else {

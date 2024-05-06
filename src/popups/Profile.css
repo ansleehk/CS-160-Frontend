@@ -1,0 +1,97 @@
+@import "../utilities/Styles.css";
+
+#profile-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--c_shadow);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#profile-popup {
+  background-color: var(--c_accent2);
+  color: var(--c_headtext);
+  padding: var(--large_dim);
+  border-radius: var(--medium_dim);
+  box-shadow: 0 0 var(--large_dim) var(--c_shadow);
+  position: relative;
+  width: var(--login_width);
+  z-index: 11;
+}
+
+#close-button {
+  position: absolute;
+  top: var(--medium_dim);
+  right: var(--medium_dim);
+  background: none;
+  border: none;
+  color: var(--c_headtext);
+  cursor: pointer;
+  font-size: var(--h2_font);
+}
+
+#profile-header {
+  text-align: center;
+}
+
+#title {
+  text-align: center;
+  margin-bottom: var(--medium_dim);
+  border-bottom: var(--small_dim) solid var(--c_highlight);
+}
+
+#profile-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+#profile-content label {
+  margin-top: var(--large_dim);
+  margin-bottom: var(--small_dim);
+}
+
+#profile-content input {
+  padding: var(--medium_dim);
+  border-radius: var(--small_dim);
+  border: 1px solid var(--c_accent1);
+}
+
+#password-options {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: right;
+  width: 100%;
+  margin-bottom: var(--medium_dim);
+}
+
+#show-password {
+  color: var(--c_maintext);
+  font-size: var(--sub_font);
+  cursor: pointer;
+  margin-left: auto;
+}
+
+#delete {
+  margin-top: var(--medium_dim);
+  width: 100%;
+}
+
+button {
+  padding: var(--medium_dim);
+  background-color: var(--c_highlight);
+  color: var(--c_headtext);
+  border: none;
+  border-radius: var(--small_dim);
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
+}
