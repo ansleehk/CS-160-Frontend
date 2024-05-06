@@ -2,7 +2,7 @@ import "./Topbar.css";
 
 import React from "react";
 import Tooltip from "../utilities/Tooltip";
-import LoginPopup from "../widgets/LoginPopup";
+import LoginPopup from "../popups/LoginPopup";
 
 class Topbar extends React.Component {
 

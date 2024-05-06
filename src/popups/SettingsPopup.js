@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./SettingsPopup.css";
 
-import Tooltip from "../utilities/Tooltip";
+import Tooltip from "../utilities/Tooltip.js";
 
 import del from "../images/Delete.png";
 import add from "../images/Add.png";

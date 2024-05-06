@@ -1,7 +1,7 @@
 import "./DiagramViewer.css";
 
 import React from "react";
-import Mermaid from "./Mermaid";
+import Mermaid from "../utilities/Mermaid";
 import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
 

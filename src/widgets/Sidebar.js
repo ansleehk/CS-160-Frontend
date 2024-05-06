@@ -3,7 +3,7 @@ import "./Sidebar.css";
 import React from "react";
 // import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
-import SettingsPopup from "./SettingsPopup.js";
+import SettingsPopup from "../popups/SettingsPopup.js";
 import ArticleList from "./ArticleList.js";
 
 import sidebar from "../images/Sidebar.png";
