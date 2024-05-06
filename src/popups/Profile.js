@@ -49,7 +49,7 @@ const Profile = ({ onClose }) => {
   // Clean user input 
   // https://stackoverflow.com/questions/24816/escaping-html-strings-with-jquery
   function escapeHtml (string) {
-    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return String(string).replace(/[&<>"'`=]/g, function (s) {
       return entityMap[s];
     });
   }
