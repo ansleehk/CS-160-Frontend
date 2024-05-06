@@ -1,7 +1,7 @@
 import React from "react";
-import "./PrivacyPopup.css";
+import "./Privacy.css";
 
-const PrivacyPopup = ({ onClose }) => {
+const Privacy = ({ onClose }) => {
 
   return (
     <div id="privacy-popup-overlay">
@@ -11,7 +11,7 @@ const PrivacyPopup = ({ onClose }) => {
         <button id="close-button" onClick={onClose}>x</button>
 
         {/* Title */}
-        <h2 id="title">Privacy Settings</h2>
+        <h2 id="title">Privacy Policy</h2>
 
         {/* Content */}
         <div id="policy">
@@ -26,4 +26,4 @@ const PrivacyPopup = ({ onClose }) => {
   );
 };
 
-export default PrivacyPopup;
+export default Privacy;

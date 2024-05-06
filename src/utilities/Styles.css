@@ -1,32 +1,4 @@
-/*
-CURRENT TODO
------
-
-CONTENT ::
-- Add Diagram comparision
-- Add Privacy policy
-- Add profiles menu
-
-CHANGES ::
-- Delete correct local article
-- Redo/clarify icons
-
-UI ::
-- Add diagram color choice
-- Add place for summary
-
-FETCH REQUESTS ::
-- Article Visualization
- - Update concept map
- - Get article summary
- - Update article summary
-- Article CRUD
- - Upload PDF
- - Delete article
-- Account
- - Update details
- - Delete user
-*/
+/* Variables for UI design */
 
 :root {
 

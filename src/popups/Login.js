@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import "./LoginPopup.css";
+import "./Login.css";
 
 import createAlert from "../utilities/Alert";
 
-const LoginPopup = ({ onClose }) => {
+const Login = ({ onClose }) => {
 
   // State variables
   const [tab, setTab] = useState("signin");
@@ -255,4 +255,4 @@ const LoginPopup = ({ onClose }) => {
   );
 };
 
-export default LoginPopup;
+export default Login;

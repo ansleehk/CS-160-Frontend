@@ -2,7 +2,7 @@ import "./Topbar.css";
 
 import React from "react";
 import Tooltip from "../utilities/Tooltip";
-import LoginPopup from "../popups/LoginPopup";
+import Login from "../popups/Login";
 
 class Topbar extends React.Component {
 
@@ -44,7 +44,7 @@ class Topbar extends React.Component {
 
         {/* Render login popup if true */}
         {this.state.showLoginPopup && (
-          <LoginPopup onClose={this.toggleLoginPopup} />
+          <Login onClose={this.toggleLoginPopup} />
         )}
       </div>
     );

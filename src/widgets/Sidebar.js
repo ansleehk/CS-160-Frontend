@@ -3,8 +3,8 @@ import "./Sidebar.css";
 import React from "react";
 // import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
-import PrivacyPopup from "../popups/PrivacyPopup.js";
-import SettingsPopup from "../popups/SettingsPopup.js";
+import Privacy from "../popups/Privacy.js";
+import Settings from "../popups/Settings.js";
 import ArticleList from "./ArticleList.js";
 
 import sidebar from "../images/Sidebar.png";
@@ -87,14 +87,14 @@ class Sidebar extends React.Component {
                     <img src={privacy} id="Privacy" alt="privacy policy" />
                   </button>
                 </Tooltip>
-                {this.state.showPrivacyPolicy && <PrivacyPopup onClose={this.togglePrivacyPopup} />}
+                {this.state.showPrivacyPolicy && <Privacy onClose={this.togglePrivacyPopup} />}
                 <Tooltip text="Opens settings">
                   <button id="Settings-open" onClick={this.toggleSettingsPopup}>
                     <img src={settings} id="Settings" alt="settings" />
                   </button>
                 </Tooltip>
               </div>
-              {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
+              {this.state.showSettings && <Settings onClose={this.toggleSettingsPopup} />}
             </div>
           </div>
         ) : (
@@ -142,7 +142,7 @@ class Sidebar extends React.Component {
                   <img src={settings} id="Settings" alt="settings" />
                 </button>
               </Tooltip>
-              {this.state.showSettings && <SettingsPopup onClose={this.toggleSettingsPopup} />}
+              {this.state.showSettings && <Settings onClose={this.toggleSettingsPopup} />}
             </div>
           </div>
         )}

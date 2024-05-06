@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./SettingsPopup.css";
+import "./Settings.css";
 
 import Tooltip from "../utilities/Tooltip.js";
 
@@ -7,7 +7,7 @@ import del from "../images/Delete.png";
 import add from "../images/Add.png";
 import Themes from "../utilities/Themes.js";
 
-const SettingsPopup = ({ onClose }) => {
+const Settings = ({ onClose }) => {
 
   // State variables
   const [selectedPreset, setSelectedPreset] = useState(() => 
@@ -217,4 +217,4 @@ const SettingsPopup = ({ onClose }) => {
   );
 };
 
-export default SettingsPopup;
+export default Settings;
