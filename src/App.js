@@ -14,11 +14,13 @@ class App extends React.Component {
     super(props);
     this.state = {
       pdfSrc: null,
+      articleID: null,
       isLoading: false,
       selectedPresetIndex: 0,
       showPDFView: true,
       showDiagramView: true,
       diagramDefinition: null,
+      sumamryDefinition: null,
       toggleRefresh: false,
     };
   }
@@ -56,74 +58,285 @@ class App extends React.Component {
 
   
   // Handler for pdf upload
-  changePDF = (event) => {
+  changePDF = async (event) => {
     const file = event.target.files[0];
     // Check for PDF
     if (file && file.type === 'application/pdf') {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Show PDF on screen
-        this.setState({ pdfSrc: e.target.result });
+      if (file.size > 1024 * 1024) { // 1MB in bytes
+        createAlert('PDF file size exceeds 1MB.');
+      } else {
+        // Loading bar
+        this.setIsLoading(true);
+
+        // Get accountID
+        let accountID = localStorage.getItem("userId");
+
         // Send PDF to backend for diagram
-        this.uploadPDF(file);
-      };
-      reader.readAsDataURL(file);
+        let articleID = this.uploadPDF(file);
+        // Check success
+        if (articleID == null) {
+          // No need for extra alert
+          this.setIsLoading(false);
+          return;
+        }
+        this.setState({ articleID: articleID });
+
+        // Send article to server for diagram
+        let diagram = await this.generateDiagram(accountID, articleID);
+        // Send article to server for sumamry
+        let summary = await this.generateSummary(accountID, articleID);
+        // Check success
+        if (diagram === null || summary === null) {
+          // No need for extra alert
+          this.setIsLoading(false);
+          return;
+        }
+
+        // Update backend database
+        let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
+        let upSummary = await this.updateSummary(accountID, articleID, summary);
+        if (upDiagram === false || upSummary === false) {
+          // No need for extra alert
+          this.setIsLoading(false);
+          return;
+        }
+        
+        // Update views
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.setState({ pdfSrc: e.target.result });      
+        };
+        reader.readAsDataURL(file);
+        this.setState({ diagramDefinition : diagram });
+        this.setState({ summaryDefinition : summary });
+        this.setIsLoading(false);
+      }
     } else {
       createAlert('Please select a PDF file.');
     }
   };
 
-  // Send PDF to backend for diagram
-  uploadPDF = async (file) => {
+  // Send PDF to backend to database
+  uploadPDF = async (file, accountID) => {
     try {
-      this.setIsLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-  
       // PDF upload endpoint
-      const response = await fetch('/uploadPdf', {
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article`, {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+        body: file,
       });
-  
-      if (response.status === 413) {
-        createAlert('Error uploading PDF file: PDF file exceeds 3500 tokens.');
+
+      if (response.ok) {
+        // Get article ID
+        const articleID = await response.result.articleId;
+        return articleID;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Unauthorized access!');
+        // Too many tokens
+        } else if (response.status === 413) {
+          createAlert('Error uploading PDF file: PDF file exceeds 3500 tokens.');
+        // All other errors
+        } else {
+          createAlert('Internal server error.');
+          console.log("Error : ", response.status, response.statusText)
+        }
         this.setIsLoading(false);
-        return;
+        return null;
       }
-
-      if (!response.ok) {
-        throw new Error('Failed to upload PDF file');
-      }
-  
-      const responseBody = await response.text();
-      console.log('PDF file uploaded successfully:', responseBody);
-      this.setIsLoading(false);
-
-      // Update diagram
-      this.changeDiagram(responseBody);
     } catch (error) {
-      console.log('Error uploading PDF file:', error.message); 
-      createAlert('Error uploading PDF file: ' + error.message);
+      createAlert('Internal server error.');
+      console.log("Error : ", error);
       this.setIsLoading(false);
+      return null;
     }
   };
 
 
-  // Regenerate diagram from pdf
-  regenDiagram = async () => {
-    if (this.state.pdfSrc) {
+  // Generate diagram
+  generateDiagram = async (accountID, articleID) => {
+    try {
+      // PDF to diagram  upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
+        method: 'GET'
+      });
+
+      if (response.ok) {
+        // Recieve diagram as mermaid string
+        const mermaid = await response.text();
+        return mermaid;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Generate Diagram : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Generate Diagram : Internal server error.');
+          console.log("Generate Diagram Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return null;
+      }
+    } catch (error) {
+      createAlert('Generate Diagram : Internal server error.');
+      console.log("Generate Diagram Error : ", error);
+      this.setIsLoading(false);
+      return null;
+    }
+  }
+
+
+  // Generate summary
+  generateSummary = async (accountID, articleID) => {
+    try {
+      // PDF to diagram upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+        method: 'GET'
+      });
+
+      if (response.ok) {
+        // Recieve summary as a string
+        const summary = await response.text();
+        return summary;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Generate Summary : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Generate Summary : Internal server error.');
+          console.log("Generate Summary Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return null;
+      }
+    } catch (error) {
+      createAlert('Generate Summary Internal server error.');
+      console.log("Generate Summary Error : ", error);
+      this.setIsLoading(false);
+      return null;
+    }
+  }
+
+
+  // Update diagram
+  updateDiagram = async (accountID, articleID, diagram) => {
+    try {
+      // Diagram update upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
+        method: 'PUT',
+        body: diagram
+      });
+
+      if (response.ok) {
+        // Successfully uploaded to backend
+        return true;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Update Diagram : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Update Diagram : Internal server error.');
+          console.log("Update Diagram Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      createAlert('Update Diagram : Internal server error.');
+      console.log("Update Diagram Error : ", error);
+      this.setIsLoading(false);
+      return false;
+    }
+  }
+
+
+  // Update sumamry
+  updateSummary = async (accountID, articleID, summary) => {
+    try {
+      // Summary update upload endpoint
+      const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+        method: 'PUT',
+        body: summary
+      });
+
+      if (response.ok) {
+        // Successfully uploaded to backend
+        return true;
+      } else {
+        // Account not found
+        if (response.status === 401) {
+          createAlert('Update Summary : Unauthorized access!');
+        // All other errors
+        } else {
+          createAlert('Update Summary : Internal server error.');
+          console.log("Update Summary Error : ", response.status, response.statusText)
+        }
+        this.setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      createAlert('Update Summary : Internal server error.');
+      console.log("Update Summary Error : ", error);
+      this.setIsLoading(false);
+      return false;
+    }
+  }
+
+
+  // Handle regenerate diagram from currently selected pdf
+  handleRegenDiagram = async () => {
+    if (this.state.articleID) {
       try {
-        // Convert data URI to PDF file
-        const blob = await (await fetch(this.state.pdfSrc)).blob();
-        const file = new File([blob], "filename.pdf", { type: "application/pdf" });
-        await this.uploadPDF(file);
+        // Loading bar
+        this.setIsLoading(true);
+        
+        // Get accountID
+        let accountID = localStorage.getItem("userId");
+
+        // Regenerate diagram
+        await this.regenDiagram(this.state.articleID, accountID);
       } catch (error) {
         console.error("Error regenerating diagram:", error);
         createAlert("Error regenerating diagram. Please try again.");
       }
     } else {
       createAlert("No current PDF")
+    }
+  }
+
+  // Regenerate diagram from currently selected pdf
+  regenDiagram = async (articleID, accountID) => {
+    try {
+      // Send article to server for diagram
+      let diagram = await this.generateDiagram(accountID, articleID);
+      // Check success
+      if (diagram === null) {
+        // No need for extra alert
+        this.setIsLoading(false);
+        return;
+      }
+
+      // Update backend database
+      let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
+      if (upDiagram === false) {
+        // No need for extra alert
+        this.setIsLoading(false);
+        return;
+      }
+      
+      // Update views
+      this.setState({ diagramDefinition : diagram });
+      this.setIsLoading(false);
+    } catch (error) {
+      createAlert('Internal server error.');
+      console.log("Error : ", error);
+      this.setIsLoading(false);
+      return null;
     }
   }
 
@@ -218,7 +431,7 @@ class App extends React.Component {
     return (
       <div id="Fullscreen">
         <Sidebar onPDFChange={this.changePDF}
-                 regenDiagram={this.regenDiagram}
+                 regenDiagram={this.handleRegenDiagram}
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
                  toggleDiagram={this.toggleDiagramView}
@@ -233,7 +446,7 @@ class App extends React.Component {
                          pdfSrc={this.state.pdfSrc} />
             )}
             {this.state.showDiagramView && (
-              <DiagramViewer regenDiagram={this.regenDiagram}
+              <DiagramViewer regenDiagram={this.handleRegenDiagram}
                              diagramDefinition={this.state.diagramDefinition}
                              isLoading={this.state.isLoading}
                              saveToLocal={this.saveToLocal} />
