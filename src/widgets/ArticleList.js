@@ -54,6 +54,7 @@ class ArticleList extends React.Component {
   loadFromServer = async (articleID) => {
     // Get user id
     // TODO
+    let accountID = null;
 
     let article = await this.fetchServerArticle(accountID, articleID);
     let diagram = await this.fetchServerDiagram(accountID, articleID);
@@ -176,8 +177,8 @@ class ArticleList extends React.Component {
         <b>Server Articles</b>
         <ul>
           {this.state.serverArticles.map(article => (
-            <li key={article.ArticleID} className="Article-item">
-              <button onClick={() => this.loadFromServer(key)} 
+            <li key={article.articleID} className="Article-item">
+              <button onClick={() => this.loadFromServer(article.articleID)} 
                       className="Article-button">
                 <div className="Article-title">{article.title}</div>
                 <div className="Article-summary">{article.summary}</div>

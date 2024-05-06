@@ -1,16 +1,23 @@
 /*
-TODO ::
-- Delete correct local article
+CURRENT TODO
+-----
+
+CONTENT ::
 - Add Diagram comparision
-- Redo/clarify icons
-- Add Help menu --> Hover overlay
 - Add Privacy policy
 - Add profiles menu
+
+CHANGES ::
+- Delete correct local article
+- Redo/clarify icons
+- Lasting visual alert
+
+UI ::
+- Add Help menu --> Hover overlay
 - Add diagram color choice
-- Add place for sumamry
+- Add place for summary
 
-
-SERVER SIDE ::
+FETCH REQUESTS ::
 - Article Visualization
  - Update concept map
  - Get article summary
@@ -24,17 +31,28 @@ SERVER SIDE ::
 */
 
 :root {
-  /* Color Pallete */
+
+  /* Color UI */
   --c_main1: #D5DDE8;
   --c_accent1: #A9AEC2;
   --c_main2: #4B4B59;
   --c_accent2: #2B2B33;
   --c_highlight: #0056b3;
+  --c_shadow: rgba(0, 0, 0, 0.5); /* Semi Transparent Background */
+
+  /* Color Text */
   --c_headtext: #D5DDE8;
   --c_maintext: #A9AEC2;
   --c_subtext: #4B4B59;
   --c_alttext: #2B2B33;
-  --c_shadow: rgba(0, 0, 0, 0.5); /* Semi Transparent Background */
+
+  /* Color Mermaid */
+  /*
+  Rect - Main
+  Text - Duh
+  Line - Arrow
+  Box - Action?
+  */
 
   /* Space Sizes */
   --small_dim: 4px;

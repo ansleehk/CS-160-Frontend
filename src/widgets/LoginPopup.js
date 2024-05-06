@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import "./LoginPopup.css";
 
 import createAlert from "../utilities/Alert";
@@ -22,6 +23,20 @@ const LoginPopup = ({ onClose }) => {
     '`': '&#x60;',
     '=': '&#x3D;'
   };
+
+
+  // Import the captcha
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.google.com/recaptcha/api.js";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   
 
   // Clean user input 
@@ -58,8 +73,7 @@ const LoginPopup = ({ onClose }) => {
 
 
   // Handles form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  window.handleSubmit = async (token) => {
 
     // Clean user input
     setEmail(escapeHtml(email));
@@ -67,7 +81,7 @@ const LoginPopup = ({ onClose }) => {
     setPassword(escapeHtml(password));
 
     // Send to login/signup logic
-    const result = (tab === "signin") ? await signIn(email, password) : await signUp(email, profile, password);
+    const result = (tab === "signin") ? await signIn(email, password, token) : await signUp(email, password, profile, token);
 
     // Close popup on successful response
     if (result) { onClose(); } 
@@ -76,72 +90,93 @@ const LoginPopup = ({ onClose }) => {
 
   // Handles sign in
   // True if successful, false otherwise
-  const signIn = async (email, password) => {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
+  const signIn = async (email, password, token) => {
+    try {
+      const response = await fetch('https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          captcha: token
+        }),
 
-    // Register upload endpoint
-    const response = await fetch('/auth/login', {
-      method: 'POST',
-      body: formData
-    });
+      });
 
-    // Error : Email in use
-    if (response.status === 400) {
-      createAlert('User not found!');
-      return false;
-    }
+      if (response.ok) {
+        const data = await response.json();
 
-    // Error : Internal server error
-    if (!response.ok) {
+        localStorage.setItem('authToken', data.data.token);
+        localStorage.setItem('userId', data.data.userId);
+        createAlert("Successfully logged in!");
+        return true;
+      } else {
+        // Email not found
+        if (response.status === 400) {
+          createAlert('User not found!');
+        // All other errors
+        } else {
+          createAlert('Internal server error.');
+          console.log("Error : ", response.status, response.statusText)
+        }
+        return false;
+      }
+    } catch (error) {
       createAlert('Internal server error.');
-      console.log("Error : ", response.status, response.statusText)
+      console.log("Error : ", error)
       return false;
     }
-
-    const responseBody = await response.text();
-    createAlert("Successfully logged in!");
-    return true;
   }
 
 
   // Handles sign up
   // True if successful, false otherwise
-  const signUp = async (email, profile, password) => {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('displayName', profile);
-
-    // Register upload endpoint
-    const response = await fetch('/auth/register', {
-      method: 'POST',
-      body: formData
-    });
-
-    // Error : Email in use
-    if (response.status === 400) {
-      createAlert('A user with this email already exists!');
-      return false;
-    }
-
-    // Error : Internal server error
-    if (!response.ok) {
+  const signUp = async (email, password, profile, token) => {
+    try {
+      // Register endpoint
+      const response = await fetch('https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            displayName: profile,
+            captcha: token
+          })
+      });
+      // Okay
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('authToken', data.data.token);  
+        localStorage.setItem('userId', data.data.userId);
+        createAlert("Registration successful.")
+        return true;
+      } else {
+        // Email in use
+        if (response.status === 400) {
+          createAlert('A user with this email already exists!');
+        // All other errors
+        } else {
+          createAlert('Internal server error.');
+          console.log("Error : ", response.status, response.statusText)
+        }
+        return false;
+      }
+    } catch (error) {
       createAlert('Internal server error.');
-      console.log("Error : ", response.status, response.statusText)
+      console.log("Error : ", error)
       return false;
     }
-
-    const responseBody = await response.text();
-    createAlert("Registration successful.");
-    return true;
   }
 
 
   // TODO : Function for help with password retrieval
   const passwordHelp = () => {
-    createAlert("Passwords not yet implemented.");
+    createAlert("Passwords help not yet implemented.");
   };
 
   return (
@@ -172,7 +207,7 @@ const LoginPopup = ({ onClose }) => {
 
         {/* Login/Signup form */}
         <div id="login-content">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(event) => { event.preventDefault(); }}>
 
             {tab === "signup" && (
               <>
@@ -208,8 +243,9 @@ const LoginPopup = ({ onClose }) => {
               </span>
             </div>
 
-            {/* Submit button */}
-            <button type="submit">
+            {/* reCAPTCHA and submit button */}
+            <button className="g-recaptcha" data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL" data-callback='handleSubmit'
+              data-action='submit'>
               {tab === "signin" ? "Sign in" : "Sign up"}
             </button>
           </form>
