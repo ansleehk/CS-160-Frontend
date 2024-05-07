@@ -70,7 +70,8 @@ class Sidebar extends React.Component {
             </div>
 
             {/* List of articles */}
-            <ArticleList loadArticle={this.props.loadArticle}
+            <ArticleList id="Article-list"
+                         loadArticle={this.props.loadArticle}
                          deleteFromLocal={this.props.deleteFromLocal}
                          toggleRefresh={this.props.toggleRefresh} />
 

@@ -4,6 +4,12 @@
   padding-right: var(--large_dim);
 }
 
+#Article-list ul,
+#Article-list li {
+  padding-left: var(--small_dim);
+  margin-left: var(--small_dim);
+}
+
 .Article-item {
   list-style-type: none;
   margin-bottom: var(--medium_dim);
@@ -55,7 +61,9 @@
   font-weight: bold;
 }
 
-.Article-id {
+.Article-summary {
   font-size: var(--sub_font);
   color: var(--c_subtext);
+  word-wrap: break-word;
+  white-space: pre-line;
 }

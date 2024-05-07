@@ -5,7 +5,6 @@ import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
 
 import del from "../images/Delete.png";
-// import testArticles from "../testArticles.json"; // Test articles
 
 class ArticleList extends React.Component {
 
@@ -22,6 +21,12 @@ class ArticleList extends React.Component {
   // Fetch articles when the component mounts
   // Change to onlogin later on
   componentDidMount = async () => {
+    await this.fetchArticles();
+  }
+
+  
+  // Fetch and load articles from local/server
+  fetchArticles = async() => {
     // Get local articles from local storage
     const localArticles = this.loadFromLocal();
 
@@ -29,7 +34,6 @@ class ArticleList extends React.Component {
     //const serverArticles = testArticles;
     const serverArticles = await this.fetchArticleList()
     
-      
     // Update state article lists
     this.setState({
       localArticles: localArticles,
@@ -63,12 +67,22 @@ class ArticleList extends React.Component {
 
   // Get article list from server
   fetchArticleList = async () => {
-    // Get user id
+    // Get user id / authentication token
     let accountID = localStorage.getItem("userId") || null;
+    let authToken = localStorage.getItem("authToken");
+
+    // Not logged in
+    if (accountID === null) {
+      return [];
+    }
 
     // Fetch article list
-    const response = await fetch(`/account/${accountID}/article`, {
-      method: 'GET'
+    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article`, {
+      credentials: "include",
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      },
     });
 
     // Error : Access unauthorized
@@ -84,8 +98,8 @@ class ArticleList extends React.Component {
       return [];
     }
 
-    const responseBody = await response.result();
-    return responseBody;
+    const data = await response.json();
+    return data.data.articles;
   }
 
 
@@ -94,7 +108,7 @@ class ArticleList extends React.Component {
     // TODO : Fix returns
 
     // Fetch article
-    const response = await fetch(`/account/${accountID}/article/${articleID}`, {
+    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article/${articleID}`, {
       method: 'GET'
     });
 
@@ -125,7 +139,7 @@ class ArticleList extends React.Component {
   // Fetch diagram from server
   fetchServerDiagram = async (accountID, articleID) => {
     // Fetch Diagram
-    const response = await fetch(`/account/${accountID}/visual/${articleID}/concept-map`, {
+    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
       method: 'GET'
     });
 
@@ -153,6 +167,21 @@ class ArticleList extends React.Component {
   }
 
 
+  // Cut down the summary to 200char or 2 new lines
+  truncateSummary = (summary) => {
+    var text = summary;
+    // Splitting the summary by newline character and taking at most two lines
+    const lines = text.split('\n');
+    if (lines.length > 2) {
+      text = lines.slice(0, 2).join('\n') + '...';
+    }
+    // Cutting down to 200 chars
+    if (text.length > 200) {
+      text = text.substring(0, 200) + '...';
+    }
+    return text;
+  };
+
 
   render() {
     return (
@@ -163,8 +192,8 @@ class ArticleList extends React.Component {
             <li key={index} className="Article-item">
               <button onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition)} 
                       className="Article-button">
-                <div className="Article-title">Title</div>
-                <div className="Article-id">Description</div>
+                <div className="Article-title">{article.title}</div>
+                <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
                 <Tooltip text="Delete from local storage">
                   <button onClick={() => this.props.deleteFromLocal(index)}
                     className="Article-delete-button">
@@ -182,7 +211,7 @@ class ArticleList extends React.Component {
               <button onClick={() => this.loadFromServer(article.articleID)} 
                       className="Article-button">
                 <div className="Article-title">{article.title}</div>
-                <div className="Article-summary">{article.summary}</div>
+                <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
               </button>
             </li>
           ))}
