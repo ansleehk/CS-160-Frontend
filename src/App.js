@@ -28,15 +28,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.loadThemeColors();
-
-    // Below is to test profiles
-    /*
-    localStorage.setItem('authToken', "token");
-    localStorage.setItem('userId', 1241);
-    localStorage.setItem('email', "testing@email.com");
-    localStorage.setItem('password', "Password");
-    localStorage.setItem('profile', "Testing");
-    */
   }
 
 
@@ -272,7 +263,7 @@ class App extends React.Component {
 
 
   // Update diagram
-  updateDiagram = async (accountID, articleID, diagram, authToken) => {
+  updateDiagram = async (accountID, articleID, authToken) => {
     try {
       // Diagram update upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
@@ -280,13 +271,13 @@ class App extends React.Component {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`
-        },
-        body: diagram
+        }
       });
 
       if (response.ok) {
         // Successfully uploaded to backend
-        return true;
+        const mermaid = await response.text();
+        return mermaid;
       } else {
         // Account not found
         if (response.status === 401) {
@@ -296,20 +287,18 @@ class App extends React.Component {
           createAlert('Update Diagram : Internal server error.');
           console.log("Update Diagram Error : ", response.status, response.statusText)
         }
-        this.setIsLoading(false);
-        return false;
+        return null;
       }
     } catch (error) {
       createAlert('Update Diagram : Internal server error.');
       console.log("Update Diagram Error : ", error);
-      this.setIsLoading(false);
-      return false;
+      return null;
     }
   }
 
 
   // Update sumamry
-  updateSummary = async (accountID, articleID, summary, authToken) => {
+  updateSummary = async (accountID, articleID, authToken) => {
     try {
       // Summary update upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
@@ -317,13 +306,13 @@ class App extends React.Component {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`
-        },
-        body: summary
+        }
       });
 
       if (response.ok) {
         // Successfully uploaded to backend
-        return true;
+        const summary = await response.text();
+        return summary;
       } else {
         // Account not found
         if (response.status === 401) {
@@ -333,14 +322,12 @@ class App extends React.Component {
           createAlert('Update Summary : Internal server error.');
           console.log("Update Summary Error : ", response.status, response.statusText)
         }
-        this.setIsLoading(false);
-        return false;
+        return null;
       }
     } catch (error) {
       createAlert('Update Summary : Internal server error.');
       console.log("Update Summary Error : ", error);
-      this.setIsLoading(false);
-      return false;
+      return null;
     }
   }
 
@@ -362,6 +349,7 @@ class App extends React.Component {
         pdfSrc: this.state.pdfSrc,
         diagramDefinition: this.state.diagramDefinition,
         summaryDefinition: this.state.summaryDefinition,
+        articleID: this.state.articleID
       };
       savedArticles.push(newArticle);
 
@@ -386,12 +374,13 @@ class App extends React.Component {
 
 
   // Load an article from local/server list
-  loadArticle = (pdfSrc, diagramDefinition, summaryDefinition) => {
+  loadArticle = (pdfSrc, diagramDefinition, summaryDefinition, articleID) => {
     if (pdfSrc && diagramDefinition) {
       this.setState({
         pdfSrc: pdfSrc,
         diagramDefinition: diagramDefinition,
-        summaryDefinition: summaryDefinition
+        summaryDefinition: summaryDefinition,
+        articleID: articleID
       });
     } else {
       console.log("Load issue :", pdfSrc);

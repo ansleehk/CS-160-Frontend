@@ -246,7 +246,7 @@ class ArticleList extends React.Component {
         <b>Local Articles</b>
         <ul>
           {this.state.localArticles && this.state.localArticles.map((article, index) => (
-            <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition, article.summaryDefinition)}>
+            <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition, article.summaryDefinition, article.articleID)}>
               <div className="Article-title">{article.title}</div>
               <div className="Article-summary">{this.truncateSummary(article.summaryDefinition)}</div>
               <Tooltip className="Delete-tooltip" text="Delete from local storage">
