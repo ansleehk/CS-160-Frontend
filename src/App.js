@@ -446,7 +446,13 @@ class App extends React.Component {
 
   // Clears the PDF and Diagram views
   resetViews = () => {
-    this.setState({ pdfSrc: null, diagramDefinition: null });
+    this.setState({
+      pdfSrc: null,
+      diagramDefinition: null,
+      summaryDefinition: null,
+      compareDiagramDefinition: null,
+      compareSummaryDefinition: null
+    });
   };
 
   render() {

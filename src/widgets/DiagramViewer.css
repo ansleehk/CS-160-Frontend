@@ -69,7 +69,7 @@
 
 #diagram-options {
   position: absolute;
-  top: var(--small_dim);
+  bottom: var(--small_dim);
   right: var(--small_dim);
   display: flex;
   margin: 0;
@@ -98,16 +98,16 @@
 
 #diagram-container {
   position: absolute;
-  top: 0;
+  justify-content: center;
   left: 0;
   bottom: 0; 
   right: 0;
-  overflow: auto;
 }
 
 #mermaid-container {
   position: absolute;
-  top: 0;
+  align-items: center;
+  bottom: var(--large_dim);
   left: 0;
   width: 100%;
   height: 100%;

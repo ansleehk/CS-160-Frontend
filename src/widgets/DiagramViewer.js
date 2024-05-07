@@ -53,12 +53,6 @@ class DiagramViewer extends React.Component {
 
     if (prevProps.summaryDefinition !== this.props.summaryDefinition) {
       this.setState({ summaryKey: this.state.summaryKey + 1 });
-
-      // Get the height of the summary box
-      const summaryHeight = document.getElementById('summary-box').offsetHeight;
-
-      // Set the padding-top of the diagram container to match the height of the summary box
-      document.getElementById('diagram-container').style.top = `${summaryHeight}px`;
     }
   }
 
