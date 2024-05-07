@@ -47,6 +47,26 @@
   100% { transform: rotate(360deg); }
 }
 
+#content {
+  position: relative;
+  align-items: top;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#summary-box {
+  z-index: 2;
+  border-bottom: var(--small_dim) solid var(--c_hilight);
+}
+
+#summary {
+  margin: 0;
+  padding: var(--small_dim);
+  font-size: var(--sub_font);
+  border-bottom: var(--small_dim) solid var(--c_hilight);
+}
+
 #diagram-options {
   position: absolute;
   top: var(--small_dim);
@@ -74,6 +94,15 @@
 #diagram-options img {
   height: var(--small_button);
   width: var(--small_button);
+}
+
+#diagram-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; 
+  right: 0;
+  overflow: auto;
 }
 
 #mermaid-container {

@@ -386,11 +386,12 @@ class App extends React.Component {
 
 
   // Load an article from local/server list
-  loadArticle = (pdfSrc, diagramDefinition) => {
+  loadArticle = (pdfSrc, diagramDefinition, summaryDefinition) => {
     if (pdfSrc && diagramDefinition) {
       this.setState({
         pdfSrc: pdfSrc,
-        diagramDefinition: diagramDefinition
+        diagramDefinition: diagramDefinition,
+        summaryDefinition: summaryDefinition
       });
     } else {
       console.log("Load issue :", pdfSrc);
@@ -455,6 +456,7 @@ class App extends React.Component {
             {this.state.showDiagramView && (
               <DiagramViewer regenDiagram={this.handleRegenDiagram}
                              diagramDefinition={this.state.diagramDefinition}
+                             summaryDefinition={this.state.summaryDefinition}
                              isLoading={this.state.isLoading}
                              saveToLocal={this.saveToLocal} />
             )}

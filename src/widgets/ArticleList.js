@@ -64,9 +64,10 @@ class ArticleList extends React.Component {
     if (article === null) { return; }
     let diagram = await this.fetchServerDiagram(accountID, articleID, authToken);
     if (diagram === null) { return; }
-    console.log("DiagramInfo : ", diagram);
+    let summary = null
+    if (summary === null) { return; }
 
-    this.props.loadArticle(this.convertToPdfSrc(article), diagram)    
+    this.props.loadArticle(this.convertToPdfSrc(article), diagram, summary)    
   }
 
 
@@ -245,7 +246,7 @@ class ArticleList extends React.Component {
         <b>Local Articles</b>
         <ul>
           {this.state.localArticles && this.state.localArticles.map((article, index) => (
-            <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition)}>
+            <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition, article.summaryDefinition)}>
               <div className="Article-title">{article.title}</div>
               <div className="Article-summary">{this.truncateSummary(article.summaryDefinition)}</div>
               <Tooltip className="Delete-tooltip" text="Delete from local storage">
