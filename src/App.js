@@ -5,6 +5,7 @@ import Sidebar from "./widgets/Sidebar";
 import Topbar from "./widgets/Topbar";
 import PDFViewer from "./widgets/PDFViewer";
 import DiagramViewer from "./widgets/DiagramViewer";
+import CompareViewer from "./widgets/CompareViewer";
 
 import createAlert from "./utilities/Alert";
 import Themes from "./utilities/Themes.js";
@@ -20,7 +21,9 @@ class App extends React.Component {
       showPDFView: true,
       showDiagramView: true,
       diagramDefinition: null,
-      sumamryDefinition: null,
+      summaryDefinition: null,
+      compareDiagramDefinition: null,
+      compareSummryDefinition: null,
       toggleRefresh: false,
     };
   }
@@ -376,12 +379,21 @@ class App extends React.Component {
   // Load an article from local/server list
   loadArticle = (pdfSrc, diagramDefinition, summaryDefinition, articleID) => {
     if (pdfSrc && diagramDefinition) {
-      this.setState({
-        pdfSrc: pdfSrc,
-        diagramDefinition: diagramDefinition,
-        summaryDefinition: summaryDefinition,
-        articleID: articleID
-      });
+      if (this.state.showCompareView) {
+        this.setState({
+          pdfSrc: pdfSrc,
+          compareDiagramDefinition: diagramDefinition,
+          compareSummaryDefinition: summaryDefinition,
+          articleID: articleID
+        });
+      } else {
+        this.setState({
+          pdfSrc: pdfSrc,
+          diagramDefinition: diagramDefinition,
+          summaryDefinition: summaryDefinition,
+          articleID: articleID
+        });
+      }
     } else {
       console.log("Load issue :", pdfSrc);
       console.log("Diagram :", diagramDefinition);
@@ -410,8 +422,21 @@ class App extends React.Component {
 
   // Shows/hides PDFView
   togglePDFView = () => {
-    this.setState({ showPDFView : !this.state.showPDFView })
+    this.setState({
+      showCompareView: false,
+      showPDFView: !this.state.showPDFView
+    })
   }
+
+
+  // Shows/hides CompareView
+  toggleCompareView = () => {
+    this.setState({
+      showPDFView: false,
+      showCompareView: !this.state.showCompareView
+    })
+  }
+
 
   // Shows/hides DiagramView
   toggleDiagramView = () => {
@@ -431,6 +456,7 @@ class App extends React.Component {
                  regenDiagram={this.handleRegenDiagram}
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
+                 toggleCompare={this.toggleCompareView}
                  toggleDiagram={this.toggleDiagramView}
                  loadArticle={this.loadArticle}
                  deleteFromLocal={this.deleteFromLocal}
@@ -441,6 +467,10 @@ class App extends React.Component {
             {this.state.showPDFView && (
               <PDFViewer onPDFChange={this.changePDF}
                          pdfSrc={this.state.pdfSrc} />
+            )}
+            {this.state.showCompareView && (
+              <CompareViewer diagramDefinition={this.state.compareDiagramDefinition}
+                             summaryDefinition={this.state.compareSummaryDefinition} />
             )}
             {this.state.showDiagramView && (
               <DiagramViewer regenDiagram={this.handleRegenDiagram}

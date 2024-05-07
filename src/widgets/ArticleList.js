@@ -29,7 +29,6 @@ class ArticleList extends React.Component {
   fetchArticles = async() => {
     // Get local articles from local storage
     const localArticles = this.loadFromLocal();
-    console.log("Local :", localArticles);
 
     // Get server articles from server
     //const serverArticles = testArticles;
@@ -186,7 +185,7 @@ class ArticleList extends React.Component {
   }
 
 
-  // Cut down the summary to 200char or 2 new lines
+  // Cut down the summary to 100char or 2 new lines
   truncateSummary = (summary) => {
     var text = summary;
     // Splitting the summary by newline character and taking at most two lines
@@ -194,9 +193,9 @@ class ArticleList extends React.Component {
     if (lines.length > 2) {
       text = lines.slice(0, 2).join('\n') + '...';
     }
-    // Cutting down to 200 chars
-    if (text.length > 200) {
-      text = text.substring(0, 200) + '...';
+    // Cutting down to 100 chars
+    if (text.length > 100) {
+      text = text.substring(0, 100) + '...';
     }
     return text;
   };

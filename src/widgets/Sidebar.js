@@ -128,6 +128,11 @@ class Sidebar extends React.Component {
                 <img src={pdf} id="Toggle-pdf" alt="toggle pdf" />
               </button>
             </Tooltip>
+            <Tooltip text="Toggles diagram comparer visibility">
+              <button onClick={this.props.toggleCompare}>
+                <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
+              </button>
+            </Tooltip>
             <Tooltip text="Toggles diagram visibility">
               <button onClick={this.props.toggleDiagram}>
                 <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />

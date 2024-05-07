@@ -1,0 +1,57 @@
+@import "../utilities/Styles.css";
+
+#Diagram-viewer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--h1_font);
+  color: var(--c_headtext);
+  background-color: var(--c_main2);
+  height: 100%;
+  width: 100%;
+  transition: width 0.3s ease;
+}
+
+#content {
+  position: relative;
+  align-items: top;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#summary-box {
+  z-index: 2;
+  border-bottom: var(--small_dim) solid var(--c_hilight);
+}
+
+#summary {
+  margin: 0;
+  padding: var(--small_dim);
+  font-size: var(--sub_font);
+  border-bottom: var(--small_dim) solid var(--c_hilight);
+}
+
+#explain {
+  font-size: var(--h2_font);
+}
+
+#diagram-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; 
+  right: 0;
+  overflow: auto;
+}
+
+#mermaid-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
