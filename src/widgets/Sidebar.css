@@ -49,10 +49,6 @@
   vertical-align: top;
 }
 
-#Right-aligned {
-  margin-left: auto;
-}
-
 #Closed-sidebar button {
   border-radius: 0;
   background-color: var(--c_main1);

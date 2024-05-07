@@ -360,7 +360,8 @@ class App extends React.Component {
       // Combine new data with existing data
       const newArticle = {
         pdfSrc: this.state.pdfSrc,
-        diagramDefinition: this.state.diagramDefinition
+        diagramDefinition: this.state.diagramDefinition,
+        summaryDefinition: this.state.summaryDefinition,
       };
       savedArticles.push(newArticle);
 
@@ -392,6 +393,8 @@ class App extends React.Component {
         diagramDefinition: diagramDefinition
       });
     } else {
+      console.log("Load issue :", pdfSrc);
+      console.log("Diagram :", diagramDefinition);
       createAlert("PDF/Diagram information could not be retrieved.")
     }
   }

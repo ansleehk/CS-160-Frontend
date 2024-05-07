@@ -77,24 +77,22 @@ class Sidebar extends React.Component {
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">
-              <Tooltip text="Clears current PDF/diagram">
+              <Tooltip id="Reset-tooltip" text="Clears current PDF/diagram">
                 <button id="New-article" onClick={this.props.onReset}>
                   <img src={reset} id="New" alt="new article" />
                 </button>
               </Tooltip>
-              <div id="Right-align">
-                <Tooltip text="Shows privacy policy">
-                  <button id="Privacy-policy" onClick={this.togglePrivacyPopup}>
-                    <img src={privacy} id="Privacy" alt="privacy policy" />
-                  </button>
-                </Tooltip>
-                {this.state.showPrivacyPolicy && <Privacy onClose={this.togglePrivacyPopup} />}
-                <Tooltip text="Opens settings">
-                  <button id="Settings-open" onClick={this.toggleSettingsPopup}>
-                    <img src={settings} id="Settings" alt="settings" />
-                  </button>
-                </Tooltip>
-              </div>
+              <Tooltip id="Privacy-tooltip" text="Shows privacy policy">
+                <button id="Privacy-policy" onClick={this.togglePrivacyPopup}>
+                  <img src={privacy} id="Privacy" alt="privacy policy" />
+                </button>
+              </Tooltip>
+              {this.state.showPrivacyPolicy && <Privacy onClose={this.togglePrivacyPopup} />}
+              <Tooltip id="Settings-open-tooltip" text="Opens settings">
+                <button id="Settings-open" onClick={this.toggleSettingsPopup}>
+                  <img src={settings} id="Settings" alt="settings" />
+                </button>
+              </Tooltip>
               {this.state.showSettings && <Settings onClose={this.toggleSettingsPopup} />}
             </div>
           </div>

@@ -29,6 +29,7 @@ class ArticleList extends React.Component {
   fetchArticles = async() => {
     // Get local articles from local storage
     const localArticles = this.loadFromLocal();
+    console.log("Local :", localArticles);
 
     // Get server articles from server
     //const serverArticles = testArticles;
@@ -55,13 +56,24 @@ class ArticleList extends React.Component {
 
   // Return article/diagram from server
   loadFromServer = async (articleID) => {
-    // Get user id
-    // TODO
-    let accountID = null;
+    // Get accountID / authentication token
+    let accountID = localStorage.getItem("userId");
+    let authToken = localStorage.getItem("authToken");
 
-    let article = await this.fetchServerArticle(accountID, articleID);
-    let diagram = await this.fetchServerDiagram(accountID, articleID);
-    this.props.loadArticle(article, diagram)    
+    let article = await this.fetchServerArticle(accountID, articleID, authToken);
+    if (article === null) { return; }
+    let diagram = await this.fetchServerDiagram(accountID, articleID, authToken);
+    if (diagram === null) { return; }
+    console.log("DiagramInfo : ", diagram);
+
+    this.props.loadArticle(this.convertToPdfSrc(article), diagram)    
+  }
+
+
+  // Convert PDF file binary string to pdfSrc
+  convertToPdfSrc = (pdfFileString) => {
+    const pdfDataUrl = `data:application/pdf;base64,${btoa(pdfFileString)}`;
+    return pdfDataUrl;
   }
 
 
@@ -104,65 +116,71 @@ class ArticleList extends React.Component {
 
 
   // Fetch article from server
-  fetchServerArticle = async (accountID, articleID) => {
-    // TODO : Fix returns
-
+  fetchServerArticle = async (accountID, articleID, authToken) => {
     // Fetch article
     const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article/${articleID}`, {
-      method: 'GET'
+      credentials: "include",
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
     });
 
     // Error : Access unauthorized
     if (response.status === 401) {
       createAlert("Can't access article!");
-      return false;
+      return null;
     }
 
     // Error : Article not found!
     if (response.status === 404) {
       createAlert("Selected article can't be found.");
-      return false;
+      return null;
     }
 
     // Error : Internal server error
     if (!response.ok) {
       createAlert('Internal server error when accessing article list.');
       console.log("Error : ", response.status, response.statusText)
-      return false;
+      return null;
     }
 
-    const responseBody = await response.text();
+    const responseBody = await response;
     return responseBody;
   }
 
 
   // Fetch diagram from server
-  fetchServerDiagram = async (accountID, articleID) => {
+  fetchServerDiagram = async (accountID, articleID, authToken) => {
     // Fetch Diagram
     const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
-      method: 'GET'
+      credentials: "include",
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
     });
 
     // Error : Access unauthorized
     if (response.status === 401) {
       createAlert("Can't access diagram!");
-      return "";
+      return null;
     }
 
     // Error : Article not found!
     if (response.status === 404) {
       createAlert("Selected diagram can't be found.");
-      return "";
+      return null;
     }
 
     // Error : Internal server error
     if (!response.ok) {
       createAlert('Internal server error when accessing diagram.');
       console.log("Error : ", response.status, response.statusText)
-      return "";
+      return null;
     }
 
-    const responseBody = await response.text();
+    const responseBody = await response;
     return responseBody;
   }
 
@@ -183,36 +201,74 @@ class ArticleList extends React.Component {
   };
 
 
+  // Delete article from server
+  deleteFromServer = async (articleID) => {
+    // Get accountID / authentication token
+    let accountID = localStorage.getItem("userId");
+    let authToken = localStorage.getItem("authToken");
+
+    // Delete article
+    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article/${articleID}/concept-map`, {
+      credentials: "include",
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+
+    // Error : Access unauthorized
+    if (response.status === 401) {
+      createAlert("Can't access diagram!");
+      return;
+    }
+
+    // Error : Article not found!
+    if (response.status === 404) {
+      createAlert("Selected diagram can't be found.");
+      return;
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error when accessing diagram.');
+      console.log("Error : ", response.status, response.statusText)
+      return;
+    }
+
+    createAlert("Article deleted!");
+  }
+
+
   render() {
     return (
       <div key={this.props.toggleRefresh} id="Article-list">
         <b>Local Articles</b>
         <ul>
           {this.state.localArticles && this.state.localArticles.map((article, index) => (
-            <li key={index} className="Article-item">
-              <button onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition)} 
-                      className="Article-button">
-                <div className="Article-title">{article.title}</div>
-                <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
-                <Tooltip text="Delete from local storage">
-                  <button onClick={() => this.props.deleteFromLocal(index)}
-                    className="Article-delete-button">
-                  <img src={del} alt="delete article" />
-                  </button>
-                </Tooltip>
-              </button>
+            <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition)}>
+              <div className="Article-title">{article.title}</div>
+              <div className="Article-summary">{this.truncateSummary(article.summaryDefinition)}</div>
+              <Tooltip className="Delete-tooltip" text="Delete from local storage">
+                <button onClick={() => this.props.deleteFromLocal(index)}
+                  className="Article-delete-button">
+                <img src={del} alt="delete article" />
+                </button>
+              </Tooltip>
             </li>
           ))}
         </ul>
         <b>Server Articles</b>
         <ul>
           {this.state.serverArticles.map(article => (
-            <li key={article.articleID} className="Article-item">
-              <button onClick={() => this.loadFromServer(article.articleID)} 
-                      className="Article-button">
-                <div className="Article-title">{article.title}</div>
-                <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
-              </button>
+            <li key={article.articleID} className="Article-item" onClick={() => this.loadFromServer(article.articleID)}>
+              <div className="Article-title">{article.title}</div>
+              <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
+              <Tooltip className="Delete-tooltip" text="Delete from server storage">
+                <button onClick={() => this.deleteFromServer(article.articleID)}
+                  className="Article-delete-button">
+                <img src={del} alt="delete article" />
+                </button>
+              </Tooltip>
             </li>
           ))}
         </ul>

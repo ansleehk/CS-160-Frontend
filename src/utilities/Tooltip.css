@@ -1,10 +1,5 @@
 @import "Styles.css";
 
-.tooltip-container {
-  position: relative;
-  display: inline-block;
-}
-
 .tooltip {
   position: fixed; /* Position fixed */
   z-index: 9999; /* Ensure it's on top of other elements */

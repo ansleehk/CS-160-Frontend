@@ -11,12 +11,6 @@
 }
 
 .Article-item {
-  list-style-type: none;
-  margin-bottom: var(--medium_dim);
-  position: relative;
-}
-
-.Article-button {
   width: 100%;
   text-align: left;
   padding: var(--small_dim);
@@ -26,6 +20,13 @@
   border: none;
   border-radius: var(--small_dim);
   cursor: pointer;
+  list-style-type: none;
+  margin-bottom: var(--medium_dim);
+  position: relative;
+}
+
+.Article-item:hover {
+  filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }
 
 .Article-delete-button {

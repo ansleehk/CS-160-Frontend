@@ -62,8 +62,13 @@ class DiagramViewer extends React.Component {
             <div id="loader"></div>
           </>
         ) : this.props.diagramDefinition ? (
-          // Mermaid diagram
+          
           <>
+            {/* Summary Box */}
+            <div id="summary-box">
+
+            </div>
+            {/* Diagram Options */}
             <div id="diagram-options">
               <Tooltip text="Save diagram locally">
                 <button onClick={this.props.saveToLocal}>
@@ -76,6 +81,7 @@ class DiagramViewer extends React.Component {
                 </button>
               </Tooltip>
             </div>
+            {/* Mermaid Diagram */}
             <div id="mermaid-container">
               <Mermaid id="mermaid" key={this.state.diagramKey}
                                     chart={this.props.diagramDefinition}
