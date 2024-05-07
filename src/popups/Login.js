@@ -107,13 +107,16 @@ const Login = ({ onClose }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("R1 : ", data);
 
         // TODO : more secure storage
-        localStorage.setItem('authToken', data.result.token);
-        localStorage.setItem('userId', data.result.userId);
+        localStorage.setItem('authToken', data.data.token);
+        localStorage.setItem('userId', data.data.userId);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
-        localStorage.setItem('profile', profile);
+        localStorage.setItem('profile', data.data.displayName);
+
+        console.log(`UserInfo : UserID(${localStorage.getItem('userId')})`);
 
         createAlert("Successfully logged in!");
         return true;
@@ -162,7 +165,7 @@ const Login = ({ onClose }) => {
         localStorage.setItem('userId', data.result.userId);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
-        localStorage.setItem('profile', profile);
+        localStorage.setItem('profile', data.data.displayName);
 
         createAlert("Registration successful.")
         return true;

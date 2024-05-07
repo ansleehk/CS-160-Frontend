@@ -11,7 +11,7 @@ class Topbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userName: localStorage.getItem("userName"),
+      userName: localStorage.getItem("profile"),
       authToken: localStorage.getItem("authToken"),
       showLoginPopup: false,
       showProfilePopup: false

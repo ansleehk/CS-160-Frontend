@@ -68,11 +68,12 @@ class App extends React.Component {
         // Loading bar
         this.setIsLoading(true);
 
-        // Get accountID
+        // Get accountID / authentication token
         let accountID = localStorage.getItem("userId");
+        let authToken = localStorage.getItem("authToken");
 
         // Send PDF to backend for diagram
-        let articleID = this.uploadPDF(file);
+        let articleID = await this.uploadPDF(file, accountID, authToken);
         // Check success
         if (articleID == null) {
           // No need for extra alert
@@ -82,20 +83,17 @@ class App extends React.Component {
         this.setState({ articleID: articleID });
 
         // Send article to server for diagram
-        let diagram = await this.generateDiagram(accountID, articleID);
-        // Send article to server for sumamry
-        let summary = await this.generateSummary(accountID, articleID);
+        let diagram = await this.generateDiagram(accountID, articleID, authToken);
         // Check success
-        if (diagram === null || summary === null) {
-          // No need for extra alert
+        if (diagram === null) {
           this.setIsLoading(false);
           return;
         }
 
-        // Update backend database
-        let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
-        let upSummary = await this.updateSummary(accountID, articleID, summary);
-        if (upDiagram === false || upSummary === false) {
+        // Send article to server for sumamry
+        let summary = await this.generateSummary(accountID, articleID, authToken);
+        // Check success
+        if (summary === null) {
           // No need for extra alert
           this.setIsLoading(false);
           return;
@@ -117,25 +115,31 @@ class App extends React.Component {
   };
 
   // Send PDF to backend to database
-  uploadPDF = async (file, accountID) => {
+  uploadPDF = async (file, accountID, authToken) => {
     try {
+      const formData  = new FormData();
+      formData.append('pdf', file);
       // PDF upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article`, {
+        credentials: "include",
         method: 'POST',
         headers: {
-          'Content-Type': 'application/pdf',
+          Authorization: `Bearer ${authToken}`
         },
-        body: file,
+        body: formData,
       });
 
       if (response.ok) {
         // Get article ID
-        const articleID = await response.result.articleId;
+        const data = await response.json()
+        console.log("Data : ",data);
+        const articleID = data.data.articleId;
+        console.log("ArticleID : ", articleID);
         return articleID;
       } else {
         // Account not found
         if (response.status === 401) {
-          createAlert('Unauthorized access!');
+          createAlert('Uploading PDF : Unauthorized access!');
         // Too many tokens
         } else if (response.status === 413) {
           createAlert('Error uploading PDF file: PDF file exceeds 3500 tokens.');
@@ -157,11 +161,15 @@ class App extends React.Component {
 
 
   // Generate diagram
-  generateDiagram = async (accountID, articleID) => {
+  generateDiagram = async (accountID, articleID, authToken) => {
     try {
       // PDF to diagram  upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
-        method: 'GET'
+        credentials: "include",
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
       });
 
       if (response.ok) {
@@ -190,11 +198,15 @@ class App extends React.Component {
 
 
   // Generate summary
-  generateSummary = async (accountID, articleID) => {
+  generateSummary = async (accountID, articleID, authToken) => {
     try {
       // PDF to diagram upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
-        method: 'GET'
+        credentials: "include",
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
       });
 
       if (response.ok) {
@@ -222,12 +234,53 @@ class App extends React.Component {
   }
 
 
+  // Handle regenerate diagram from currently selected pdf
+  handleRegenDiagram = async () => {
+    if (this.state.articleID) {
+      // Loading bar
+      this.setIsLoading(true);
+      
+      // Get accountID / authentication token
+      let accountID = localStorage.getItem("userId");
+      let authToken = localStorage.getItem("authToken");
+
+      // Send article to server for diagram
+      let diagram = await this.updateDiagram(accountID, this.state.articleID, authToken);
+      // Check success
+      if (diagram === null) {
+        this.setIsLoading(false);
+        return;
+      }
+
+      // Send article to server for sumamry
+      let summary = await this.updateSummary(accountID, this.state.articleID, authToken);
+      // Check success
+      if (summary === null) {
+        // No need for extra alert
+        this.setIsLoading(false);
+        return;
+      }
+
+      // Update views
+      this.setState({ diagramDefinition : diagram });
+      this.setState({ summaryDefinition : summary });
+      this.setIsLoading(false);
+    } else {
+      createAlert("No current PDF")
+    }
+  }
+
+
   // Update diagram
-  updateDiagram = async (accountID, articleID, diagram) => {
+  updateDiagram = async (accountID, articleID, diagram, authToken) => {
     try {
       // Diagram update upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
+        credentials: "include",
         method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
         body: diagram
       });
 
@@ -256,11 +309,15 @@ class App extends React.Component {
 
 
   // Update sumamry
-  updateSummary = async (accountID, articleID, summary) => {
+  updateSummary = async (accountID, articleID, summary, authToken) => {
     try {
       // Summary update upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+        credentials: "include",
         method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
         body: summary
       });
 
@@ -284,59 +341,6 @@ class App extends React.Component {
       console.log("Update Summary Error : ", error);
       this.setIsLoading(false);
       return false;
-    }
-  }
-
-
-  // Handle regenerate diagram from currently selected pdf
-  handleRegenDiagram = async () => {
-    if (this.state.articleID) {
-      try {
-        // Loading bar
-        this.setIsLoading(true);
-        
-        // Get accountID
-        let accountID = localStorage.getItem("userId");
-
-        // Regenerate diagram
-        await this.regenDiagram(this.state.articleID, accountID);
-      } catch (error) {
-        console.error("Error regenerating diagram:", error);
-        createAlert("Error regenerating diagram. Please try again.");
-      }
-    } else {
-      createAlert("No current PDF")
-    }
-  }
-
-  // Regenerate diagram from currently selected pdf
-  regenDiagram = async (articleID, accountID) => {
-    try {
-      // Send article to server for diagram
-      let diagram = await this.generateDiagram(accountID, articleID);
-      // Check success
-      if (diagram === null) {
-        // No need for extra alert
-        this.setIsLoading(false);
-        return;
-      }
-
-      // Update backend database
-      let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
-      if (upDiagram === false) {
-        // No need for extra alert
-        this.setIsLoading(false);
-        return;
-      }
-      
-      // Update views
-      this.setState({ diagramDefinition : diagram });
-      this.setIsLoading(false);
-    } catch (error) {
-      createAlert('Internal server error.');
-      console.log("Error : ", error);
-      this.setIsLoading(false);
-      return null;
     }
   }
 
