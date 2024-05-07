@@ -39,6 +39,7 @@
   border: none;
   border-radius: var(--small_dim);
   margin: 0;
+  margin-right: var(--medium_dim);
   padding: 0;
   height: var(--mini_button);
   width: var(--mini_button);
