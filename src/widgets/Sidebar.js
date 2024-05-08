@@ -73,7 +73,9 @@ class Sidebar extends React.Component {
             <ArticleList id="Article-list"
                          loadArticle={this.props.loadArticle}
                          deleteFromLocal={this.props.deleteFromLocal}
-                         toggleRefresh={this.props.toggleRefresh} />
+                         toggleRefresh={this.props.toggleRefresh}
+                         regenDiagram={this.props.regenDiagram}
+                         showPdf={this.props.showPdf} />
 
             {/* Open bottom menu */}
             <div id="Open-sidebar-bottom">

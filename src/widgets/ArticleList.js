@@ -61,19 +61,64 @@ class ArticleList extends React.Component {
 
     let article = await this.fetchServerArticle(accountID, articleID, authToken);
     if (article === null) { return; }
+    console.log(article);
+    //console.log(URL.createObjectURL(article));
+    //const blob = this.base64toBlob(article.text());
+    //const url = URL.createObjectURL(blob);
+    const blob = await article.blob();
+    const url = URL.createObjectURL(blob);
+
+    this.props.showPdf(articleID, url);
+
+    /*
     let diagram = await this.fetchServerDiagram(accountID, articleID, authToken);
     if (diagram === null) { return; }
-    let summary = null
+    let summary = await this.fetchServerSummary(accountID, articleID, authToken);
     if (summary === null) { return; }
 
     this.props.loadArticle(this.convertToPdfSrc(article), diagram, summary)    
+    */
   }
+
+  base64toBlob = (data) => {
+    if (typeof data !== 'string') {
+      console.error('Input data is not a string.');
+      return null;
+    }
+
+    // Check if the prefix is present
+    const prefix = 'data:application/pdf;base64,';
+    if (data.startsWith(prefix)) {
+        // Remove the prefix
+        data = data.substr(prefix.length);
+    }
+
+    // Convert base64 to binary
+    const bytes = atob(data);
+    let length = bytes.length;
+    let out = new Uint8Array(length);
+
+    while (length--) {
+        out[length] = bytes.charCodeAt(length);
+    }
+
+    return new Blob([out], { type: 'application/pdf' });
+};
 
 
   // Convert PDF file binary string to pdfSrc
   convertToPdfSrc = (pdfFileString) => {
+    const pdfBlob = new Blob([pdfFileString], { type: 'application/pdf' });
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      return e.target.result;      
+    };
+    reader.readAsDataURL(pdfBlob);
+    /*
     const pdfDataUrl = `data:application/pdf;base64,${btoa(pdfFileString)}`;
+    console.log(pdfDataUrl);
     return pdfDataUrl;
+    */
   }
 
 
@@ -155,7 +200,7 @@ class ArticleList extends React.Component {
     // Fetch Diagram
     const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
       credentials: "include",
-      method: 'GET',
+      method: 'PUT',
       headers: {
         Authorization: `Bearer ${authToken}`
       }
@@ -185,6 +230,41 @@ class ArticleList extends React.Component {
   }
 
 
+  // Fetch summary from server
+  fetchServerSummary = async (accountID, articleID, authToken) => {
+    // Fetch Summary
+    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+      credentials: "include",
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
+
+    // Error : Access unauthorized
+    if (response.status === 401) {
+      createAlert("Can't access summary!");
+      return null;
+    }
+
+    // Error : Article not found!
+    if (response.status === 404) {
+      createAlert("Selected sumary can't be found.");
+      return null;
+    }
+
+    // Error : Internal server error
+    if (!response.ok) {
+      createAlert('Internal server error when accessing summary.');
+      console.log("Error : ", response.status, response.statusText)
+      return null;
+    }
+
+    const responseBody = await response;
+    return responseBody;
+  }
+
+
   // Cut down the summary to 100char or 2 new lines
   truncateSummary = (summary) => {
     var text = summary;
@@ -202,13 +282,13 @@ class ArticleList extends React.Component {
 
 
   // Delete article from server
-  deleteFromServer = async (articleID) => {
+  deleteFromServer = async (article, articleID) => {
     // Get accountID / authentication token
     let accountID = localStorage.getItem("userId");
     let authToken = localStorage.getItem("authToken");
 
     // Delete article
-    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article/${articleID}/concept-map`, {
+    const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article/${articleID}`, {
       credentials: "include",
       method: 'DELETE',
       headers: {
@@ -264,7 +344,9 @@ class ArticleList extends React.Component {
               <div className="Article-title">{article.title}</div>
               <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
               <Tooltip className="Delete-tooltip" text="Delete from server storage">
-                <button onClick={() => this.deleteFromServer(article.articleID)}
+                <button onClick={(e) => {
+                  e.stopPropagation();
+                  this.deleteFromServer(article, article.articleID); }}
                   className="Article-delete-button">
                 <img src={del} alt="delete article" />
                 </button>

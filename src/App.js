@@ -108,6 +108,23 @@ class App extends React.Component {
     }
   };
 
+
+  // Show pdf
+  showPdf = (articleID, pdfSrc) => {
+    console.log(pdfSrc);
+    this.setState(
+      {
+        articleID: articleID,
+        pdfSrc: pdfSrc
+      },
+      () => {
+        // Callback function to handleRegenDiagram()
+        this.handleRegenDiagram();
+      }
+    );
+  }
+
+
   // Send PDF to backend to database
   uploadPDF = async (file, accountID, authToken) => {
     try {
@@ -460,6 +477,7 @@ class App extends React.Component {
       <div id="Fullscreen">
         <Sidebar onPDFChange={this.changePDF}
                  regenDiagram={this.handleRegenDiagram}
+                 showPdf={this.showPdf}
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
                  toggleCompare={this.toggleCompareView}
