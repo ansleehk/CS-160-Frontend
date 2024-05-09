@@ -77,6 +77,10 @@
   border: 1px solid var(--c_accent1);
 }
 
+.validation-message {
+  font-size: var(--sub_font);
+}
+
 #password-options {
   display: flex;
   flex-direction: row;

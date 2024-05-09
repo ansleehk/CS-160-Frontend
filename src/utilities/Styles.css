@@ -16,14 +16,6 @@
   --c_subtext: #4B4B59;
   --c_alttext: #2B2B33;
 
-  /* Color Mermaid */
-  /*
-  Rect - Main
-  Text - Duh
-  Line - Arrow
-  Box - Action?
-  */
-
   /* Space Sizes */
   --small_dim: 4px;
   --medium_dim: 8px;
@@ -37,6 +29,7 @@
   --mini_button: 16px;
   --small_button: 48px;
   --large_button: 20vmin;
+  --small_img: 44px;
 
   /* Button Filters */
   --b_brightness: 1.2;

@@ -5,7 +5,7 @@ import "./Profile.css";
 import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
 
-const Profile = ({ onClose }) => {
+const Profile = ({ rerender, onClose, onReset }) => {
 
   // State variables
   const [profile, setProfile] = useState("");
@@ -76,6 +76,8 @@ const Profile = ({ onClose }) => {
 
   // Handles account updating
   window.accountUpdate = async (token) => {
+
+    console.log("TOKEN : ", token);
 
     // Clean user input
     setEmail(escapeHtml(email));
@@ -170,13 +172,15 @@ const Profile = ({ onClose }) => {
 
 
   // Handle logging out
-  const logOut = () => {
+  const logOut = (rerender) => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
     localStorage.removeItem('password');
     localStorage.removeItem('profile');
 
+    rerender();
+    onReset();
     createAlert("Successfully logged out.");
     onClose();
   }
@@ -237,7 +241,7 @@ const Profile = ({ onClose }) => {
           </form>
           {/* Logout button */}
           <Tooltip text="Logs out.">
-            <button id="logout" onClick={logOut}>
+            <button id="logout" onClick={() => logOut(rerender)}>
               Log Out
             </button>
           </Tooltip>

@@ -24,6 +24,15 @@ class ArticleList extends React.Component {
     await this.fetchArticles();
   }
 
+
+  // Fetch article force update
+  componentDidUpdate(prevProps) {
+    // Check if the bTriggered prop has changed
+    if (this.props.toggleRefresh && !prevProps.toggleRefresh) {
+      this.fetchArticles();
+    }
+  }
+
   
   // Fetch and load articles from local/server
   fetchArticles = async() => {
@@ -264,18 +273,36 @@ class ArticleList extends React.Component {
     return responseBody;
   }
 
+  // Cut down the title to 20char or 1 new lines
+  truncateTitle = (summary) => {
+    var text = summary;
+    // Splitting the summary by newline character and taking at most two lines
+    if (text) {
+      const lines = text.split('\n');
+      if (lines.length > 1) {
+        text = lines.slice(0, 1).join('\n') + '...';
+      }
+      // Cutting down to 100 chars
+      if (text.length > 20) {
+        text = text.substring(0, 20) + '...';
+      }
+    }
+    return text;
+  };
 
   // Cut down the summary to 100char or 2 new lines
   truncateSummary = (summary) => {
     var text = summary;
     // Splitting the summary by newline character and taking at most two lines
-    const lines = text.split('\n');
-    if (lines.length > 2) {
-      text = lines.slice(0, 2).join('\n') + '...';
-    }
-    // Cutting down to 100 chars
-    if (text.length > 100) {
-      text = text.substring(0, 100) + '...';
+    if (text) {
+      const lines = text.split('\n');
+      if (lines.length > 2) {
+        text = lines.slice(0, 2).join('\n') + '...';
+      }
+      // Cutting down to 100 chars
+      if (text.length > 100) {
+        text = text.substring(0, 100) + '...';
+      }
     }
     return text;
   };
@@ -322,11 +349,11 @@ class ArticleList extends React.Component {
   render() {
     return (
       <div key={this.props.toggleRefresh} id="Article-list">
-        <b>Local Articles</b>
+        <b>Local Saves</b>
         <ul>
           {this.state.localArticles && this.state.localArticles.map((article, index) => (
             <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition, article.summaryDefinition, article.articleID)}>
-              <div className="Article-title">{article.title}</div>
+              <div className="Article-title">{this.truncateTitle(article.title)}</div>
               <div className="Article-summary">{this.truncateSummary(article.summaryDefinition)}</div>
               <Tooltip className="Delete-tooltip" text="Delete from local storage">
                 <button onClick={() => this.props.deleteFromLocal(index)}
@@ -337,11 +364,11 @@ class ArticleList extends React.Component {
             </li>
           ))}
         </ul>
-        <b>Server Articles</b>
+        <b>Saved PDFs</b>
         <ul>
           {this.state.serverArticles.map(article => (
             <li key={article.articleID} className="Article-item" onClick={() => this.loadFromServer(article.articleID)}>
-              <div className="Article-title">{article.title}</div>
+              <div className="Article-title">{this.truncateTitle(article.title)}</div>
               <div className="Article-summary">{this.truncateSummary(article.summary)}</div>
               <Tooltip className="Delete-tooltip" text="Delete from server storage">
                 <button onClick={(e) => {

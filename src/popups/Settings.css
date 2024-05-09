@@ -67,6 +67,11 @@
   width: 100%;
 }
 
+#color-picker input,
+#color-picker label {
+  height: 24px;
+}
+
 #color-picker div {
   display: flex;
   flex-direction: column;
