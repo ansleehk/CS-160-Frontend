@@ -1,0 +1,27 @@
+@import "../utilities/Styles.css";
+
+#Compare-viewer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--h1_font);
+  color: var(--c_headtext);
+  background-color: var(--c_main2);
+  height: 100%;
+  width: 100%;
+  transition: width 0.3s ease;
+}
+
+#compare-summary {
+  margin: 0;
+  padding: var(--small_dim);
+  font-size: var(--sub_font);
+  border-bottom: var(--c_highlight) solid var(--small_dim) !important;
+}
+
+#explain {
+  font-size: var(--h2_font);
+}

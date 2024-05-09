@@ -14,6 +14,11 @@
   margin-left: var(--medium_dim);
 }
 
+#User {
+  display: flex;
+  flex-direction: row;
+}
+
 #Site-name {
   color: var(--c_headtext);
 }
