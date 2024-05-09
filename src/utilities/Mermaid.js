@@ -4,7 +4,7 @@ import "./Mermaid.css";
 
 mermaid.initialize({
   startOnLoad: true,
-  theme: "default",
+  theme: localStorage.getItem("mermaidTheme") || "dark",
   securityLevel: "loose"
 });
 
