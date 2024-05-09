@@ -58,7 +58,7 @@ class App extends React.Component {
     // Check for PDF
     if (file && file.type === 'application/pdf') {
       if (file.size > 10 * 1024 * 1024) { // 10MB in bytes
-        createAlert('PDF file size exceeds 1MB.');
+        createAlert('PDF file is too large!');
       } else {
         // Loading bar
         this.setIsLoading(true);
@@ -76,6 +76,11 @@ class App extends React.Component {
           return;
         }
         this.setState({ articleID: articleID });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.setState({ pdfSrc: e.target.result });      
+        };
+        reader.readAsDataURL(file);
 
         // Send article to server for diagram
         let diagram = await this.generateDiagram(accountID, articleID, authToken);
@@ -84,6 +89,7 @@ class App extends React.Component {
           this.setIsLoading(false);
           return;
         }
+        this.setState({ diagramDefinition : diagram });
 
         // Send article to server for sumamry
         let summary = await this.generateSummary(accountID, articleID, authToken);
@@ -93,15 +99,8 @@ class App extends React.Component {
           this.setIsLoading(false);
           return;
         }
-        
-        // Update views
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.setState({ pdfSrc: e.target.result });      
-        };
-        reader.readAsDataURL(file);
-        this.setState({ diagramDefinition : diagram });
         this.setState({ summaryDefinition : summary });
+    
         this.setIsLoading(false);
       }
     } else {
