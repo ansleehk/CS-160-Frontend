@@ -331,7 +331,7 @@ class ArticleList extends React.Component {
   render() {
     return (
       <div key={this.props.toggleRefresh} id="Article-list">
-        <b>Local Articles</b>
+        <b>Local Saves</b>
         <ul>
           {this.state.localArticles && this.state.localArticles.map((article, index) => (
             <li key={index} className="Article-item" onClick={() => this.props.loadArticle(article.pdfSrc, article.diagramDefinition, article.summaryDefinition, article.articleID)}>
@@ -346,7 +346,7 @@ class ArticleList extends React.Component {
             </li>
           ))}
         </ul>
-        <b>Server Articles</b>
+        <b>Saved PDFs</b>
         <ul>
           {this.state.serverArticles.map(article => (
             <li key={article.articleID} className="Article-item" onClick={() => this.loadFromServer(article.articleID)}>

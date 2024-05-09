@@ -20,10 +20,11 @@ class App extends React.Component {
       selectedPresetIndex: 0,
       showPDFView: true,
       showDiagramView: true,
+      showCompareView: false,
       diagramDefinition: null,
       summaryDefinition: null,
       compareDiagramDefinition: null,
-      compareSummryDefinition: null,
+      compareSummaryDefinition: null,
       toggleRefresh: false,
     };
   }
@@ -56,7 +57,7 @@ class App extends React.Component {
     const file = event.target.files[0];
     // Check for PDF
     if (file && file.type === 'application/pdf') {
-      if (file.size > 1024 * 1024) { // 1MB in bytes
+      if (file.size > 10 * 1024 * 1024) { // 10MB in bytes
         createAlert('PDF file size exceeds 1MB.');
       } else {
         // Loading bar
@@ -503,7 +504,7 @@ class App extends React.Component {
                              isLoading={this.state.isLoading}
                              saveToLocal={() => this.saveToLocal(this.toggleRefresh)} />
             )}
-            {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView (
+            {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView && (
               <b>No Views Open :(</b>
             )}
           </div>
