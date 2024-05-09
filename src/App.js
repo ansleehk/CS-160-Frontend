@@ -67,6 +67,13 @@ class App extends React.Component {
         let accountID = localStorage.getItem("userId");
         let authToken = localStorage.getItem("authToken");
 
+        // User must be logged in
+        if ((accountID === null) || (authToken === null)) {
+          createAlert("You must be logged in to use this feature!");
+          this.setIsLoading(false);
+          return;
+        }
+
         // Send PDF to backend for diagram
         let articleID = await this.uploadPDF(file, accountID, authToken);
         // Check success
@@ -467,7 +474,10 @@ class App extends React.Component {
       diagramDefinition: null,
       summaryDefinition: null,
       compareDiagramDefinition: null,
-      compareSummaryDefinition: null
+      compareSummaryDefinition: null,
+      showPDFView: true,
+      showDiagramView: true,
+      showCompareView: false
     });
   };
 
@@ -485,7 +495,7 @@ class App extends React.Component {
                  deleteFromLocal={this.deleteFromLocal}
                  toggleRefresh={this.state.toggleRefresh} />
         <div id="Main">
-          <Topbar/>
+          <Topbar onReset={this.resetViews}/>
           <div id="Views">
             {this.state.showPDFView && (
               <PDFViewer onPDFChange={this.changePDF}

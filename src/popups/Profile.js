@@ -5,7 +5,7 @@ import "./Profile.css";
 import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
 
-const Profile = ({ rerender, onClose }) => {
+const Profile = ({ rerender, onClose, onReset }) => {
 
   // State variables
   const [profile, setProfile] = useState("");
@@ -180,6 +180,7 @@ const Profile = ({ rerender, onClose }) => {
     localStorage.removeItem('profile');
 
     rerender();
+    onReset();
     createAlert("Successfully logged out.");
     onClose();
   }

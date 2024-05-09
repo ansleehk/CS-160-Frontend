@@ -69,7 +69,8 @@ class Topbar extends React.Component {
             {/* Render profile popup if true */}
             {this.state.showProfilePopup && (
               <Profile rerender={this.rerender}
-                       onClose={this.toggleProfilePopup} />
+                       onClose={this.toggleProfilePopup}
+                       onReset={this.props.onReset} />
             )}
             </>
           ) : (
