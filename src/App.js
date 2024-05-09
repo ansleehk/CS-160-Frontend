@@ -82,15 +82,6 @@ class App extends React.Component {
         };
         reader.readAsDataURL(file);
 
-        // Send article to server for diagram
-        let diagram = await this.generateDiagram(accountID, articleID, authToken);
-        // Check success
-        if (diagram === null) {
-          this.setIsLoading(false);
-          return;
-        }
-        this.setState({ diagramDefinition : diagram });
-
         // Send article to server for sumamry
         let summary = await this.generateSummary(accountID, articleID, authToken);
         // Check success
@@ -100,6 +91,15 @@ class App extends React.Component {
           return;
         }
         this.setState({ summaryDefinition : summary });
+
+        // Send article to server for diagram
+        let diagram = await this.generateDiagram(accountID, articleID, authToken);
+        // Check success
+        if (diagram === null) {
+          this.setIsLoading(false);
+          return;
+        }
+        this.setState({ diagramDefinition : diagram });
     
         this.setIsLoading(false);
       }
@@ -255,14 +255,6 @@ class App extends React.Component {
       let accountID = localStorage.getItem("userId");
       let authToken = localStorage.getItem("authToken");
 
-      // Send article to server for diagram
-      let diagram = await this.updateDiagram(accountID, this.state.articleID, authToken);
-      // Check success
-      if (diagram === null) {
-        this.setIsLoading(false);
-        return;
-      }
-
       // Send article to server for sumamry
       let summary = await this.updateSummary(accountID, this.state.articleID, authToken);
       // Check success
@@ -271,10 +263,17 @@ class App extends React.Component {
         this.setIsLoading(false);
         return;
       }
-
-      // Update views
-      this.setState({ diagramDefinition : diagram });
       this.setState({ summaryDefinition : summary });
+
+      // Send article to server for diagram
+      let diagram = await this.updateDiagram(accountID, this.state.articleID, authToken);
+      // Check success
+      if (diagram === null) {
+        this.setIsLoading(false);
+        return;
+      }
+      this.setState({ diagramDefinition : diagram });
+
       this.setIsLoading(false);
     } else {
       createAlert("No current PDF")
