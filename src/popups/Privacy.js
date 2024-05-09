@@ -15,11 +15,18 @@ const Privacy = ({ onClose }) => {
 
         {/* Content */}
         <div id="policy">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur turpis quam, mollis in neque rhoncus, sodales tincidunt leo. Vivamus mattis congue volutpat. Integer quis euismod mi. Integer pharetra congue urna, in dignissim mauris aliquam non. Nulla et nibh in mauris facilisis posuere non ac erat. Vestibulum ligula tortor, tristique luctus est non, suscipit dignissim enim. Mauris tempus est lectus, ut congue metus tincidunt at. Mauris tincidunt magna non justo egestas, et facilisis tortor sollicitudin. Suspendisse potenti. Morbi laoreet erat vitae neque condimentum, id faucibus sapien dictum. Pellentesque ac aliquet lectus, id vehicula neque. Pellentesque odio odio, lobortis eget ex eget, tristique lacinia risus. Donec vel neque at ipsum dictum pulvinar. Nullam sed feugiat orci. Mauris a ligula sed urna venenatis ornare vel in velit. Nam cursus efficitur tempus.</p>
+          <p><strong>1. Information Collected:</strong> We collect email addresses during account creation and PDF files uploaded during interactions with our service.</p>
 
-          <p>Donec tristique scelerisque erat, ultricies varius sem congue ut. Vestibulum eu lacus volutpat, mattis lectus eu, vestibulum lacus. Maecenas tincidunt tellus quis purus suscipit, non elementum purus pellentesque. Nulla facilisi. Integer tincidunt sem nec nisi blandit aliquet. Nulla facilisi. Maecenas a massa sed nulla sagittis aliquam at aliquet ipsum.</p>
+          <p><strong>2. How Information is Processed:</strong> Information is processed to personalize the user experience on our website.</p>
 
-          <p>In tempus scelerisque ante at euismod. Nullam luctus euismod feugiat. Ut vel est dignissim, aliquam odio quis, hendrerit erat. Vivamus iaculis egestas iaculis. Vestibulum hendrerit sed lorem ut accumsan. Donec sed diam venenatis est tempor consequat eleifend a libero. Curabitur consectetur dapibus lorem laoreet tristique. Aliquam lectus justo, congue ac neque eu, elementum placerat dui.</p>
+          <p><strong>3. Data Sharing:</strong> We do not sell user data. However, information contained within uploaded PDF files is shared with ChatGPT for processing.</p>
+
+          <p><strong>4. User Rights:</strong> Users have the right to delete PDF files from their accounts or delete their accounts entirely. We do not retain any records beyond user deletion requests.</p>
+
+          <p><strong>Contact Details:</strong> For inquiries or concerns regarding this privacy policy, users can leave us a message at our <a href="https://github.com/ansleehk/CS-160/issues">Github Project</a>.</p>
+
+          <p>This privacy policy governs the collection, processing, and sharing of user information on our website. By using our services, users consent to the practices outlined in this policy.</p>
+
         </div>
       </div>
     </div>

@@ -20,10 +20,11 @@ class App extends React.Component {
       selectedPresetIndex: 0,
       showPDFView: true,
       showDiagramView: true,
+      showCompareView: false,
       diagramDefinition: null,
       summaryDefinition: null,
       compareDiagramDefinition: null,
-      compareSummryDefinition: null,
+      compareSummaryDefinition: null,
       toggleRefresh: false,
     };
   }
@@ -56,8 +57,8 @@ class App extends React.Component {
     const file = event.target.files[0];
     // Check for PDF
     if (file && file.type === 'application/pdf') {
-      if (file.size > 1024 * 1024) { // 1MB in bytes
-        createAlert('PDF file size exceeds 1MB.');
+      if (file.size > 10 * 1024 * 1024) { // 10MB in bytes
+        createAlert('PDF file is too large!');
       } else {
         // Loading bar
         this.setIsLoading(true);
@@ -65,6 +66,13 @@ class App extends React.Component {
         // Get accountID / authentication token
         let accountID = localStorage.getItem("userId");
         let authToken = localStorage.getItem("authToken");
+
+        // User must be logged in
+        if ((accountID === null) || (authToken === null)) {
+          createAlert("You must be logged in to use this feature!");
+          this.setIsLoading(false);
+          return;
+        }
 
         // Send PDF to backend for diagram
         let articleID = await this.uploadPDF(file, accountID, authToken);
@@ -75,14 +83,11 @@ class App extends React.Component {
           return;
         }
         this.setState({ articleID: articleID });
-
-        // Send article to server for diagram
-        let diagram = await this.generateDiagram(accountID, articleID, authToken);
-        // Check success
-        if (diagram === null) {
-          this.setIsLoading(false);
-          return;
-        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.setState({ pdfSrc: e.target.result });      
+        };
+        reader.readAsDataURL(file);
 
         // Send article to server for sumamry
         let summary = await this.generateSummary(accountID, articleID, authToken);
@@ -92,15 +97,17 @@ class App extends React.Component {
           this.setIsLoading(false);
           return;
         }
-        
-        // Update views
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.setState({ pdfSrc: e.target.result });      
-        };
-        reader.readAsDataURL(file);
-        this.setState({ diagramDefinition : diagram });
         this.setState({ summaryDefinition : summary });
+
+        // Send article to server for diagram
+        let diagram = await this.generateDiagram(accountID, articleID, authToken);
+        // Check success
+        if (diagram === null) {
+          this.setIsLoading(false);
+          return;
+        }
+        this.setState({ diagramDefinition : diagram });
+    
         this.setIsLoading(false);
       }
     } else {
@@ -255,14 +262,6 @@ class App extends React.Component {
       let accountID = localStorage.getItem("userId");
       let authToken = localStorage.getItem("authToken");
 
-      // Send article to server for diagram
-      let diagram = await this.updateDiagram(accountID, this.state.articleID, authToken);
-      // Check success
-      if (diagram === null) {
-        this.setIsLoading(false);
-        return;
-      }
-
       // Send article to server for sumamry
       let summary = await this.updateSummary(accountID, this.state.articleID, authToken);
       // Check success
@@ -271,10 +270,17 @@ class App extends React.Component {
         this.setIsLoading(false);
         return;
       }
-
-      // Update views
-      this.setState({ diagramDefinition : diagram });
       this.setState({ summaryDefinition : summary });
+
+      // Send article to server for diagram
+      let diagram = await this.updateDiagram(accountID, this.state.articleID, authToken);
+      // Check success
+      if (diagram === null) {
+        this.setIsLoading(false);
+        return;
+      }
+      this.setState({ diagramDefinition : diagram });
+
       this.setIsLoading(false);
     } else {
       createAlert("No current PDF")
@@ -353,7 +359,7 @@ class App extends React.Component {
 
 
   // Save the PDF and diagram to local storage
-  saveToLocal = () => {
+  saveToLocal = (toggleRefresh) => {
     if (this.state.pdfSrc && this.state.diagramDefinition) {
 
       // Get existing data from local storage
@@ -374,7 +380,7 @@ class App extends React.Component {
       savedArticles.push(newArticle);
 
       localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
-      this.toggleRefresh();
+      toggleRefresh();
       createAlert("PDF and Diagram saved to local storage.");
     } else {
       createAlert("Both PDF and diagram must be present to save to local storage.");
@@ -468,7 +474,10 @@ class App extends React.Component {
       diagramDefinition: null,
       summaryDefinition: null,
       compareDiagramDefinition: null,
-      compareSummaryDefinition: null
+      compareSummaryDefinition: null,
+      showPDFView: true,
+      showDiagramView: true,
+      showCompareView: false
     });
   };
 
@@ -486,7 +495,7 @@ class App extends React.Component {
                  deleteFromLocal={this.deleteFromLocal}
                  toggleRefresh={this.state.toggleRefresh} />
         <div id="Main">
-          <Topbar/>
+          <Topbar onReset={this.resetViews}/>
           <div id="Views">
             {this.state.showPDFView && (
               <PDFViewer onPDFChange={this.changePDF}
@@ -501,9 +510,9 @@ class App extends React.Component {
                              diagramDefinition={this.state.diagramDefinition}
                              summaryDefinition={this.state.summaryDefinition}
                              isLoading={this.state.isLoading}
-                             saveToLocal={this.saveToLocal} />
+                             saveToLocal={() => this.saveToLocal(this.toggleRefresh)} />
             )}
-            {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView (
+            {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView && (
               <b>No Views Open :(</b>
             )}
           </div>

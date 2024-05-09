@@ -12,6 +12,8 @@ const Settings = ({ onClose }) => {
   // State variables
   const [selectedPreset, setSelectedPreset] = useState(() => 
     parseInt(localStorage.getItem("selectedPreset")) || 0);
+  const [mermaidTheme, setMermaidTheme] = useState(() => 
+    localStorage.getItem("mermaidTheme")) || "dark";
   const [userThemes, setUserThemes] = useState(() =>
     JSON.parse(localStorage.getItem("userThemes")) || []);
   const [newThemeName, setNewThemeName] = useState("");
@@ -90,6 +92,14 @@ const Settings = ({ onClose }) => {
       document.documentElement.style.setProperty(`--${name}`, colors[name]);
     });
   };
+
+
+  // Handle mermaid selection change
+  const handleMermaidThemeChange = (e) => {
+    const index = e.target.value;
+    localStorage.setItem("mermaidTheme", index);
+    setMermaidTheme(index);
+  }
 
 
   // Handle custom theme deletion
@@ -194,12 +204,19 @@ const Settings = ({ onClose }) => {
               <label htmlFor="c_maintext">Main Text : </label>
               <label htmlFor="c_subtext">Sub Text : </label>
               <label htmlFor="c_alttext">Alt Text : </label>
+              <label htmlFor="m_theme">Diagram : </label>
           </div>
           <div id="font-color-picker">
             <input type="color" id="c_headtext" name="c_headtext" value={currentColor.c_headtext} onChange={handleChange} />
             <input type="color" id="c_maintext" name="c_maintext" value={currentColor.c_maintext} onChange={handleChange} />
             <input type="color" id="c_subtext" name="c_subtext" value={currentColor.c_subtext} onChange={handleChange} />
             <input type="color" id="c_alttext" name="c_alttext" value={currentColor.c_alttext} onChange={handleChange} />
+            <select id="preset" name="preset" value={mermaidTheme} onChange={handleMermaidThemeChange}>
+                <option key={"dark"} value={"dark"}>Dark</option>
+                <option key={"default"} value={"default"}>Light</option>
+                <option key={"neutral"} value={"neutral"}>Neutral</option>
+                <option key={"forest"} value={"forest"}>Forest</option>
+          </select>
           </div>
         </div>
 
