@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 
 import createAlert from "../utilities/Alert";
+import Tooltip from "../utilities/Tooltip";
 
 const Profile = ({ onClose }) => {
 
@@ -83,13 +84,15 @@ const Profile = ({ onClose }) => {
 
     // Get account id
     let accountID = localStorage.getItem("userId") || null;
+    let authToken = localStorage.getItem("authToken") || null;
 
     // Account update logic
     try {
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/user`, {
+        credentials: "include",
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`
         },
         body: JSON.stringify({
           email: email,
@@ -130,11 +133,16 @@ const Profile = ({ onClose }) => {
   window.accountDelete = async(token) => {
     // Get account id
     let accountID = localStorage.getItem("userId") || null;
+    let authToken = localStorage.getItem("authToken") || null;
 
-    // Account update logic
+    // Account delete logic
     try {
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/user`, {
-        method: 'DELETE'
+        credentials: "include",
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
       });
 
       if (response.ok) {
@@ -158,6 +166,19 @@ const Profile = ({ onClose }) => {
       createAlert('Internal server error.');
       console.log("Error : ", error)
     }
+  }
+
+
+  // Handle logging out
+  const logOut = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('password');
+    localStorage.removeItem('profile');
+
+    createAlert("Successfully logged out.");
+    onClose();
   }
 
 
@@ -206,18 +227,28 @@ const Profile = ({ onClose }) => {
             </div>
 
             {/* reCAPTCHA and update button */}
-            <button id="update" className="g-recaptcha" 
-              data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
-              data-callback='accountUpdate' data-action='submit'>
-              Update
-            </button>
+            <Tooltip text="Updates user profile.">
+              <button id="update" className="g-recaptcha" 
+                data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
+                data-callback='accountUpdate' data-action='submit'>
+                Update
+              </button>
+            </Tooltip>
           </form>
+          {/* Logout button */}
+          <Tooltip text="Logs out.">
+            <button id="logout" onClick={logOut}>
+              Log Out
+            </button>
+          </Tooltip>
           {/* reCAPTCHA and delete button */}
-          <button id="delete" className="g-recaptcha"
-            data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
-            data-callback='accountDelete'>
-            Delete Account
-          </button>
+          <Tooltip text="Deletes user profile.">
+            <button id="delete" className="g-recaptcha"
+              data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
+              data-callback='accountDelete'>
+              Delete Account
+            </button>
+          </Tooltip>
         </div>
       </div>
     </div>

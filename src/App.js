@@ -5,6 +5,7 @@ import Sidebar from "./widgets/Sidebar";
 import Topbar from "./widgets/Topbar";
 import PDFViewer from "./widgets/PDFViewer";
 import DiagramViewer from "./widgets/DiagramViewer";
+import CompareViewer from "./widgets/CompareViewer";
 
 import createAlert from "./utilities/Alert";
 import Themes from "./utilities/Themes.js";
@@ -20,7 +21,9 @@ class App extends React.Component {
       showPDFView: true,
       showDiagramView: true,
       diagramDefinition: null,
-      sumamryDefinition: null,
+      summaryDefinition: null,
+      compareDiagramDefinition: null,
+      compareSummryDefinition: null,
       toggleRefresh: false,
     };
   }
@@ -28,15 +31,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.loadThemeColors();
-
-    // Below is to test profiles
-    /*
-    localStorage.setItem('authToken', "token");
-    localStorage.setItem('userId', 1241);
-    localStorage.setItem('email', "testing@email.com");
-    localStorage.setItem('password', "Password");
-    localStorage.setItem('profile', "Testing");
-    */
   }
 
 
@@ -68,11 +62,12 @@ class App extends React.Component {
         // Loading bar
         this.setIsLoading(true);
 
-        // Get accountID
+        // Get accountID / authentication token
         let accountID = localStorage.getItem("userId");
+        let authToken = localStorage.getItem("authToken");
 
         // Send PDF to backend for diagram
-        let articleID = this.uploadPDF(file);
+        let articleID = await this.uploadPDF(file, accountID, authToken);
         // Check success
         if (articleID == null) {
           // No need for extra alert
@@ -82,20 +77,17 @@ class App extends React.Component {
         this.setState({ articleID: articleID });
 
         // Send article to server for diagram
-        let diagram = await this.generateDiagram(accountID, articleID);
-        // Send article to server for sumamry
-        let summary = await this.generateSummary(accountID, articleID);
+        let diagram = await this.generateDiagram(accountID, articleID, authToken);
         // Check success
-        if (diagram === null || summary === null) {
-          // No need for extra alert
+        if (diagram === null) {
           this.setIsLoading(false);
           return;
         }
 
-        // Update backend database
-        let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
-        let upSummary = await this.updateSummary(accountID, articleID, summary);
-        if (upDiagram === false || upSummary === false) {
+        // Send article to server for sumamry
+        let summary = await this.generateSummary(accountID, articleID, authToken);
+        // Check success
+        if (summary === null) {
           // No need for extra alert
           this.setIsLoading(false);
           return;
@@ -116,26 +108,49 @@ class App extends React.Component {
     }
   };
 
+
+  // Show pdf
+  showPdf = (articleID, pdfSrc) => {
+    console.log(pdfSrc);
+    this.setState(
+      {
+        articleID: articleID,
+        pdfSrc: pdfSrc
+      },
+      () => {
+        // Callback function to handleRegenDiagram()
+        this.handleRegenDiagram();
+      }
+    );
+  }
+
+
   // Send PDF to backend to database
-  uploadPDF = async (file, accountID) => {
+  uploadPDF = async (file, accountID, authToken) => {
     try {
+      const formData  = new FormData();
+      formData.append('pdf', file);
       // PDF upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/article`, {
+        credentials: "include",
         method: 'POST',
         headers: {
-          'Content-Type': 'application/pdf',
+          Authorization: `Bearer ${authToken}`
         },
-        body: file,
+        body: formData,
       });
 
       if (response.ok) {
         // Get article ID
-        const articleID = await response.result.articleId;
+        const data = await response.json()
+        console.log("Data : ",data);
+        const articleID = data.data.articleId;
+        console.log("ArticleID : ", articleID);
         return articleID;
       } else {
         // Account not found
         if (response.status === 401) {
-          createAlert('Unauthorized access!');
+          createAlert('Uploading PDF : Unauthorized access!');
         // Too many tokens
         } else if (response.status === 413) {
           createAlert('Error uploading PDF file: PDF file exceeds 3500 tokens.');
@@ -157,11 +172,15 @@ class App extends React.Component {
 
 
   // Generate diagram
-  generateDiagram = async (accountID, articleID) => {
+  generateDiagram = async (accountID, articleID, authToken) => {
     try {
       // PDF to diagram  upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
-        method: 'GET'
+        credentials: "include",
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
       });
 
       if (response.ok) {
@@ -190,11 +209,15 @@ class App extends React.Component {
 
 
   // Generate summary
-  generateSummary = async (accountID, articleID) => {
+  generateSummary = async (accountID, articleID, authToken) => {
     try {
       // PDF to diagram upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
-        method: 'GET'
+        credentials: "include",
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
       });
 
       if (response.ok) {
@@ -222,18 +245,59 @@ class App extends React.Component {
   }
 
 
+  // Handle regenerate diagram from currently selected pdf
+  handleRegenDiagram = async () => {
+    if (this.state.articleID) {
+      // Loading bar
+      this.setIsLoading(true);
+      
+      // Get accountID / authentication token
+      let accountID = localStorage.getItem("userId");
+      let authToken = localStorage.getItem("authToken");
+
+      // Send article to server for diagram
+      let diagram = await this.updateDiagram(accountID, this.state.articleID, authToken);
+      // Check success
+      if (diagram === null) {
+        this.setIsLoading(false);
+        return;
+      }
+
+      // Send article to server for sumamry
+      let summary = await this.updateSummary(accountID, this.state.articleID, authToken);
+      // Check success
+      if (summary === null) {
+        // No need for extra alert
+        this.setIsLoading(false);
+        return;
+      }
+
+      // Update views
+      this.setState({ diagramDefinition : diagram });
+      this.setState({ summaryDefinition : summary });
+      this.setIsLoading(false);
+    } else {
+      createAlert("No current PDF")
+    }
+  }
+
+
   // Update diagram
-  updateDiagram = async (accountID, articleID, diagram) => {
+  updateDiagram = async (accountID, articleID, authToken) => {
     try {
       // Diagram update upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/concept-map`, {
+        credentials: "include",
         method: 'PUT',
-        body: diagram
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
       });
 
       if (response.ok) {
         // Successfully uploaded to backend
-        return true;
+        const mermaid = await response.text();
+        return mermaid;
       } else {
         // Account not found
         if (response.status === 401) {
@@ -243,30 +307,32 @@ class App extends React.Component {
           createAlert('Update Diagram : Internal server error.');
           console.log("Update Diagram Error : ", response.status, response.statusText)
         }
-        this.setIsLoading(false);
-        return false;
+        return null;
       }
     } catch (error) {
       createAlert('Update Diagram : Internal server error.');
       console.log("Update Diagram Error : ", error);
-      this.setIsLoading(false);
-      return false;
+      return null;
     }
   }
 
 
   // Update sumamry
-  updateSummary = async (accountID, articleID, summary) => {
+  updateSummary = async (accountID, articleID, authToken) => {
     try {
       // Summary update upload endpoint
       const response = await fetch(`https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/account/${accountID}/visual/${articleID}/summary`, {
+        credentials: "include",
         method: 'PUT',
-        body: summary
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
       });
 
       if (response.ok) {
         // Successfully uploaded to backend
-        return true;
+        const summary = await response.text();
+        return summary;
       } else {
         // Account not found
         if (response.status === 401) {
@@ -276,66 +342,11 @@ class App extends React.Component {
           createAlert('Update Summary : Internal server error.');
           console.log("Update Summary Error : ", response.status, response.statusText)
         }
-        this.setIsLoading(false);
-        return false;
+        return null;
       }
     } catch (error) {
       createAlert('Update Summary : Internal server error.');
       console.log("Update Summary Error : ", error);
-      this.setIsLoading(false);
-      return false;
-    }
-  }
-
-
-  // Handle regenerate diagram from currently selected pdf
-  handleRegenDiagram = async () => {
-    if (this.state.articleID) {
-      try {
-        // Loading bar
-        this.setIsLoading(true);
-        
-        // Get accountID
-        let accountID = localStorage.getItem("userId");
-
-        // Regenerate diagram
-        await this.regenDiagram(this.state.articleID, accountID);
-      } catch (error) {
-        console.error("Error regenerating diagram:", error);
-        createAlert("Error regenerating diagram. Please try again.");
-      }
-    } else {
-      createAlert("No current PDF")
-    }
-  }
-
-  // Regenerate diagram from currently selected pdf
-  regenDiagram = async (articleID, accountID) => {
-    try {
-      // Send article to server for diagram
-      let diagram = await this.generateDiagram(accountID, articleID);
-      // Check success
-      if (diagram === null) {
-        // No need for extra alert
-        this.setIsLoading(false);
-        return;
-      }
-
-      // Update backend database
-      let upDiagram = await this.updateDiagram(accountID, articleID, diagram);
-      if (upDiagram === false) {
-        // No need for extra alert
-        this.setIsLoading(false);
-        return;
-      }
-      
-      // Update views
-      this.setState({ diagramDefinition : diagram });
-      this.setIsLoading(false);
-    } catch (error) {
-      createAlert('Internal server error.');
-      console.log("Error : ", error);
-      this.setIsLoading(false);
       return null;
     }
   }
@@ -356,7 +367,9 @@ class App extends React.Component {
       // Combine new data with existing data
       const newArticle = {
         pdfSrc: this.state.pdfSrc,
-        diagramDefinition: this.state.diagramDefinition
+        diagramDefinition: this.state.diagramDefinition,
+        summaryDefinition: this.state.summaryDefinition,
+        articleID: this.state.articleID
       };
       savedArticles.push(newArticle);
 
@@ -381,13 +394,26 @@ class App extends React.Component {
 
 
   // Load an article from local/server list
-  loadArticle = (pdfSrc, diagramDefinition) => {
+  loadArticle = (pdfSrc, diagramDefinition, summaryDefinition, articleID) => {
     if (pdfSrc && diagramDefinition) {
-      this.setState({
-        pdfSrc: pdfSrc,
-        diagramDefinition: diagramDefinition
-      });
+      if (this.state.showCompareView) {
+        this.setState({
+          pdfSrc: pdfSrc,
+          compareDiagramDefinition: diagramDefinition,
+          compareSummaryDefinition: summaryDefinition,
+          articleID: articleID
+        });
+      } else {
+        this.setState({
+          pdfSrc: pdfSrc,
+          diagramDefinition: diagramDefinition,
+          summaryDefinition: summaryDefinition,
+          articleID: articleID
+        });
+      }
     } else {
+      console.log("Load issue :", pdfSrc);
+      console.log("Diagram :", diagramDefinition);
       createAlert("PDF/Diagram information could not be retrieved.")
     }
   }
@@ -413,8 +439,21 @@ class App extends React.Component {
 
   // Shows/hides PDFView
   togglePDFView = () => {
-    this.setState({ showPDFView : !this.state.showPDFView })
+    this.setState({
+      showCompareView: false,
+      showPDFView: !this.state.showPDFView
+    })
   }
+
+
+  // Shows/hides CompareView
+  toggleCompareView = () => {
+    this.setState({
+      showPDFView: false,
+      showCompareView: !this.state.showCompareView
+    })
+  }
+
 
   // Shows/hides DiagramView
   toggleDiagramView = () => {
@@ -424,7 +463,13 @@ class App extends React.Component {
 
   // Clears the PDF and Diagram views
   resetViews = () => {
-    this.setState({ pdfSrc: null, diagramDefinition: null });
+    this.setState({
+      pdfSrc: null,
+      diagramDefinition: null,
+      summaryDefinition: null,
+      compareDiagramDefinition: null,
+      compareSummaryDefinition: null
+    });
   };
 
   render() {
@@ -432,8 +477,10 @@ class App extends React.Component {
       <div id="Fullscreen">
         <Sidebar onPDFChange={this.changePDF}
                  regenDiagram={this.handleRegenDiagram}
+                 showPdf={this.showPdf}
                  onReset={this.resetViews}
                  togglePDF={this.togglePDFView}
+                 toggleCompare={this.toggleCompareView}
                  toggleDiagram={this.toggleDiagramView}
                  loadArticle={this.loadArticle}
                  deleteFromLocal={this.deleteFromLocal}
@@ -445,13 +492,18 @@ class App extends React.Component {
               <PDFViewer onPDFChange={this.changePDF}
                          pdfSrc={this.state.pdfSrc} />
             )}
+            {this.state.showCompareView && (
+              <CompareViewer diagramDefinition={this.state.compareDiagramDefinition}
+                             summaryDefinition={this.state.compareSummaryDefinition} />
+            )}
             {this.state.showDiagramView && (
               <DiagramViewer regenDiagram={this.handleRegenDiagram}
                              diagramDefinition={this.state.diagramDefinition}
+                             summaryDefinition={this.state.summaryDefinition}
                              isLoading={this.state.isLoading}
                              saveToLocal={this.saveToLocal} />
             )}
-            {!this.state.showPDFView && !this.state.showDiagramView && (
+            {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView (
               <b>No Views Open :(</b>
             )}
           </div>

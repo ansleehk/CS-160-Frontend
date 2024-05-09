@@ -49,10 +49,6 @@
   vertical-align: top;
 }
 
-#Right-aligned {
-  margin-left: auto;
-}
-
 #Closed-sidebar button {
   border-radius: 0;
   background-color: var(--c_main1);
@@ -101,4 +97,8 @@
 
 #Sidebar button {
   transition: background-color 0.3s ease;
+}
+
+#Article-list {
+  width: 100%;
 }

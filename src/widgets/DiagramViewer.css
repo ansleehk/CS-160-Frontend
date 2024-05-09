@@ -47,9 +47,16 @@
   100% { transform: rotate(360deg); }
 }
 
+#summary {
+  margin: 0;
+  padding: var(--small_dim);
+  font-size: var(--sub_font);
+  border-bottom: var(--c_highlight) solid var(--small_dim) !important;
+}
+
 #diagram-options {
   position: absolute;
-  top: var(--small_dim);
+  bottom: var(--small_dim);
   right: var(--small_dim);
   display: flex;
   margin: 0;
@@ -74,12 +81,4 @@
 #diagram-options img {
   height: var(--small_button);
   width: var(--small_button);
-}
-
-#mermaid-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
 }

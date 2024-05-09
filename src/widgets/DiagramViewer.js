@@ -1,9 +1,9 @@
 import "./DiagramViewer.css";
 
 import React from "react";
-import Mermaid from "../utilities/Mermaid";
 import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
+import Diagram from "../utilities/Diagram";
 
 import generate from "../images/Generate.png";
 import localSave from "../images/LocalSave.png";
@@ -13,7 +13,7 @@ class DiagramViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      diagramKey: 0 // Initialize a key for forcing re-renders
+      diagramKey: 0, // Initialize a key for forcing re-renders
     };
   }
 
@@ -62,8 +62,12 @@ class DiagramViewer extends React.Component {
             <div id="loader"></div>
           </>
         ) : this.props.diagramDefinition ? (
-          // Mermaid diagram
           <>
+            {/* Summary Box */}
+            <p id="summary">
+              {this.props.summaryDefinition}
+            </p>
+            {/* Diagram Options */}
             <div id="diagram-options">
               <Tooltip text="Save diagram locally">
                 <button onClick={this.props.saveToLocal}>
@@ -76,12 +80,9 @@ class DiagramViewer extends React.Component {
                 </button>
               </Tooltip>
             </div>
-            <div id="mermaid-container">
-              <Mermaid id="mermaid" key={this.state.diagramKey}
-                                    chart={this.props.diagramDefinition}
-                                    width="100%"
-                                    height="100%"/>
-            </div>
+            {/* Mermaid Diagram */}
+            <Diagram id="diagram" key={this.state.diagramKey}
+                     mermaid={this.props.diagramDefinition} />
           </>
         ) : (
           // Generate diagram button
