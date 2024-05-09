@@ -1,7 +1,7 @@
 import "./CompareViewer.css";
 
 import React from "react";
-import Mermaid from "../utilities/Mermaid";
+import Diagram from "../utilities/Diagram";
 // import createAlert from "../utilities/Alert";
 // import Tooltip from "../utilities/Tooltip";
 
@@ -10,7 +10,6 @@ class CompareViewer extends React.Component {
     super(props);
     this.state = {
       diagramKey: 0, // Initialize a key for forcing re-renders
-      summaryKey: 0
     };
   }
 
@@ -20,41 +19,22 @@ class CompareViewer extends React.Component {
     if (prevProps.diagramDefinition !== this.props.diagramDefinition) {
       this.setState({ diagramKey: this.state.diagramKey + 1 });
     }
-
-    if (prevProps.summaryDefinition !== this.props.summaryDefinition) {
-      this.setState({ summaryKey: this.state.summaryKey + 1 });
-
-      // Get the height of the summary box
-      const summaryHeight = document.getElementById('summary-box').offsetHeight;
-
-      // Set the padding-top of the diagram container to match the height of the summary box
-      document.getElementById('diagram-container').style.top = `${summaryHeight}px`;
-    }
   }
 
 
   render() {
     return (
-      <div id="Diagram-viewer" data-testid="DiagramViewer">
+      <div id="Compare-viewer" data-testid="CompareViewer">
         {this.props.diagramDefinition ? (
-          
-          <div id="content">
+          <>
             {/* Summary Box */}
-            <div id="summary-box">
-              <p id="summary" key={this.state.summaryDefinition}>
-                {this.props.summaryDefinition}
-              </p>
-            </div>
-            <div id="diagram-container">
-              {/* Mermaid Diagram */}
-              <div id="mermaid-container">
-                <Mermaid id="mermaid" key={this.state.diagramKey}
-                                      chart={this.props.diagramDefinition}
-                                      width="100%"
-                                      height="100%"/>
-              </div>
-            </div>
-          </div>
+            <p id="compare-summary">
+              {this.props.summaryDefinition}
+            </p>
+            {/* Mermaid Diagram */}
+            <Diagram id="compare-diagram" key={this.state.diagramKey}
+                     mermaid={this.props.diagramDefinition} />
+          </>
         ) : (
           // Generate diagram button
           <>

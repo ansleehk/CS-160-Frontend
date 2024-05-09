@@ -1,9 +1,9 @@
 import "./DiagramViewer.css";
 
 import React from "react";
-import Mermaid from "../utilities/Mermaid";
 import createAlert from "../utilities/Alert";
 import Tooltip from "../utilities/Tooltip";
+import Diagram from "../utilities/Diagram";
 
 import generate from "../images/Generate.png";
 import localSave from "../images/LocalSave.png";
@@ -14,7 +14,6 @@ class DiagramViewer extends React.Component {
     super(props);
     this.state = {
       diagramKey: 0, // Initialize a key for forcing re-renders
-      summaryKey: 0
     };
   }
 
@@ -50,10 +49,6 @@ class DiagramViewer extends React.Component {
     if (prevProps.diagramDefinition !== this.props.diagramDefinition) {
       this.setState({ diagramKey: this.state.diagramKey + 1 });
     }
-
-    if (prevProps.summaryDefinition !== this.props.summaryDefinition) {
-      this.setState({ summaryKey: this.state.summaryKey + 1 });
-    }
   }
 
 
@@ -67,37 +62,28 @@ class DiagramViewer extends React.Component {
             <div id="loader"></div>
           </>
         ) : this.props.diagramDefinition ? (
-          
-          <div id="content">
+          <>
             {/* Summary Box */}
-            <div id="summary-box">
-              <p id="summary" key={this.state.summaryDefinition}>
-                {this.props.summaryDefinition}
-              </p>
+            <p id="summary">
+              {this.props.summaryDefinition}
+            </p>
+            {/* Diagram Options */}
+            <div id="diagram-options">
+              <Tooltip text="Save diagram locally">
+                <button onClick={this.props.saveToLocal}>
+                  <img src={localSave} alt="save locally" />
+                </button>
+              </Tooltip>
+              <Tooltip text="Download diagram as svg">
+                <button onClick={this.saveDiagramAsSVG}>
+                  <img src={diagramToImage} alt="save diagram" />
+                </button>
+              </Tooltip>
             </div>
-            <div id="diagram-container">
-              {/* Diagram Options */}
-              <div id="diagram-options">
-                <Tooltip text="Save diagram locally">
-                  <button onClick={this.props.saveToLocal}>
-                    <img src={localSave} alt="save locally" />
-                  </button>
-                </Tooltip>
-                <Tooltip text="Download diagram as svg">
-                  <button onClick={this.saveDiagramAsSVG}>
-                    <img src={diagramToImage} alt="save diagram" />
-                  </button>
-                </Tooltip>
-              </div>
-              {/* Mermaid Diagram */}
-              <div id="mermaid-container">
-                <Mermaid id="mermaid" key={this.state.diagramKey}
-                                      chart={this.props.diagramDefinition}
-                                      width="100%"
-                                      height="100%"/>
-              </div>
-            </div>
-          </div>
+            {/* Mermaid Diagram */}
+            <Diagram id="diagram" key={this.state.diagramKey}
+                     mermaid={this.props.diagramDefinition} />
+          </>
         ) : (
           // Generate diagram button
           <>

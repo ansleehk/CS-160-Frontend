@@ -503,7 +503,7 @@ class App extends React.Component {
                              isLoading={this.state.isLoading}
                              saveToLocal={this.saveToLocal} />
             )}
-            {!this.state.showPDFView && !this.state.showDiagramView && (
+            {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView (
               <b>No Views Open :(</b>
             )}
           </div>

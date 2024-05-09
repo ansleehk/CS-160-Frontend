@@ -161,8 +161,8 @@ const Login = ({ onClose }) => {
         const data = await response.json();
 
         // TODO : more secure storage
-        localStorage.setItem('authToken', data.result.token);
-        localStorage.setItem('userId', data.result.userId);
+        localStorage.setItem('authToken', data.data.token);
+        localStorage.setItem('userId', data.data.userId);
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
         localStorage.setItem('profile', data.data.displayName);
