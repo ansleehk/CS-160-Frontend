@@ -353,7 +353,7 @@ class App extends React.Component {
 
 
   // Save the PDF and diagram to local storage
-  saveToLocal = () => {
+  saveToLocal = (toggleRefresh) => {
     if (this.state.pdfSrc && this.state.diagramDefinition) {
 
       // Get existing data from local storage
@@ -374,7 +374,7 @@ class App extends React.Component {
       savedArticles.push(newArticle);
 
       localStorage.setItem('savedArticles', JSON.stringify(savedArticles));
-      this.toggleRefresh();
+      toggleRefresh();
       createAlert("PDF and Diagram saved to local storage.");
     } else {
       createAlert("Both PDF and diagram must be present to save to local storage.");
@@ -501,7 +501,7 @@ class App extends React.Component {
                              diagramDefinition={this.state.diagramDefinition}
                              summaryDefinition={this.state.summaryDefinition}
                              isLoading={this.state.isLoading}
-                             saveToLocal={this.saveToLocal} />
+                             saveToLocal={() => this.saveToLocal(this.toggleRefresh)} />
             )}
             {!this.state.showPDFView && !this.state.showDiagramView && !this.state.showCompareView (
               <b>No Views Open :(</b>

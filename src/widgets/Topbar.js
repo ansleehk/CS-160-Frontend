@@ -35,6 +35,17 @@ class Topbar extends React.Component {
   };
 
 
+  // Rerenders topbar
+  rerender = () => {
+    this.setState({
+      userName: localStorage.getItem("profile"),
+      authToken: localStorage.getItem("authToken"),
+      showLoginPopup: false,
+      showProfilePopup: false
+    });
+  }
+
+
   render() {
     return (
       <div id="Topbar" data-testid="Topbar">
@@ -57,7 +68,8 @@ class Topbar extends React.Component {
 
             {/* Render profile popup if true */}
             {this.state.showProfilePopup && (
-              <Profile onClose={this.toggleProfilePopup} />
+              <Profile rerender={this.rerender}
+                       onClose={this.toggleProfilePopup} />
             )}
             </>
           ) : (
@@ -71,7 +83,8 @@ class Topbar extends React.Component {
 
             {/* Render login popup if true */}
             {this.state.showLoginPopup && (
-              <Login onClose={this.toggleLoginPopup} />
+              <Login rerender={this.rerender}
+                     onClose={this.toggleLoginPopup} />
             )}
             </>
           )}

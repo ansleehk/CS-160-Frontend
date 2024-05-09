@@ -24,6 +24,15 @@ class ArticleList extends React.Component {
     await this.fetchArticles();
   }
 
+
+  // Fetch article force update
+  componentDidUpdate(prevProps) {
+    // Check if the bTriggered prop has changed
+    if (this.props.toggleRefresh && !prevProps.toggleRefresh) {
+      this.fetchArticles();
+    }
+  }
+
   
   // Fetch and load articles from local/server
   fetchArticles = async() => {

@@ -4,7 +4,7 @@ import "./Login.css";
 
 import createAlert from "../utilities/Alert";
 
-const Login = ({ onClose }) => {
+const Login = ({ rerender, onClose }) => {
 
   // State variables
   const [tab, setTab] = useState("signin");
@@ -73,7 +73,10 @@ const Login = ({ onClose }) => {
 
 
   // Handles form submission
-  window.handleSubmit = async (token) => {
+  window.handleSubmit = async(token) => {
+    handleSubmit2(token, rerender);
+  }
+  const handleSubmit2 = async (token, rerender) => {
 
     // Clean user input
     setEmail(escapeHtml(email));
@@ -84,7 +87,10 @@ const Login = ({ onClose }) => {
     const result = (tab === "signin") ? await signIn(email, password, token) : await signUp(email, password, profile, token);
 
     // Close popup on successful response
-    if (result) { onClose(); } 
+    if (result) {
+      rerender();
+      onClose();
+    } 
   };
 
 
@@ -258,8 +264,10 @@ const Login = ({ onClose }) => {
             </div>
 
             {/* reCAPTCHA and submit button */}
-            <button className="g-recaptcha" data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL" data-callback='handleSubmit'
-              data-action='submit'>
+            <button className="g-recaptcha" 
+                    data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
+                    data-callback='handleSubmit'
+                    data-action='submit'>
               {tab === "signin" ? "Sign in" : "Sign up"}
             </button>
           </form>
