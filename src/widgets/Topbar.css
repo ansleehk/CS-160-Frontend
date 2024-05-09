@@ -48,3 +48,8 @@
 #Profile:hover {
   filter: brightness(var(--b_brightness)) saturate(var(--b_saturation));
 }
+
+.grecaptcha-badge {
+  visibility: hidden;
+  z-index: 100;
+}

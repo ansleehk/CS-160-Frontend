@@ -150,7 +150,8 @@ const Login = ({ rerender, onClose }) => {
       } else {
         // Email not found
         if (response.status === 400) {
-          createAlert('User not found!');
+          const data = await response.text();
+          createAlert(data);
         // All other errors
         } else {
           createAlert('Internal server error.');
@@ -303,7 +304,7 @@ const Login = ({ rerender, onClose }) => {
               </span>
             </div>
 
-            {/* reCAPTCHA and submit button */}
+            {/* reCAPTCHA */}
             <div
               className="g-recaptcha"
               data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"

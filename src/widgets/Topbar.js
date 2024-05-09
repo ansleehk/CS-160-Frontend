@@ -89,6 +89,15 @@ class Topbar extends React.Component {
             </>
           )}
         </div>
+
+        {/* CSS to hide the reCAPTCHA badge */}
+        <style>
+          {`
+            .grecaptcha-badge {
+              visibility: ${(this.state.showLoginPopup || this.state.showProfilePopup) ? 'visible' : 'hidden'};
+            }
+          `}
+        </style>
       </div>
     );
   }
