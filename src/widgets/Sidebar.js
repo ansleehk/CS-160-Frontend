@@ -12,6 +12,7 @@ import upload from "../images/Upload.png";
 import generate from "../images/Generate.png";
 import pdf from "../images/PDF.png";
 import diagram from "../images/Diagram.png";
+import compare from "../images/Compare.png";
 import settings from "../images/Settings.png";
 import reset from "../images/Reset.png";
 import privacy from "../images/Privacy.png";
@@ -132,7 +133,7 @@ class Sidebar extends React.Component {
             </Tooltip>
             <Tooltip text="Toggles diagram comparer visibility">
               <button onClick={this.props.toggleCompare}>
-                <img src={diagram} id="Toggle-diagram" alt="toggle diagram" />
+                <img src={compare} id="Toggle-compare" alt="toggle compare" />
               </button>
             </Tooltip>
             <Tooltip text="Toggles diagram visibility">

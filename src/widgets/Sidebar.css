@@ -61,8 +61,8 @@
 
 #Open-sidebar img,
 #Closed-sidebar img {
-  width: var(--small_button);
-  height: var(--small_button);
+  width: var(--small_img);
+  height: var(--small_img);
 }
 
 #Closed-sidebar {
@@ -101,4 +101,8 @@
 
 #Article-list {
   width: 100%;
+}
+
+#Sidebar button {
+  padding: 2px;
 }
