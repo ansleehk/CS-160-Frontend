@@ -11,7 +11,9 @@ const Login = ({ rerender, onClose }) => {
   const [profile, setProfile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   var entityMap = {
     '&': '&amp;',
@@ -25,14 +27,25 @@ const Login = ({ rerender, onClose }) => {
   };
 
 
-  // Import the captcha
+  const handleLoaded = () => {
+    window.grecaptcha.ready(() => {
+      window.grecaptcha
+        .execute("6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL", { action: "form_submission" })
+        .then(token => {
+          setCaptchaToken(token);
+        });
+    });
+  };
+
+
   useEffect(() => {
+    // Add reCaptcha script when the component mounts
     const script = document.createElement("script");
-    script.src = "https://www.google.com/recaptcha/api.js";
-    script.async = true;
-    script.defer = true;
+    script.src = "https://www.google.com/recaptcha/api.js?render=6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL";
+    script.addEventListener("load", handleLoaded);
     document.body.appendChild(script);
 
+    // Clean up function to remove the script when the component unmounts
     return () => {
       document.body.removeChild(script);
     };
@@ -72,11 +85,19 @@ const Login = ({ rerender, onClose }) => {
   };
 
 
-  // Handles form submission
-  window.handleSubmit = async(token) => {
-    handleSubmit2(token, rerender);
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
   }
-  const handleSubmit2 = async (token, rerender) => {
+
+
+  // Handles form sumbission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if ((tab === 'signup') && (password !== confirmPassword)) {
+      createAlert('Passwords do not match');
+      return;
+    }
 
     // Clean user input
     setEmail(escapeHtml(email));
@@ -84,7 +105,7 @@ const Login = ({ rerender, onClose }) => {
     setPassword(escapeHtml(password));
 
     // Send to login/signup logic
-    const result = (tab === "signin") ? await signIn(email, password, token) : await signUp(email, password, profile, token);
+    const result = (tab === "signin") ? await signIn(email, password, captchaToken) : await signUp(email, password, profile, captchaToken);
 
     // Close popup on successful response
     if (result) {
@@ -176,9 +197,10 @@ const Login = ({ rerender, onClose }) => {
         createAlert("Registration successful.")
         return true;
       } else {
-        // Email in use
+        // An signup error (ie. email in use, password not strong enough)
         if (response.status === 400) {
-          createAlert('A user with this email already exists!');
+          const data = await response.text();
+          createAlert(data);
         // All other errors
         } else {
           createAlert('Internal server error.');
@@ -227,15 +249,15 @@ const Login = ({ rerender, onClose }) => {
 
         {/* Login/Signup form */}
         <div id="login-content">
-          <form onSubmit={(event) => { event.preventDefault(); }}>
+          <form onSubmit={handleSubmit}>
 
             {tab === "signup" && (
               <>
               <label>Name:</label>
               <input value={profile}
                 onChange={handleProfileChange}
-                pattern="[A-Za-z0-9]{3,24}"
-                title="Name must be an alphanumeric string between 3-24 characters"
+                pattern="[A-Za-z0-9]{3,32}"
+                title="Name must be an alphanumeric string between 3-32 characters"
                 required />
               </>
             )}
@@ -247,9 +269,27 @@ const Login = ({ rerender, onClose }) => {
             <label>Password:</label>
             <input type={showPassword ? "text" : "password"} value={password}
               onChange={handlePasswordChange} 
-              pattern=".{8,}"
-              title="Password must be at least 8 characters long"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$"
+              title="Password must be between 8 and 32 characters, and contain at least one uppercase letter, one lowercase letter, one number, and one special symbol (@$!%*?&)"
               required />
+            {password.length > 0 && (
+              <div className="validation-message">
+                {password.length < 8 && <div className="validation-message">Password must be at least 8 characters long</div>}
+                {!/[a-z]/.test(password) && <div className="validation-message">Password must contain at least one lowercase letter</div>}
+                {!/[A-Z]/.test(password) && <div className="validation-message">Password must contain at least one uppercase letter</div>}
+                {!/\d/.test(password) && <div className="validation-message">Password must contain at least one number</div>}
+                {!/[@$!%*?&]/.test(password) && <div className="validation-message">Password must contain at least one special symbol (@$!%*?&)</div>}   
+              </div>
+            )}
+            {tab === "signup" && (
+              <>
+              <label>Confirm Password:</label>
+              <input type={showPassword ? "text" : "password"} value={confirmPassword} onChange={handleConfirmPasswordChange} required />
+              {confirmPassword.length > 0 && password !== confirmPassword && (
+                  <div className="validation-message">Passwords do not match</div>
+              )}
+              </>
+            )}
 
             {/* Password options (help, show) */}
             <div id="password-options">
@@ -264,10 +304,13 @@ const Login = ({ rerender, onClose }) => {
             </div>
 
             {/* reCAPTCHA and submit button */}
-            <button className="g-recaptcha" 
-                    data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
-                    data-callback='handleSubmit'
-                    data-action='submit'>
+            <div
+              className="g-recaptcha"
+              data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
+              data-size="invisible"
+              data-callback="onSubmit">
+            </div>
+            <button type='submit'>
               {tab === "signin" ? "Sign in" : "Sign up"}
             </button>
           </form>
