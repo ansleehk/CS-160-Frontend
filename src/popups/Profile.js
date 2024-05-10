@@ -12,6 +12,8 @@ const Profile = ({ rerender, onClose, onReset }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isConfirmationVisible, setConfirmationVisible] = useState(false);
+  const [token, setToken] = useState(null);
 
   var entityMap = {
     '&': '&amp;',
@@ -131,8 +133,14 @@ const Profile = ({ rerender, onClose, onReset }) => {
   };
 
 
+  window.confirmDelete = (token) => {
+    setConfirmationVisible(true);
+    setToken(token);
+  }
+
+
   // Handles account deletion
-  window.accountDelete = async(token) => {
+  const accountDelete = async (token) => {
     // Get account id
     let accountID = localStorage.getItem("userId") || null;
     let authToken = localStorage.getItem("authToken") || null;
@@ -249,10 +257,20 @@ const Profile = ({ rerender, onClose, onReset }) => {
           <Tooltip text="Deletes user profile.">
             <button id="delete" className="g-recaptcha"
               data-sitekey="6Lddz84pAAAAAOoVxY1bFZUQqaxLb8XCHGeVYSaL"
-              data-callback='accountDelete'>
+              data-callback='confirmDelete'>
               Delete Account
             </button>
           </Tooltip>
+          {/* Confirmation component */}
+          {isConfirmationVisible && (
+            <>
+              <p>Are you sure you want to delete your account?</p>
+              <div id="delete-confirm">
+                <button id="del" onClick={() => accountDelete(token)}>Yes, Delete</button>
+                <button id="can" onClick={() => setConfirmationVisible(false)}>Cancel</button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
