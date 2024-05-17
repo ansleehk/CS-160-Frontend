@@ -96,6 +96,7 @@ const Profile = ({ rerender, onClose, onReset }) => {
         credentials: "include",
         method: 'PUT',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`
         },
         body: JSON.stringify({
@@ -151,15 +152,23 @@ const Profile = ({ rerender, onClose, onReset }) => {
         credentials: "include",
         method: 'DELETE',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`
-        }
+        },
+        body: JSON.stringify({
+          captcha: token
+        }),
       });
 
       if (response.ok) {
         // TODO : More secure storage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
         localStorage.removeItem('email');
         localStorage.removeItem('password');
         localStorage.removeItem('profile');
+        rerender();
+        onReset();
         onClose();
         createAlert("Successfully deleted!");
       } else {
