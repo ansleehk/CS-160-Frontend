@@ -113,6 +113,7 @@ const Profile = ({ rerender, onClose, onReset }) => {
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
         localStorage.setItem('profile', profile);
+        rerender();
         createAlert("Successfully updated!");
       } else {
         // Email already exists
